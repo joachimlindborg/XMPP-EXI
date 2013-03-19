@@ -39,6 +39,14 @@
             <uri>http://se.linkedin.com/pub/peter-waher/1a/71b/a29/</uri>
         </author>
 		<revision>
+			<version>0.0.4</version>
+			<date>2013-03-19</date>
+			<initials>pwa</initials>
+			<remark>
+				<p>Added support for uploading EXI-compressed schema files.</p>
+			</remark>
+		</revision>
+		<revision>
 			<version>0.0.3</version>
 			<date>2013-03-15</date>
 			<initials>pwa</initials>
@@ -182,7 +190,7 @@
             </p>
             <example caption='Uploading schema file'>
                 <![CDATA[
-    <uploadSchema xmlns='http://jabber.org/protocol/compress/exi'>
+    <uploadSchema xmlns='http://jabber.org/protocol/compress/exi' contentType='Text'>
         PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjx4czpzY2hlbWENCiAgICB4
         bWxuczp4cz0naHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEnDQogICAgdGFyZ2V0TmFt
         ZXNwYWNlPSd1cm46eG1wcDpzbjpwcm92aXNpb25pbmcnDQogICAgeG1sbnM9J3Vybjp4bXBwOnNu
@@ -224,6 +232,94 @@
                 The client in turn can check this attribute as a quick way to check if agreement exists.
             </p>
         </section2>
+		<section2 topic='Uploading compressed schema files'>
+			<p>
+				The <strong>uploadSchema</strong> command has an optional attribute called <strong>contentType</strong> that can be used to send different types of documents 
+				to the server. This is not a MIME content type, but an enumeration with the following options:
+			</p>
+			<table caption='contentType values'>
+				<tr>
+					<th>Value</th>
+					<th>Description</th>
+				</tr>
+				<tr>
+					<td>Text</td>
+					<td>The schema is sent as plain text. If no encoding is provided in the XML header of the schema file, UTF-8 encoding is assumed. This is the default value.</td>
+				</tr>
+				<tr>
+					<td>ExiBody</td>
+					<td>The schema file is sent as an EXI compressed file, but only the body is sent. *</td>
+				</tr>
+				<tr>
+					<td>ExiDocument</td>
+					<td>The schema file is sent as an EXI compressed file. The entire file, including Exi header is provided. *</td>
+				</tr>
+			</table>
+			<p>
+				(*) These options assume the following set of default EXI options are used. It is assumed the XMPP server has more capabilities than the client, so the following
+				set of options must be supported by the XMPP server. The schema files can be precompressed and stored as binary files on the client for easier transmission.
+			</p>
+			<table caption='Default EXI options'>
+				<tr>
+					<th>Option</th>
+					<th>Default value</th>
+				</tr>
+				<tr>
+					<td>Version</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>alignment</td>
+					<td>bit-packed</td>
+				</tr>
+				<tr>
+					<td>compression</td>
+					<td>false</td>
+				</tr>
+				<tr>
+					<td>strict</td>
+					<td>false</td>
+				</tr>
+				<tr>
+					<td>fragment</td>
+					<td>false</td>
+				</tr>
+				<tr>
+					<td>preserve</td>
+					<td>all false</td>
+				</tr>
+				<tr>
+					<td>selfContained</td>
+					<td>false</td>
+				</tr>
+				<tr>
+					<td>schemaId</td>
+					<td>No schema</td>
+				</tr>
+				<tr>
+					<td>datatypeRepresentationMap</td>
+					<td>No map</td>
+				</tr>
+				<tr>
+					<td>blockSize</td>
+					<td>1000000 (one million)</td>
+				</tr>
+				<tr>
+					<td>valueMaxLength</td>
+					<td>unbounded</td>
+				</tr>
+				<tr>
+					<td>valuePartitionCapacity</td>
+					<td>unbounded</td>
+				</tr>
+			</table>
+			<p>
+				Since EXI compression does not perserve the extact binary representation of the schema file (for instance it doesn't preserve white space), the server
+				cannot correctly compute byte size and an MD5 hash for the file. Therefore, the client needs to provide this information in the <strong>uploadSchema</strong>
+				command using the <strong>bytes</strong> and <strong>md5Hash</strong> attributes. They are mandatory in case EXI compressed schema files are uploaded to the
+				server. Also note that the byte length and MD5 Hash should be computed on the original XML Schema file, not the compressed or decompressed version.
+			</p>
+		</section2>
         <section2 topic='Downloading new schema files on server'>
             <p>
                 As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <strong>downloadSchema</strong>
@@ -314,7 +410,8 @@
             </example>
             <p>
                 When the client receives acknowledgement that the compression method has been accepted, it restarts the stream, as explained in 
-                <link url='http://xmpp.org/extensions/xep-0138.html#usecase'>XEP 0138</link>.
+                <link url='http://xmpp.org/extensions/xep-0138.html#usecase'>XEP 0138</link>, except that it <strong>must not</strong> resend the <strong>&lt;stream&gt;</strong>
+				start element sequence. Similarly, the client must not send a <strong>&lt;/stream&gt;</strong> element when closing the session. Closing the connection is sufficient.
             </p>
         </section2>
     </section1>
@@ -668,7 +765,25 @@
         </xs:restriction>
     </xs:simpleType>
  
-    <xs:element name='uploadSchema' type='xs:base64Binary'/>
+	<xs:element name='uploadSchema'>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base='xs:base64Binary'>
+					<xs:attribute name='contentType' type='ContentType' use='optional' default='Text'/>
+					<xs:attribute name='bytes' type='xs:positiveInteger' use='optional'/>
+					<xs:attribute name='md5Hash' type='MD5Hash' use='optional'/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+ 
+	<xs:simpleType name='ContentType'>
+		<xs:restriction base='xs:string'>
+			<xs:enumeration value='Text'/>
+			<xs:enumeration value='ExiBody'/>
+			<xs:enumeration value='ExiDocument'/>
+		</xs:restriction>
+	</xs:simpleType>
  
     <xs:element name='downloadSchema' type='DownloadSchema'/>
     <xs:element name='downloadSchemaResponse' type='DownloadSchemaResponse'/>
@@ -718,6 +833,6 @@
         </code>
     </section1>
     <section1 topic='Acknowledgements' anchor='ack'>
-        <p>Thanks to Joachim Lindborg, Yusuke Doi, Takuki Kamiya, Tina Beckman, Karin Forsell and Jeff Freund for all valuable feedback.</p>
+        <p>Thanks to Joachim Lindborg, Yusuke Doi, Takuki Kamiya, Tina Beckman, Karin Forsell, Jeff Freund and Rumen Kyusakov for all valuable feedback.</p>
     </section1>
 </xep>

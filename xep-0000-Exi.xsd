@@ -135,7 +135,25 @@
         </xs:restriction>
     </xs:simpleType>
  
-    <xs:element name='uploadSchema' type='xs:base64Binary'/>
+	<xs:element name='uploadSchema'>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base='xs:base64Binary'>
+					<xs:attribute name='contentType' type='ContentType' use='optional' default='Text'/>
+					<xs:attribute name='bytes' type='xs:positiveInteger' use='optional'/>
+					<xs:attribute name='md5Hash' type='MD5Hash' use='optional'/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+ 
+	<xs:simpleType name='ContentType'>
+		<xs:restriction base='xs:string'>
+			<xs:enumeration value='Text'/>
+			<xs:enumeration value='ExiBody'/>
+			<xs:enumeration value='ExiDocument'/>
+		</xs:restriction>
+	</xs:simpleType>
  
     <xs:element name='downloadSchema' type='DownloadSchema'/>
 	<xs:element name='downloadSchemaResponse' type='DownloadSchemaResponse'/>

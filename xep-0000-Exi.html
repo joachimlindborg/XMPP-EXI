@@ -10,7 +10,7 @@
     <meta name="DC.Description" content="This specification describes how EXI compression can be used in XMPP networks.">
     <meta name="DC.Publisher" content="XMPP Standards Foundation">
     <meta name="DC.Contributor" content="XMPP Extensions Editor">
-    <meta name="DC.Date" content="2013-03-15">
+    <meta name="DC.Date" content="2013-03-19">
     <meta name="DC.Type" content="XMPP Extension Protocol">
     <meta name="DC.Format" content="XHTML">
     <meta name="DC.Identifier" content="XEP-xxxx">
@@ -42,11 +42,11 @@
       </tr>
       <tr valign="top">
         <td><strong>Version:</strong></td>
-        <td>0.0.3</td>
+        <td>0.0.4</td>
       </tr>
       <tr valign="top">
         <td><strong>Last Updated:</strong></td>
-        <td>2013-03-15</td>
+        <td>2013-03-19</td>
       </tr>
     </table>
     <hr>
@@ -55,26 +55,27 @@
     <h2>Table of Contents</h2>
     <div class="indent">
       <p><br>1.  <a href="#intro">Introduction</a><br>2.  <a href="#usecases">Use Cases</a><br>   
-      2.1.  <a href="#sect-ID0ENG">Detecting support</a><br>   
-      2.2.  <a href="#sect-ID0EPH">Invalid setup</a><br>   
-      2.3.  <a href="#sect-ID0E5H">Proposing compression parameters</a><br>   
-      2.4.  <a href="#sect-ID0EUBAC">Uploading new schema files</a><br>   
-      2.5.  <a href="#sect-ID0EKDAC">Downloading new schema files on server</a><br>   
-      2.6.  <a href="#sect-ID0EVFAC">Start compression</a><br>3.  <a href="#impl">Implementation Notes</a><br>   
-      3.1.  <a href="#sect-ID0EYGAC">EXI options</a><br>   
-      3.2.  <a href="#sect-ID0EYKAC">Transmission of EXI bodies and Session-wide Buffers</a><br>   
-      3.3.  <a href="#sect-ID0E3LAC">Preserving prefixes</a><br>   
-      3.4.  <a href="#sect-ID0EQMAC">Networks containing clients having limited memory</a><br>   
-      3.5.  <a href="#sect-ID0E4MAC">Caching schema files</a><br>   
-      3.6.  <a href="#sect-ID0ETNAC">Uploading vs. Downloading schemas</a><br>   
-      3.7.  <a href="#sect-ID0EEOAC">Server decompression and recompression vs. binary forwarding</a><br>4.  <a href="#security">Security Considerations</a><br>5.  <a href="#iana">IANA Considerations</a><br>6.  <a href="#registrar">XMPP Registrar Considerations</a><br>7.  <a href="#schema">XML Schema</a><br>8.  <a href="#ack">Acknowledgements</a></p>
+      2.1.  <a href="#sect-ID0E4G">Detecting support</a><br>   
+      2.2.  <a href="#sect-ID0EAAAC">Invalid setup</a><br>   
+      2.3.  <a href="#sect-ID0EPAAC">Proposing compression parameters</a><br>   
+      2.4.  <a href="#sect-ID0EECAC">Uploading new schema files</a><br>   
+      2.5.  <a href="#sect-ID0E1DAC">Uploading compressed schema files</a><br>   
+      2.6.  <a href="#sect-ID0E1KAC">Downloading new schema files on server</a><br>   
+      2.7.  <a href="#sect-ID0EFNAC">Start compression</a><br>3.  <a href="#impl">Implementation Notes</a><br>   
+      3.1.  <a href="#sect-ID0EOOAC">EXI options</a><br>   
+      3.2.  <a href="#sect-ID0EPCAE">Transmission of EXI bodies and Session-wide Buffers</a><br>   
+      3.3.  <a href="#sect-ID0ETDAE">Preserving prefixes</a><br>   
+      3.4.  <a href="#sect-ID0EHEAE">Networks containing clients having limited memory</a><br>   
+      3.5.  <a href="#sect-ID0EUEAE">Caching schema files</a><br>   
+      3.6.  <a href="#sect-ID0EKFAE">Uploading vs. Downloading schemas</a><br>   
+      3.7.  <a href="#sect-ID0E2FAE">Server decompression and recompression vs. binary forwarding</a><br>4.  <a href="#security">Security Considerations</a><br>5.  <a href="#iana">IANA Considerations</a><br>6.  <a href="#registrar">XMPP Registrar Considerations</a><br>7.  <a href="#schema">XML Schema</a><br>8.  <a href="#ack">Acknowledgements</a></p>
       <p><a href="#appendices">Appendices</a><br>    <a href="#appendix-docinfo">A: Document Information</a><br>    <a href="#appendix-authorinfo">B: Author Information</a><br>    <a href="#appendix-legal">C: Legal Notices</a><br>    <a href="#appendix-xmpp">D: Relation to XMPP</a><br>    <a href="#appendix-discuss">E: Discussion Venue</a><br>    <a href="#appendix-conformance">F: Requirements Conformance</a><br>    <a href="#appendix-notes">G: Notes</a><br>    <a href="#appendix-revs">H: Revision History</a></p>
     </div>
     <hr>
     <h2>1.
        <a name="intro">Introduction</a></h2>
         <p class="" style="">
-            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0EEE">1</a>] is an
+            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0EUE">1</a>] is an
             efficient way to compress XML documents and XML fragments. This document provides information on how EXI can be used in XMPP streams to efficiently compress data transmitted between
             the server and the client. For certain applications (like applications in sensor networks) EXI is a vital component, decreasing packet size enabling sensors with limited memory to
             communicate efficiently. The strong support in EXI for generating efficient stubcodes is also vital to build efficient code in constrained devices.
@@ -107,9 +108,9 @@
     <h2>2.
        <a name="usecases">Use Cases</a></h2>
         <div class="indent">
-      <h3>2.1 <a name="sect-ID0ENG">Detecting support</a></h3>
+      <h3>2.1 <a name="sect-ID0E4G">Detecting support</a></h3>
             <p class="" style="">
-                This XEP is based on <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0E2G">2</a>]. When the client connects to the XMPP Server, it will receive a list of features supported by the server:
+                This XEP is based on <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0ELH">2</a>]. When the client connects to the XMPP Server, it will receive a list of features supported by the server:
             </p>
             <p class="caption"><a name="example-1"></a>Example 1. Search Features</p>
       <div class="indent">
@@ -130,7 +131,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>2.2 <a name="sect-ID0EPH">Invalid setup</a></h3>
+      <h3>2.2 <a name="sect-ID0EAAAC">Invalid setup</a></h3>
             <p class="" style="">
                 If the client attempts to activate an EXI stream at this point, before the negotiation of EXI properties has been performed, the server must respond with a
                 <span class="strong">setup-failed</span> response.
@@ -150,7 +151,7 @@
       </div>
         </div>
         <div class="indent">
-      <h3>2.3 <a name="sect-ID0E5H">Proposing compression parameters</a></h3>
+      <h3>2.3 <a name="sect-ID0EPAAC">Proposing compression parameters</a></h3>
             <p class="" style="">
                 When the client decides to activate EXI compression, it sends a <span class="strong">setup</span> stanza containing parameter proposals to the server as follows:
             </p>
@@ -193,7 +194,7 @@
 			</p>
         </div>
         <div class="indent">
-      <h3>2.4 <a name="sect-ID0EUBAC">Uploading new schema files</a></h3>
+      <h3>2.4 <a name="sect-ID0EECAC">Uploading new schema files</a></h3>
             <p class="" style="">
                 If the server lacks information about a schema file, it is specified in the response through the <span class="strong">missingSchema</span> elements. At this point, the client can
 				either choose to accept that these schema files are not available, making compression less efficient, or choose to upload the missing schema files to the server. Of course,
@@ -207,7 +208,7 @@
       <div class="indent">
         <pre class="prettyprint">
                 
-    &lt;uploadSchema xmlns='http://jabber.org/protocol/compress/exi'&gt;
+    &lt;uploadSchema xmlns='http://jabber.org/protocol/compress/exi' contentType='Text'&gt;
         PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjx4czpzY2hlbWENCiAgICB4
         bWxuczp4cz0naHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEnDQogICAgdGFyZ2V0TmFt
         ZXNwYWNlPSd1cm46eG1wcDpzbjpwcm92aXNpb25pbmcnDQogICAgeG1sbnM9J3Vybjp4bXBwOnNu
@@ -256,8 +257,103 @@
                 The client in turn can check this attribute as a quick way to check if agreement exists.
             </p>
         </div>
+		<div class="indent">
+      <h3>2.5 <a name="sect-ID0E1DAC">Uploading compressed schema files</a></h3>
+			<p class="" style="">
+				The <span class="strong">uploadSchema</span> command has an optional attribute called <span class="strong">contentType</span> that can be used to send different types of documents 
+				to the server. This is not a MIME content type, but an enumeration with the following options:
+			</p>
+			<div class="indent">
+        <p class="caption"><a name="table-1"></a>Table 1: contentType values</p>
+        <table border="1" cellpadding="3" cellspacing="0">
+				<tr class="body">
+					<th colspan="" rowspan="">Value</th>
+					<th colspan="" rowspan="">Description</th>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">Text</td>
+					<td colspan="" rowspan="">The schema is sent as plain text. If no encoding is provided in the XML header of the schema file, UTF-8 encoding is assumed. This is the default value.</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">ExiBody</td>
+					<td colspan="" rowspan="">The schema file is sent as an EXI compressed file, but only the body is sent. *</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">ExiDocument</td>
+					<td colspan="" rowspan="">The schema file is sent as an EXI compressed file. The entire file, including Exi header is provided. *</td>
+				</tr>
+			</table>
+      </div>
+			<p class="" style="">
+				(*) These options assume the following set of default EXI options are used. It is assumed the XMPP server has more capabilities than the client, so the following
+				set of options must be supported by the XMPP server. The schema files can be precompressed and stored as binary files on the client for easier transmission.
+			</p>
+			<div class="indent">
+        <p class="caption"><a name="table-2"></a>Table 2: Default EXI options</p>
+        <table border="1" cellpadding="3" cellspacing="0">
+				<tr class="body">
+					<th colspan="" rowspan="">Option</th>
+					<th colspan="" rowspan="">Default value</th>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">Version</td>
+					<td colspan="" rowspan="">1</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">alignment</td>
+					<td colspan="" rowspan="">bit-packed</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">compression</td>
+					<td colspan="" rowspan="">false</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">strict</td>
+					<td colspan="" rowspan="">false</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">fragment</td>
+					<td colspan="" rowspan="">false</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">preserve</td>
+					<td colspan="" rowspan="">all false</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">selfContained</td>
+					<td colspan="" rowspan="">false</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">schemaId</td>
+					<td colspan="" rowspan="">No schema</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">datatypeRepresentationMap</td>
+					<td colspan="" rowspan="">No map</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">blockSize</td>
+					<td colspan="" rowspan="">1000000 (one million)</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">valueMaxLength</td>
+					<td colspan="" rowspan="">unbounded</td>
+				</tr>
+				<tr class="body">
+					<td colspan="" rowspan="">valuePartitionCapacity</td>
+					<td colspan="" rowspan="">unbounded</td>
+				</tr>
+			</table>
+      </div>
+			<p class="" style="">
+				Since EXI compression does not perserve the extact binary representation of the schema file (for instance it doesn't preserve white space), the server
+				cannot correctly compute byte size and an MD5 hash for the file. Therefore, the client needs to provide this information in the <span class="strong">uploadSchema</span>
+				command using the <span class="strong">bytes</span> and <span class="strong">md5Hash</span> attributes. They are mandatory in case EXI compressed schema files are uploaded to the
+				server. Also note that the byte length and MD5 Hash should be computed on the original XML Schema file, not the compressed or decompressed version.
+			</p>
+		</div>
         <div class="indent">
-      <h3>2.5 <a name="sect-ID0EKDAC">Downloading new schema files on server</a></h3>
+      <h3>2.6 <a name="sect-ID0E1KAC">Downloading new schema files on server</a></h3>
             <p class="" style="">
                 As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <span class="strong">downloadSchema</span>
                 command, as follows:
@@ -349,7 +445,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>2.6 <a name="sect-ID0EVFAC">Start compression</a></h3>
+      <h3>2.7 <a name="sect-ID0EFNAC">Start compression</a></h3>
             <p class="" style="">
                 When EXI option negotiation has been completed, the client can tell the server that it is ready to start compression. It does this using the normal <span class="strong">compress</span>
                 stanza, as follows:
@@ -375,13 +471,14 @@
       </div>
             <p class="" style="">
                 When the client receives acknowledgement that the compression method has been accepted, it restarts the stream, as explained in 
-                <a href="http://xmpp.org/extensions/xep-0138.html#usecase">XEP 0138</a>.
+                <a href="http://xmpp.org/extensions/xep-0138.html#usecase">XEP 0138</a>, except that it <span class="strong">must not</span> resend the <span class="strong">&lt;stream&gt;</span>
+				start element sequence. Similarly, the client must not send a <span class="strong">&lt;/stream&gt;</span> element when closing the session. Closing the connection is sufficient.
             </p>
         </div>
     <h2>3.
        <a name="impl">Implementation Notes</a></h2>
         <div class="indent">
-      <h3>3.1 <a name="sect-ID0EYGAC">EXI options</a></h3>
+      <h3>3.1 <a name="sect-ID0EOOAC">EXI options</a></h3>
             <p class="" style="">
                 The following segment is taken from the <a href="http://www.w3.org/TR/exi/#options">EXI specification</a>. It describes the different EXI options that need to be negotiated before enabling EXI.
             </p>
@@ -429,7 +526,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.2 <a name="sect-ID0EYKAC">Transmission of EXI bodies and Session-wide Buffers</a></h3>
+      <h3>3.2 <a name="sect-ID0EPCAE">Transmission of EXI bodies and Session-wide Buffers</a></h3>
 			<p class="" style="">
 				The transmission of EXI-compressed stanzas takes the form of a sequence of EXI bodies. In order for the recipient to be able to correctly interpret these incoming
 				EXI bodies, the sender is required to flush any pending bits at the end of the last End Document (ED) event for each stanza and then send any pending bytes available
@@ -466,7 +563,7 @@
             </p>
         </div>
 		<div class="indent">
-      <h3>3.3 <a name="sect-ID0E3LAC">Preserving prefixes</a></h3>
+      <h3>3.3 <a name="sect-ID0ETDAE">Preserving prefixes</a></h3>
 			<p class="" style="">
 				Normally, prefixes are not preserved during EXI compression and decompression. If the communicating parties (sending client, XMPP server(s) and receiving clients)
 				interpret incoming stanzas and content according to namespace, this should be sufficient. However, some implementations do not check namespaces, but prefix names used.
@@ -482,7 +579,7 @@
 			</p>
 		</div>
         <div class="indent">
-      <h3>3.4 <a name="sect-ID0EQMAC">Networks containing clients having limited memory</a></h3>
+      <h3>3.4 <a name="sect-ID0EHEAE">Networks containing clients having limited memory</a></h3>
             <p class="" style="">
                 To successfully implement a network with clients having limited memory, such as sensor networks, care should be taken to make sure necessary schema files are
                 preinstalled on the server, to avoid the necessity to upload schema files from the clients. Clients with limited memory might be unable to perform this task.
@@ -493,7 +590,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.5 <a name="sect-ID0E4MAC">Caching schema files</a></h3>
+      <h3>3.5 <a name="sect-ID0EUEAE">Caching schema files</a></h3>
             <p class="" style="">
                 Schema files uploaded to the server should be cached on the server in some kind of schema repository. If memory is limited on the server, schema files should be
                 sorted by last access. Schema files with the oldest last access timestamp could be removed to maintain the cache within an approved cache size.
@@ -506,7 +603,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.6 <a name="sect-ID0ETNAC">Uploading vs. Downloading schemas</a></h3>
+      <h3>3.6 <a name="sect-ID0EKFAE">Uploading vs. Downloading schemas</a></h3>
             <p class="" style="">
                 When the server lacks information about a given XML schema, the client has two options for updating the server. Either it uploads the schema, or it asks the server to
                 download one.
@@ -522,7 +619,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.7 <a name="sect-ID0EEOAC">Server decompression and recompression vs. binary forwarding</a></h3>
+      <h3>3.7 <a name="sect-ID0E2FAE">Server decompression and recompression vs. binary forwarding</a></h3>
             <p class="" style="">
                 If two XMPP clients communicate with each other through an XMPP server, and both clients use EXI compression, the server must only forward
                 binary packets if both EXI compressed channels have exactly the same setup. If any parameter is different, the server MUST always recompress
@@ -542,7 +639,7 @@
         </p>
     <h2>5.
        <a name="iana">IANA Considerations</a></h2>
-        <p class="" style="">This document requires no interaction with the <span class="ref" style=""><a href="http://www.iana.org/">Internet Assigned Numbers Authority (IANA)</a></span>  [<a href="#nt-ID0EJPAC">3</a>].</p>
+        <p class="" style="">This document requires no interaction with the <span class="ref" style=""><a href="http://www.iana.org/">Internet Assigned Numbers Authority (IANA)</a></span>  [<a href="#nt-ID0EAHAE">3</a>].</p>
     <h2>6.
        <a name="registrar">XMPP Registrar Considerations</a></h2>
         <p class="" style="">REQUIRED.</p>
@@ -739,7 +836,25 @@
         &lt;/xs:restriction&gt;
     &lt;/xs:simpleType&gt;
  
-    &lt;xs:element name='uploadSchema' type='xs:base64Binary'/&gt;
+	&lt;xs:element name='uploadSchema'&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:simpleContent&gt;
+				&lt;xs:extension base='xs:base64Binary'&gt;
+					&lt;xs:attribute name='contentType' type='ContentType' use='optional' default='Text'/&gt;
+					&lt;xs:attribute name='bytes' type='xs:positiveInteger' use='optional'/&gt;
+					&lt;xs:attribute name='md5Hash' type='MD5Hash' use='optional'/&gt;
+				&lt;/xs:extension&gt;
+			&lt;/xs:simpleContent&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+ 
+	&lt;xs:simpleType name='ContentType'&gt;
+		&lt;xs:restriction base='xs:string'&gt;
+			&lt;xs:enumeration value='Text'/&gt;
+			&lt;xs:enumeration value='ExiBody'/&gt;
+			&lt;xs:enumeration value='ExiDocument'/&gt;
+		&lt;/xs:restriction&gt;
+	&lt;/xs:simpleType&gt;
  
     &lt;xs:element name='downloadSchema' type='DownloadSchema'/&gt;
     &lt;xs:element name='downloadSchemaResponse' type='DownloadSchemaResponse'/&gt;
@@ -790,7 +905,7 @@
     </div>
     <h2>8.
        <a name="ack">Acknowledgements</a></h2>
-        <p class="" style="">Thanks to Joachim Lindborg, Yusuke Doi, Takuki Kamiya, Tina Beckman, Karin Forsell and Jeff Freund for all valuable feedback.</p>
+        <p class="" style="">Thanks to Joachim Lindborg, Yusuke Doi, Takuki Kamiya, Tina Beckman, Karin Forsell, Jeff Freund and Rumen Kyusakov for all valuable feedback.</p>
     <hr><a name="appendices"></a><h2>Appendices</h2>
     <hr><a name="appendix-docinfo"></a><h3>Appendix A: Document Information</h3>
     <p class="indent">
@@ -801,8 +916,8 @@
             <a href="http://xmpp.org/extensions/xep-0001.html#states-ProtoXEP">ProtoXEP</a><br>
             Type:
             <a href="http://xmpp.org/extensions/xep-0001.html#types-Standards Track">Standards Track</a><br>
-            Version: 0.0.3<br>
-            Last Updated: 2013-03-15<br>
+            Version: 0.0.4<br>
+            Last Updated: 2013-03-19<br>
                 Approving Body: <a href="http://xmpp.org/council/">XMPP Council</a><br>Dependencies: XMPP Core, XEP-0001, XEP-0138<br>
                 Supersedes: None<br>
                 Superseded By: None<br>
@@ -836,13 +951,18 @@
     <p class="indent">The following requirements keywords as used in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>: "MUST", "SHALL", "REQUIRED"; "MUST NOT", "SHALL NOT"; "SHOULD", "RECOMMENDED"; "SHOULD NOT", "NOT RECOMMENDED"; "MAY", "OPTIONAL".</p>
     <hr><a name="appendix-notes"></a><h3>Appendix G: Notes</h3>
     <div class="indent">
-      <p><a name="nt-ID0EEE">1</a>. Efficient XML Interchange (EXI) Format &lt;<a href="http://www.w3.org/TR/exi/">http://www.w3.org/TR/exi/</a>&gt;.</p>
-      <p><a name="nt-ID0E2G">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
-      <p><a name="nt-ID0EJPAC">3</a>. The Internet Assigned Numbers Authority (IANA) is the central coordinator for the assignment of unique parameter values for Internet protocols, such as port numbers and URI schemes. For further information, see &lt;<a href="http://www.iana.org/">http://www.iana.org/</a>&gt;.</p>
+      <p><a name="nt-ID0EUE">1</a>. Efficient XML Interchange (EXI) Format &lt;<a href="http://www.w3.org/TR/exi/">http://www.w3.org/TR/exi/</a>&gt;.</p>
+      <p><a name="nt-ID0ELH">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
+      <p><a name="nt-ID0EAHAE">3</a>. The Internet Assigned Numbers Authority (IANA) is the central coordinator for the assignment of unique parameter values for Internet protocols, such as port numbers and URI schemes. For further information, see &lt;<a href="http://www.iana.org/">http://www.iana.org/</a>&gt;.</p>
     </div>
     <hr><a name="appendix-revs"></a><h3>Appendix H: Revision History</h3>
     <p>Note: Older versions of this specification might be available at <a href="http://xmpp.org/extensions/attic/">http://xmpp.org/extensions/attic/</a></p>
     <div class="indent">
+      <h4>Version 0.0.4 (2013-03-19)</h4>
+      <div class="indent">
+				<p class="" style="">Added support for uploading EXI-compressed schema files.</p>
+			 (pwa)
+    </div>
       <h4>Version 0.0.3 (2013-03-15)</h4>
       <div class="indent">
 				<p class="" style="">Added definition: EXI body.</p>
