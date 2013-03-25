@@ -7,7 +7,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
     <header>
-        <title>XEP - Efficient XML Interchange (EXI) Format</title>
+        <title>Efficient XML Interchange (EXI) Format</title>
         <abstract>This specification describes how EXI compression can be used in XMPP networks.</abstract>
         <legal>
             <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2013 by the XMPP Standards Foundation (XSF).</copyright>
