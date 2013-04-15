@@ -38,6 +38,21 @@
             <jid>peter.waher@jabber.org</jid>
             <uri>http://se.linkedin.com/pub/peter-waher/1a/71b/a29/</uri>
         </author>
+		<author>
+			<firstname>Yusuke</firstname>
+			<surname>DOI</surname>
+			<email>yusuke.doi@toshiba.co.jp</email>
+			<jid><!--TODO--></jid>
+			<uri><!--TODO--></uri>
+		</author>
+		<revision>
+			<version>0.0.5</version>
+			<date>?</date>
+			<initials>pwa, ydo</initials>
+			<remark>
+				<p>Added support for a binary binding.</p>
+			</remark>
+		</revision>
 		<revision>
 			<version>0.0.4</version>
 			<date>2013-03-19</date>
@@ -105,6 +120,16 @@
             describing the format of the expected XML. Since the server is not supposed to know all possible XML schemas, a mechanism is provided in this document whereby schemas can be
             interchanged, so that the server can adapt its compression to the needs of the client.
         </p>
+		<p>
+			EXI can be used through two bindings:
+		</p>
+		<ul>
+			<li>Normal XMPP Port</li>
+			<li>Dedicated Binary EXI Port</li>
+		</ul>
+		<p>
+			Both will be described in turn, in the following sections.
+		</p>
     </section1>
     <section1 topic='Use Cases' anchor='usecases'>
         <section2 topic='Detecting support'>
@@ -119,20 +144,28 @@
             <method>zlib</method>
             <method>lzw</method>
             <method>exi</method>
+            <method>exi:54321</method>
         </compression>
     </stream:features>]]>
             </example>
             <p>
-                Support for EXI compression is detected by the existence of the <strong>exi</strong> compression method in the <strong>features</strong> stanza.
-            </p>
+                Support for EXI compression through the normal XMPP port is detected by the existence of the <strong>exi</strong> compression method in the <strong>features</strong> stanza.
+				If a port (static or dynamic) is available for a dedicated binary EXI/XMPP binding, this can be detected by the existence of the <strong>exi:PORT</strong> compression method,
+				where PORT is replaced by the port number used.
+			</p>
+			<p>
+				<strong>Note:</strong> If the client already knows the port number of the dedicated binary EXI/XMPP binding, it can connect there directly, without the need to check the
+				server features using the normal XMPP port.
+			</p>
         </section2>
-        <section2 topic='Invalid setup'>
-            <p>
-                If the client attempts to activate an EXI stream at this point, before the negotiation of EXI properties has been performed, the server must respond with a
-                <strong>setup-failed</strong> response.
-            </p>
-            <example caption='Invalid setup'>
-                <![CDATA[
+		<section2 topic='Normal XMPP port binding use cases'>
+			<section3 topic='Invalid setup'>
+				<p>
+					If the client attempts to activate an EXI stream at this point, before the negotiation of EXI properties has been performed, the server must respond with a
+					<strong>setup-failed</strong> response.
+				</p>
+				<example caption='Invalid setup'>
+					<![CDATA[
     <compress xmlns='http://jabber.org/protocol/compress'>
         <method>exi</method>
     </compress>
@@ -140,56 +173,56 @@
     <failure xmlns='http://jabber.org/protocol/compress'>
         <setup-failed/>
     </failure>]]>
-            </example>
-        </section2>
-        <section2 topic='Proposing compression parameters'>
-            <p>
-                When the client decides to activate EXI compression, it sends a <strong>setup</strong> stanza containing parameter proposals to the server as follows:
-            </p>
-            <example caption='Proposing compression parameters'>
-                <![CDATA[
+				</example>
+			</section3>
+			<section3 topic='Proposing compression parameters'>
+				<p>
+					When the client decides to activate EXI compression, it sends a <strong>setup</strong> stanza containing parameter proposals to the server as follows:
+				</p>
+				<example caption='Proposing compression parameters'>
+					<![CDATA[
     <setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
         <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
         <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setup>]]>
-            </example>
-            <p>
-                The server in turn responds with a <strong>setupResponse</strong> stanza containing the parameters it can accept, based on the initial values provided by the client.
-                Any buffer sizes, etc., may have been changed, but only lowered, never raised.
-            </p>
-            <example caption='Unable to accommodate parameters'>
-                <![CDATA[
+				</example>
+				<p>
+					The server in turn responds with a <strong>setupResponse</strong> stanza containing the parameters it can accept, based on the initial values provided by the client.
+					Any buffer sizes, etc., may have been changed, but only lowered, never raised.
+				</p>
+				<example caption='Unable to accommodate parameters'>
+					<![CDATA[
     <setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true'
                    blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
         <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
         <missingSchema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setupResponse>]]>
-            </example>
-            <p>
-                <strong>Note:</strong> Schema files are identified using three properties: Its <strong>target namespace</strong>, its <strong>byte size</strong> and its
-                <strong>MD5 hash</strong>. The <strong>MD5 hash</strong> provides a way to detect small changes in the file, even if the byte size and namespace are the same.
-            </p>
-            <p>
-                Schema files that the server does not have (based on namespace, byte size and MD5 hash) are marked with the <strong>missingSchema</strong> element instead of the 
-                normal <strong>schema</strong> element.
-            </p>
-            <p>
-				At this point the client can choose to abort the EXI enablement sequence, if it cannot accommodate itself with the proposed parameter settings provided by the server.
-				The XMPP session will continue to work in its current state. Aborting does not require taking further action from the client.
-			</p>
-        </section2>
-        <section2 topic='Uploading new schema files'>
-            <p>
-                If the server lacks information about a schema file, it is specified in the response through the <strong>missingSchema</strong> elements. At this point, the client can
-				either choose to accept that these schema files are not available, making compression less efficient, or choose to upload the missing schema files to the server. Of course,
-				uploading schema files would require the device to have sufficient buffers and memory to store and upload the schema files in the first place. (If it is not possible to upload the
-				schema files, consideration should be given to installing the schema files manually at the server.)
-			</p>
-            <p>
-                To upload a schema file, the client simply sends the schema file using an <strong>uploadSchema</strong> element, as follows:
-            </p>
-            <example caption='Uploading schema file'>
-                <![CDATA[
+				</example>
+				<p>
+					<strong>Note:</strong> Schema files are identified using three properties: Its <strong>target namespace</strong>, its <strong>byte size</strong> and its
+					<strong>MD5 hash</strong>. The <strong>MD5 hash</strong> provides a way to detect small changes in the file, even if the byte size and namespace are the same.
+				</p>
+				<p>
+					Schema files that the server does not have (based on namespace, byte size and MD5 hash) are marked with the <strong>missingSchema</strong> element instead of the
+					normal <strong>schema</strong> element.
+				</p>
+				<p>
+					At this point the client can choose to abort the EXI enablement sequence, if it cannot accommodate itself with the proposed parameter settings provided by the server.
+					The XMPP session will continue to work in its current state. Aborting does not require taking further action from the client.
+				</p>
+			</section3>
+			<section3 topic='Uploading new schema files'>
+				<p>
+					If the server lacks information about a schema file, it is specified in the response through the <strong>missingSchema</strong> elements. At this point, the client can
+					either choose to accept that these schema files are not available, making compression less efficient, or choose to upload the missing schema files to the server. Of course,
+					uploading schema files would require the device to have sufficient buffers and memory to store and upload the schema files in the first place. (If it is not possible to upload the
+					schema files, consideration should be given to installing the schema files manually at the server.)
+				</p>
+				<p>
+					To upload a schema file, the client simply sends the schema file using an <strong>uploadSchema</strong> element, as follows:
+				</p>
+				<example caption='Uploading schema file'>
+					<![CDATA[
     <uploadSchema xmlns='http://jabber.org/protocol/compress/exi' contentType='Text'>
         PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjx4czpzY2hlbWENCiAgICB4
         bWxuczp4cz0naHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEnDQogICAgdGFyZ2V0TmFt
@@ -200,221 +233,225 @@
         dmlsZWdlJz4NCgkJPHhzOmF0dHJpYnV0ZSBuYW1lPSdpZCcgdHlwZT0nUHJpdmlsZWdlSWQnIHVz
         ZT0ncmVxdWlyZWQnLz4NCgk8L3hzOmNvbXBsZXhUeXBlPg0KIA0KPC94czpzY2hlbWE+DQo=
     </uploadSchema>]]>
-            </example>
-            <p>
-                The schema itself is sent using base64 encoding to the server. This is to make sure a binary exact copy is transferred, maintaining encoding, processing instructions, etc. The
-                server then computes the <strong>target namespace</strong>, <strong>byte size</strong> and <strong>MD5 Hash</strong> from the sent schema file.
-            </p>
-            <p>
-                If the client desires, it can test the EXI setup again. This is optional, but can be used to test that uploading the schema files, and any new property values
-                are accepted by the server.
-            </p>
-            <example caption='Testing newly uploaded schema files'>
-                <![CDATA[
+				</example>
+				<p>
+					The schema itself is sent using base64 encoding to the server. This is to make sure a binary exact copy is transferred, maintaining encoding, processing instructions, etc. The
+					server then computes the <strong>target namespace</strong>, <strong>byte size</strong> and <strong>MD5 Hash</strong> from the sent schema file.
+				</p>
+				<p>
+					If the client desires, it can test the EXI setup again. This is optional, but can be used to test that uploading the schema files, and any new property values
+					are accepted by the server.
+				</p>
+				<example caption='Testing newly uploaded schema files'>
+					<![CDATA[
     <setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
         <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
         <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setup>]]>
-            </example>
-            <p>
-                And the server should then respond:
-            </p>
-            <example caption='Agreement between client and server'>
-                <![CDATA[
+				</example>
+				<p>
+					And the server should then respond:
+				</p>
+				<example caption='Agreement between client and server'>
+					<![CDATA[
     <setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' 
                    blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100' agreement='true'>
         <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
         <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setupResponse>]]>
-            </example>
-            <p>
-                Note the <strong>agreement</strong> attribute in the response this time. The server must set this attribute to true if it agrees with the proposal from the client.
-                The client in turn can check this attribute as a quick way to check if agreement exists.
-            </p>
-        </section2>
-		<section2 topic='Uploading compressed schema files'>
-			<p>
-				The <strong>uploadSchema</strong> command has an optional attribute called <strong>contentType</strong> that can be used to send different types of documents 
-				to the server. This is not a MIME content type, but an enumeration with the following options:
-			</p>
-			<table caption='contentType values'>
-				<tr>
-					<th>Value</th>
-					<th>Description</th>
-				</tr>
-				<tr>
-					<td>Text</td>
-					<td>The schema is sent as plain text. If no encoding is provided in the XML header of the schema file, UTF-8 encoding is assumed. This is the default value.</td>
-				</tr>
-				<tr>
-					<td>ExiBody</td>
-					<td>The schema file is sent as an EXI compressed file, but only the body is sent. *</td>
-				</tr>
-				<tr>
-					<td>ExiDocument</td>
-					<td>The schema file is sent as an EXI compressed file. The entire file, including Exi header is provided. *</td>
-				</tr>
-			</table>
-			<p>
-				(*) These options assume the following set of default EXI options are used. It is assumed the XMPP server has more capabilities than the client, so the following
-				set of options must be supported by the XMPP server. The schema files can be precompressed and stored as binary files on the client for easier transmission.
-			</p>
-			<table caption='Default EXI options'>
-				<tr>
-					<th>Option</th>
-					<th>Default value</th>
-				</tr>
-				<tr>
-					<td>Version</td>
-					<td>1</td>
-				</tr>
-				<tr>
-					<td>alignment</td>
-					<td>bit-packed</td>
-				</tr>
-				<tr>
-					<td>compression</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>strict</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>fragment</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>preserve</td>
-					<td>all false</td>
-				</tr>
-				<tr>
-					<td>selfContained</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>schemaId</td>
-					<td>No schema</td>
-				</tr>
-				<tr>
-					<td>datatypeRepresentationMap</td>
-					<td>No map</td>
-				</tr>
-				<tr>
-					<td>blockSize</td>
-					<td>1000000 (one million)</td>
-				</tr>
-				<tr>
-					<td>valueMaxLength</td>
-					<td>unbounded</td>
-				</tr>
-				<tr>
-					<td>valuePartitionCapacity</td>
-					<td>unbounded</td>
-				</tr>
-			</table>
-			<p>
-				Since EXI compression does not perserve the extact binary representation of the schema file (for instance it doesn't preserve white space), the server
-				cannot correctly compute byte size and an MD5 hash for the file. Therefore, the client needs to provide this information in the <strong>uploadSchema</strong>
-				command using the <strong>bytes</strong> and <strong>md5Hash</strong> attributes. They are mandatory in case EXI compressed schema files are uploaded to the
-				server. Also note that the byte length and MD5 Hash should be computed on the original XML Schema file, not the compressed or decompressed version.
-			</p>
-		</section2>
-        <section2 topic='Downloading new schema files on server'>
-            <p>
-                As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <strong>downloadSchema</strong>
-                command, as follows:
-            </p>
-            <example caption='Downloading new schema files on server'>
-                <![CDATA[
+				</example>
+				<p>
+					Note the <strong>agreement</strong> attribute in the response this time. The server must set this attribute to true if it agrees with the proposal from the client.
+					The client in turn can check this attribute as a quick way to check if agreement exists.
+				</p>
+			</section3>
+			<section3 topic='Uploading compressed schema files'>
+				<p>
+					The <strong>uploadSchema</strong> command has an optional attribute called <strong>contentType</strong> that can be used to send different types of documents
+					to the server. This is not a MIME content type, but an enumeration with the following options:
+				</p>
+				<table caption='contentType values'>
+					<tr>
+						<th>Value</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>Text</td>
+						<td>The schema is sent as plain text. If no encoding is provided in the XML header of the schema file, UTF-8 encoding is assumed. This is the default value.</td>
+					</tr>
+					<tr>
+						<td>ExiBody</td>
+						<td>The schema file is sent as an EXI compressed file, but only the body is sent. *</td>
+					</tr>
+					<tr>
+						<td>ExiDocument</td>
+						<td>The schema file is sent as an EXI compressed file. The entire file, including Exi header is provided. *</td>
+					</tr>
+				</table>
+				<p>
+					(*) These options assume the following set of default EXI options are used. It is assumed the XMPP server has more capabilities than the client, so the following
+					set of options must be supported by the XMPP server. The schema files can be precompressed and stored as binary files on the client for easier transmission.
+				</p>
+				<table caption='Default EXI options'>
+					<tr>
+						<th>Option</th>
+						<th>Default value</th>
+					</tr>
+					<tr>
+						<td>Version</td>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td>alignment</td>
+						<td>bit-packed</td>
+					</tr>
+					<tr>
+						<td>compression</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>strict</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>fragment</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>preserve</td>
+						<td>all false</td>
+					</tr>
+					<tr>
+						<td>selfContained</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>schemaId</td>
+						<td>No schema</td>
+					</tr>
+					<tr>
+						<td>datatypeRepresentationMap</td>
+						<td>No map</td>
+					</tr>
+					<tr>
+						<td>blockSize</td>
+						<td>1000000 (one million)</td>
+					</tr>
+					<tr>
+						<td>valueMaxLength</td>
+						<td>unbounded</td>
+					</tr>
+					<tr>
+						<td>valuePartitionCapacity</td>
+						<td>unbounded</td>
+					</tr>
+				</table>
+				<p>
+					Since EXI compression does not perserve the extact binary representation of the schema file (for instance it doesn't preserve white space), the server
+					cannot correctly compute byte size and an MD5 hash for the file. Therefore, the client needs to provide this information in the <strong>uploadSchema</strong>
+					command using the <strong>bytes</strong> and <strong>md5Hash</strong> attributes. They are mandatory in case EXI compressed schema files are uploaded to the
+					server. Also note that the byte length and MD5 Hash should be computed on the original XML Schema file, not the compressed or decompressed version.
+				</p>
+			</section3>
+			<section3 topic='Downloading new schema files on server'>
+				<p>
+					As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <strong>downloadSchema</strong>
+					command, as follows:
+				</p>
+				<example caption='Downloading new schema files on server'>
+					<![CDATA[
     <downloadSchema xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd'/>]]>
-            </example>
-            <p>
-                The server tries to download the schema by itself, and then computes the <strong>target namespace</strong>, <strong>byte size</strong> and <strong>MD5 Hash</strong> 
-                from the downloaded schema.
-            </p>
-            <p>
-                When the schema has been downloaded, the following successful download response is returned:
-            </p>
-            <example caption='Schema successfully downloaded'>
-                <![CDATA[
+				</example>
+				<p>
+					The server tries to download the schema by itself, and then computes the <strong>target namespace</strong>, <strong>byte size</strong> and <strong>MD5 Hash</strong>
+					from the downloaded schema.
+				</p>
+				<p>
+					When the schema has been downloaded, the following successful download response is returned:
+				</p>
+				<example caption='Schema successfully downloaded'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='true'/>]]>
-            </example>
-            <p>
-                If an HTTP error occurred while trying to download the schema, a response as follows is returned:
-            </p>
-            <example caption='HTTP Error'>
-                <![CDATA[
+				</example>
+				<p>
+					If an HTTP error occurred while trying to download the schema, a response as follows is returned:
+				</p>
+				<example caption='HTTP Error'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
         <httpError code='404' message='NotFound'/>
     </downloadSchemaResponse>]]>
-            </example>
-            <p>
-                If the URL could not be resolved, the following response is returned:
-            </p>
-            <example caption='Invalid URL'>
-                <![CDATA[
+				</example>
+				<p>
+					If the URL could not be resolved, the following response is returned:
+				</p>
+				<example caption='Invalid URL'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='urk://example.com/schema.xsd' result='false'>
         <invalidUrl message='Unrecognized schema.'/>
     </downloadSchemaResponse>]]>
-            </example>
-            <p>
-                If a timeout occurred during the download attempt, the following response is returned:
-            </p>
-            <example caption='Timeout'>
-                <![CDATA[
+				</example>
+				<p>
+					If a timeout occurred during the download attempt, the following response is returned:
+				</p>
+				<example caption='Timeout'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
         <timeout message='No response returned.'/>
     </downloadSchemaResponse>]]>
-            </example>
-            <p>
-                If the url points to something that is not a schema, the following response is returned:
-            </p>
-            <example caption='Invalid Content Type'>
-                <![CDATA[
+				</example>
+				<p>
+					If the url points to something that is not a schema, the following response is returned:
+				</p>
+				<example caption='Invalid Content Type'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
         <invalidContentType contentTypeReturned='text/html'/>
     </downloadSchemaResponse>]]>
-            </example>
-            <p>
-                If an error occurs that is unforeseen by this specification, the server can simply respond with a generic error message, as follows:
-            </p>
-            <example caption='Other types of errors'>
-                <![CDATA[
+				</example>
+				<p>
+					If an error occurs that is unforeseen by this specification, the server can simply respond with a generic error message, as follows:
+				</p>
+				<example caption='Other types of errors'>
+					<![CDATA[
     <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
         <error message='No free space left.'/>
     </downloadSchemaResponse>]]>
-            </example>
-            <p>
-                <strong>Note:</strong> Downloading a schema, might download a version which does not correspond to the desired version
-                of the schema. It's more important in this case so the client checks that the server actually has the version of the schema required by the client.
-            </p>
-        </section2>
-        <section2 topic='Start compression'>
-            <p>
-                When EXI option negotiation has been completed, the client can tell the server that it is ready to start compression. It does this using the normal <strong>compress</strong>
-                stanza, as follows:
-            </p>
-            <example>
-                <![CDATA[
+				</example>
+				<p>
+					<strong>Note:</strong> Downloading a schema, might download a version which does not correspond to the desired version
+					of the schema. It's more important in this case so the client checks that the server actually has the version of the schema required by the client.
+				</p>
+			</section3>
+			<section3 topic='Start compression'>
+				<p>
+					When EXI option negotiation has been completed, the client can tell the server that it is ready to start compression. It does this using the normal <strong>compress</strong>
+					stanza, as follows:
+				</p>
+				<example>
+					<![CDATA[
     <compress xmlns='http://jabber.org/protocol/compress'>
         <method>exi</method>
     </compress>]]>
-            </example>
-            <p>
-                The server now has the necessary knowledge on how the EXI engine should be configured for the current session and it responds as follows:
-            </p>
-            <example caption='Compression accepted'>
-                <![CDATA[
+				</example>
+				<p>
+					The server now has the necessary knowledge on how the EXI engine should be configured for the current session and it responds as follows:
+				</p>
+				<example caption='Compression accepted'>
+					<![CDATA[
     <compressed xmlns='http://jabber.org/protocol/compress'/>]]>
-            </example>
-            <p>
-                When the client receives acknowledgement that the compression method has been accepted, it restarts the stream, as explained in 
-                <link url='http://xmpp.org/extensions/xep-0138.html#usecase'>XEP 0138</link>, except that it <strong>must not</strong> resend the <strong>&lt;stream&gt;</strong>
-				start element sequence. Similarly, the client must not send a <strong>&lt;/stream&gt;</strong> element when closing the session. Closing the connection is sufficient.
-            </p>
-        </section2>
-    </section1>
+				</example>
+				<p>
+					When the client receives acknowledgement that the compression method has been accepted, it restarts the stream, as explained in
+					<link url='http://xmpp.org/extensions/xep-0138.html#usecase'>XEP 0138</link>, except that it <strong>must not</strong> resend the <strong>&lt;stream&gt;</strong>
+					start element sequence. Similarly, the client must not send a <strong>&lt;/stream&gt;</strong> element when closing the session. Closing the connection is sufficient.
+				</p>
+			</section3>
+		</section2>
+		<section2 topic='Binary EXP/XMPP port binding use cases'>
+			<!--TODO-->
+		</section2>
+	</section1>
     <section1 topic='Implementation Notes' anchor='impl'>
         <section2 topic='EXI options'>
             <p>
@@ -571,7 +608,7 @@
         </p>
     </section1>
     <section1 topic='IANA Considerations' anchor='iana'>
-        <p>This document requires no interaction with &IANA;.</p>
+        <p>A static port number for a dedicated binary EXI/XMPP binding should be requested from IANA.</p>
     </section1>
     <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
         <p>REQUIRED.</p>
