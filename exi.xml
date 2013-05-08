@@ -136,7 +136,18 @@
 		</p>
 	</section1>
 	<section1 topic='Use Cases' anchor='usecases'>
-		<section2 topic='Detecting support'>
+		<!-- TODO: [YD] can we have a summary section to desribe the use case? a short proposal is as follows 
+		     The section title of "Detecting support of EXI" is also modified to aligned with overall structure
+		-->
+		<section2 topic="Two approaches to use EXI">
+			<p>
+				There are two ways to use EXI to make efficient XMPP communication. As a basic mode, this section desribes 
+				&xep0138; based use case.
+				After that, alternative binding is also described. Alternative binding may not use &xep0138; based 
+				negotiation and clients can start EXI communication from the start of the stream.
+			</p>
+		</section2>
+		<section2 topic='Detecting support of EXI over XML-based XMPP'>
 			<p>
 				This XEP is based on &xep0138;. When the client connects to the XMPP Server, it will receive a list of features supported by the server:
 			</p>
@@ -464,7 +475,7 @@
 				alternative TCP port.
 			</p>
 			<p>
-				Typical steps of communication is as follows.
+				Typical steps of communication is as follows (based on RFC6120).
 			</p>
 			<!-- TODO: [PW] Perhaps a bit more descriptive with references and links for more info? It is an XMPP specification, but one cannot assume readers are familiar with details of DHCP, etc. -->
 			<!-- TODO: [PW] A flow chart would be great. I can embed it inline. -->
@@ -477,7 +488,7 @@
 				</li>
 				<li>
 					<p>
-						A DNS server tells a set of DNS RR to notify a server accepts EXI/XMPP binding (ex. SRV 10 10 15222 srv.example.net.)
+						A DNS server tells a set of DNS RR to notify a server accepts EXI/XMPP binding (ex. SRV 10 10 15222 srv.example.net.) (Optional: the DNS server may tell the version of the default schema supported by the server. Currently there is only one version and has no effect. For further discussion, see <link url="http://tools.ietf.org/html/draft-doi-exi-messaging-requirements-01">draft-doi-exi-messaging-requirement</link>.
 					</p>
 				</li>
 				<li>
@@ -486,7 +497,7 @@
 				<li>
 					<p>
 						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. For example, SD,SE(stream:stream)AT(from="foo@example.net")AT(to="srv.example.net")AT(version="1.0")AT(xml:lang="en") etc.
-						<!-- TODO: [PW] Is the stream header really important. Cannit not be assumed? Fragments could be sent independently without having to within the context of a stream element.-->
+						<!-- TODO: [PW] Is the stream header really important. Cannit not be assumed? Fragments could be sent independently without having to within the context of a stream element. [YD] response recorded as comment #9-->
 					</p>
 				</li>
 				<li>
@@ -499,7 +510,7 @@
 				</li>
 				<li>
 					<p>
-						If client needs to use different encoding option or schema than the default encoding options or <link url="#combo">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
+						If client needs to use different encoding option or schema than the default encoding options or <link url="#default">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
 					</p>
 				</li>
 				<li>
@@ -553,7 +564,7 @@
 					<li>fragment: false</li>
 					<li>preserve: all false</li>
 					<li>selfContained: false</li>
-					<li>schemaId: "X${TBD}.0" (XEP number of this document and revision 0)</li>
+					<li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li>
 					<li>datatypeReresentationMap: not exist</li>
 					<li>blockSize: N/A</li>
 					<li>valueMaxLength: 64</li>
@@ -596,7 +607,7 @@
 				</p>
 
 				<ul>
-					<li>alignment MUST be byte-alignment</li>
+					<li>alignment SHOULD be bit-packed or byte-alignment</li>
 					<li>compression SHOULD NOT be enabled</li>
 					<li>strict MAY be disabled</li>
 					<li>fragment SHOULD NOT be enabled</li>
@@ -776,6 +787,23 @@
 				settings are most common.
 			</p>
 		</section2>
+		<section2 topic="Snapshot Repository for Well-known Schemas" anchor='wellknown'>
+			<!-- [YD] -->
+			<!-- TODO: Should be in section Implementation Notes. This section is for the protocol schema, not the schemas used for compression. -->
+			<p>
+				Errata and other updates may happen to well-known schemas.  Slightest
+				modification to XML schemas may break interoperability of EXI
+				nodes. However, negotiating everything is not efficient. Well-known
+				and aged schemas that referred from the schema for EXI/XMPP shall be
+				snapshoted for use in EXI processors.
+				
+				<!-- TODO: [PW] Why not efficient? In terms of total amount of communication performed during a device's lifetime, its a very very small fraction (insignificant). 
+				This is a subjective opinion, termed in absolute phraseology. -->
+			</p>
+			<p>
+				Actual snapshot is located in (TBD-URL).
+			</p>
+		</section2>
 	</section1>
 	<section1 topic='Handling of XML Schema in EXI/XMPP Stream' anchor='schemaHandling'>
 		<!-- [YD] copied from yd's proposal TODO: requires discussion -->
@@ -792,40 +820,52 @@
 		specify the interface between the client and the server. -->
 		
 		<!-- TODO: [PW] All binary communication should be clearly shown in tables, so there's no ambiguity on how to interpret them. -->
-		<p>
-			Basically, EXI/XMPP stream MAY negotiate schema to be used in "next" stream.
-			(as in Peter's proposal)
-		</p>
-		<p>
-			Server-assigned local schemaId MAY be given in setupResponse, using 32
-			bits from LSB of a hash value with 'L' prefix. For example, if a
-			schema has md5Hash '18829242ca7a72a552a7e15af5b9e44d', then the schema
-			may be registered as 'Lf5b9e44d'. This schemaId is valid only with the
-			server and the server MAY use different value for a server-local
-			schemaId (apparent case is on hash collision, or some
-			manually-installed parmanent schema). Local schemaId SHOULD
-			NOT be reused. To make a combined schema ID, schemaIds used in
-			this XEP SHALL NOT contain plus sign ("+" ASCII 0x2b).
-		</p>
 		<section2 topic="SchemaID for (a combination of) registered XML schemas" anchor="schemaID">
 			<p>
+				In EXI binding, schemaId may be used to initiate a shortcut setup.
+				A schemaID SHALL contain only characters in [a-zA-Z0-9].
+				Initial character SHOULD be 'X' for XEP-based <link url="#wellknown">well-known schemas</link>,
+				'L' for server-local schema.
+			</p>
+			<p>
 				A schemaId corresponds to a schema-informed grammar created from a
-				schema. However, in XMPP use case, it is common to add an independent
+				schema. In XMPP use case, it is common to add an independent
 				schema as a schema for extension. Hence, a set of schema should be
 				used to define a EXI stream.
 			</p>
 			<p>
 				Combined schemaId is given by plus-delimited list of component schemaIds.
 				For example,
-				base schema defined in this document plus the example above will be:
+				base schema defined in this document plus the some locally-cached schema will be
+				something like:
 			</p>
 			<code>
-				"X${TBD}.0+Lf5b9e44d"
+				"X322.0.20120423+Lf5b9e44d"
 			</code>
 			<p>
 				For each schemaId component given by a client (or an initiating entity) to a server,
 				a server shall make a combined schema by inserting 'xs:import' statement to the
-				<link url="#combo">default schema</link>.
+				<link url="#default">default schema</link>.
+			</p>
+		</section2>
+		<section2 topic="Server-local SchemaIDs">
+			<p>
+				EXI/XMPP stream MAY negotiate schema to be used in "next" stream.
+			</p>
+			<p>
+				Server-assigned local schemaId MAY be given in setupResponse
+				with 'L' prefix. For example, if a
+				schema has md5Hash '18829242ca7a72a552a7e15af5b9e44d', then the schema
+				may be registered as 'Lf5b9e44d' or 'Lfoobar' or whatever the server want to. 
+				It is recommended to use a shorter identifier for schemaId to make 
+				communication efficient.
+			</p>
+			<p>
+				This schemaId is valid only with the
+				server and the server MAY use different value for a server-local
+				schemaId (apparent case is on hash collision, or some
+				manually-installed parmanent schema). Local schemaId SHOULD
+				NOT be reused on different schema.
 			</p>
 		</section2>
 		<section2 topic="Using EXI Option Document for Shortcut Setup" anchor="shortcut">
@@ -1125,24 +1165,7 @@
 </xs:schema>
 ]]>
 		</code>
-		<section2 topic="Snapshot Repository for Well-known Schemas" anchor='wellknown'>
-			<!-- [YD] -->
-			<!-- TODO: Should be in section Implementation Notes. This section is for the protocol schema, not the schemas used for compression. -->
-			<p>
-				Errata and other updates may happen to well-known schemas.  Slightest
-				modification to XML schemas may break interoperability of EXI
-				nodes. However, negotiating everything is not efficient. Well-known
-				and aged schemas that referred from the schema for EXI/XMPP shall be
-				snapshoted for use in EXI processors.
-				
-				<!-- TODO: [PW] Why not efficient? In terms of total amount of communication performed during a device's lifetime, its a very very small fraction (insignificant). 
-				This is a subjective opinion, termed in absolute phraseology. -->
-			</p>
-			<p>
-				Actual snapshot is located in (TBD-URL).
-			</p>
-		</section2>
-		<section2 topic="Default schema to bind fundamental XMPP schemas" anchor="combo">
+		<section2 topic="Default schema for alternative bindings" anchor="default">
 			<!-- 
 FIXME [YD]
 TBD: namespace is tentative
@@ -1152,7 +1175,7 @@ shall it have other common schemas such as roster, muc, ... ?
 			See discussion above. This is a solution to the problem of combining multiple separate schemas into one schema, for EXI
 			engines only supporting one single schema. -->
 			<p>
-				Following schema is to encode/decode streams by default.
+				Default EXI grammar used in EXI/XMPP SHALL be equivalent to the EXI grammar defined by the following schema. The default EXI grammar is used in initiating connection of EXI/XMPP alternate binding.
 			</p>
 			<code>
 				<![CDATA[
@@ -1167,17 +1190,19 @@ shall it have other common schemas such as roster, muc, ... ?
  <xs:import namespace="http://jabber.org/protocol/compress/exi"
             schemaLocation="${snapshot_url}/xep-xxxx-00.xsd" /> <!-- FIXME location of Peter's schema-->
  <!-- any other common schema shall be always imported TBD -->
- <!-- any other schema components may be inserted for combined schemaId -->
+ <!-- INSERT ADDITIONAL SCHEMAS HERE -->
 </xs:schema>
 ]]>
 			</code>
 
 			<p>
-				The schemaId for this default schema is 'X${TBD}.0' where ${TBD} as a XEP number not yet assigned for this proposal.
+				The schemaId for this default schema is 'X322.0.20130423'. The schema version will be 'X322.1' as
+				the XEP becomes 'Proposed' state.
 			</p>
+		</section2>
+		<section2 topic="A schema for Combined Schemas">
 			<p>
-				If a <link url="#schemaID">combined schemaId</link> is used, correpsonding import statement
-				shall be placed at the end of the list of default import statements.
+				With a <link url="#schemaID">combined schemaId</link> in a stream header, or a setup process of compression parameter negotiation, a set of schema used in the EXI stream is defined. The grammar used in the EXI/XMPP stream SHALL be equivalent to the EXI grammar defined by the default schema with corresponding import statement is placed at the end of the list of default import statements (marked as 'INSERT ADDITIONAL SCHEMAS HERE').
 			</p>
 		</section2>
 		<section2 topic="Patch to avoid UPA for streams.xsd" anchor="patch">
@@ -1187,10 +1212,19 @@ shall it have other common schemas such as roster, muc, ... ?
 				TBD: group discussion needed
 			</p>
 			<p>
-				streams.xsd defined in RFC6120 has 'unique particle attribution (UPA)' problem. A simple
+				streams.xsd defined in RFC6120 has 'unique particle attribution (UPA)' problem.
+				UPA is undeterministic attribution of an element between a wildcard and an explicit definition.
+				Details could be found in <link url="http://www.w3.org/TR/xmlschema-1/#non-ambig">Appendix H</link> of XML schema specification.
+			</p>
+			<p>
+				A simple
 				way to solve UPA is to insert delimiters around wildcards to eliminate
-				ambiguity. The other way to solve UPA is to use 'weak wildcard model'
-				introduced in XML schema 1.1.
+				ambiguity. A deterministic delimiter can resolve ambiguity.
+				The other way to solve UPA is to use 'weak wildcard model'
+				introduced in XML schema 1.1. The cause of ambiguity is lack of
+				precedence between explicit definitions and wildcard definitions. As
+				weak wildcards have weaker precedence against explicit definitions,
+				there are no ambiguity with UPA.
 			</p>
 			<p>
 				To keep the same semantics with current XML implementations, by
@@ -1226,6 +1260,11 @@ shall it have other common schemas such as roster, muc, ... ?
 		</section2>
 	</section1>
 	<section1 topic='Acknowledgements' anchor='ack'>
-		<p>Thanks to Joachim Lindborg, Yusuke Doi, Takuki Kamiya, Tina Beckman, Karin Forsell, Jeff Freund and Rumen Kyusakov for all valuable feedback.</p>
+		<p>Thanks to Joachim Lindborg, Takuki Kamiya, Tina Beckman, Karin Forsell, Jeff Freund and Rumen Kyusakov for all valuable feedback.</p>
 	</section1>
 </xep>
+<!-- please keep this to inform YD's editor (Emacs) work aligned with Peter's indent style
+Local Variables:
+nxml-child-indent: 8
+End:
+-->
