@@ -52,6 +52,7 @@
 			<initials>pw, yd</initials>
 			<remark>
 				<p>Added support for a binary binding.</p>
+				<p>Changed namespace urn:xmpp:sn to urn:xmpp:iot</p>
 			</remark>
 		</revision>
 		<revision>
@@ -185,8 +186,8 @@
 				<example caption='Proposing compression parameters'>
 					<![CDATA[
     <setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
-        <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
-        <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
+        <schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
+        <schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setup>]]>
 				</example>
 				<p>
@@ -197,8 +198,8 @@
 					<![CDATA[
     <setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true'
                    blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
-        <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
-        <missingSchema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
+        <schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
+        <missingSchema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setupResponse>]]>
 				</example>
 				<p>
@@ -248,8 +249,8 @@
 				<example caption='Testing newly uploaded schema files'>
 					<![CDATA[
     <setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'>
-        <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
-        <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
+        <schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
+        <schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setup>]]>
 				</example>
 				<p>
@@ -259,8 +260,8 @@
 					<![CDATA[
     <setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' 
                    blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100' agreement='true'>
-        <schema ns='urn:xmpp:sn' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
-        <schema ns='urn:xmpp:sn:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
+        <schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/>
+        <schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/>
     </setupResponse>]]>
 				</example>
 				<p>
