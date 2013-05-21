@@ -467,7 +467,6 @@
 		</section2>
 		<section2 topic='Alternative Transport Binding for EXI/XMPP over TCP' anchor='alttrans'>
 			<!-- [YD] merged from yd's proposal 2013-04-16 -->
-			<!-- TODO: [PW] Revise use of MUST, SHOULD, COULD, etc. It seems SHOULD and SHOULD NOT is used when MUST/MUST NOT should be used. RECOMMENDED should be SHOULD. -->
 			<p>
 				Alternative binding for EXI/XMPP is suitable for use cases such as factory automation, smart grid appliances, and other
 				embedded use of communications. It works best if clients are constrained and does not update its specification frequently.
@@ -497,7 +496,6 @@
 				<li>
 					<p>
 						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. For example, SD,SE(stream:stream)AT(from="foo@example.net")AT(to="srv.example.net")AT(version="1.0")AT(xml:lang="en") etc.
-						<!-- TODO: [PW] Is the stream header really important. Cannit not be assumed? Fragments could be sent independently without having to within the context of a stream element. [YD] response recorded as comment #9-->
 					</p>
 				</li>
 				<li>
@@ -515,7 +513,7 @@
 				</li>
 				<li>
 					<p>The client and the server can now communicate as usual, with efficient encoding. Connection terminates when an entity sends EE(stream:stream)ED events.</p>
-					<!-- TODO: [PW] Not sufficient with just closing the connection?-->
+					<!-- TODO: [PW] Not sufficient with just closing the connection? [YD] should be fixed with endStream tag-->
 				</li>
 				<li>
 					<p>
@@ -525,7 +523,7 @@
 			</ol>
 			<section3 topic="DNS SRV lookup" anchor="srv">
 				<p>
-					Just same with section 3.2.1 of RFC6120. The service name SHOULD be
+					Just same with section 3.2.1 of RFC6120. The service name MUST be
 					'xmpp-bclient' (for binary client-to-server connections) or
 					'xmpp-bserver' (for binary server-to-server connections).
 				</p>
@@ -539,7 +537,7 @@
 				</p>
 				<p>
 					When an initiating entity tries to communicate with an XMPP server
-					with EXI, it is RECOMMENDED to start the stream with an EXI cookie
+					with EXI, it SHOULD start the stream with an EXI cookie
 					('$EXI') to avoid ambiguity.
 				</p>
 				<p>
@@ -787,21 +785,23 @@
 				settings are most common.
 			</p>
 		</section2>
-		<section2 topic="Snapshot Repository for Well-known Schemas" anchor='wellknown'>
-			<!-- [YD] -->
-			<!-- TODO: Should be in section Implementation Notes. This section is for the protocol schema, not the schemas used for compression. -->
+		<section2 topic="Snapshot Repository for Well-known Schemas (Group Discussion Needed)" anchor='wellknown'>
 			<p>
 				Errata and other updates may happen to well-known schemas.  Slightest
 				modification to XML schemas may break interoperability of EXI
-				nodes. However, negotiating everything is not efficient. Well-known
-				and aged schemas that referred from the schema for EXI/XMPP shall be
-				snapshoted for use in EXI processors.
-				
-				<!-- TODO: [PW] Why not efficient? In terms of total amount of communication performed during a device's lifetime, its a very very small fraction (insignificant). 
-				This is a subjective opinion, termed in absolute phraseology. -->
+				nodes. In some use cases, common schemas embedded in ROM may reduce 
+				complexity of client implementations significantly.
+				In addition, implementation glitches such as <link ref="#patch">UPA</link> may
+				cause large variety of 'patches' to schemas and a server of mixed XMPP system
+				may need to have unnessesarily large amount of EXI grammars for them.
 			</p>
 			<p>
-				Actual snapshot is located in (TBD-URL).
+				To keep major part of implementations burned in flash ROMs and make them interoperable,
+				this proposal recommends XSF to have a snapshot XSD repository under a stable URL and short alias schemaId may be 
+				assigned to each snapshot schema.
+			</p>
+			<p>
+				Actual snapshot is located in (TBD).
 			</p>
 		</section2>
 	</section1>
