@@ -638,7 +638,6 @@
 		</section2>
 	</section1>
 	<section1 topic='Implementation Notes' anchor='impl'>
-	<section1 topic='Implementation Notes' anchor='impl'>
 
 		<section2 topic='EXI Encoding Preprocessing and Postprocessing'>
 			<!-- [YD] added to provide 'standard view' on communication. This can be introductionaly and I placed as the first section of implementation notes. Please move this section to somewhere else to improve readability -->
