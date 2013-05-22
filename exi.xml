@@ -638,6 +638,55 @@
 		</section2>
 	</section1>
 	<section1 topic='Implementation Notes' anchor='impl'>
+	<section1 topic='Implementation Notes' anchor='impl'>
+
+		<section2 topic='EXI Encoding Preprocessing and Postprocessing'>
+			<!-- [YD] added to provide 'standard view' on communication. This can be introductionaly and I placed as the first section of implementation notes. Please move this section to somewhere else to improve readability -->
+			<p>
+				This section describes a standard view on programming model between EXI/XMPP servers and clients.
+			</p>
+			<p>
+				As shown in this document, XMPP documents represented by EXI is slightly different from documents represented in XML.
+				For example, each stanzas and first level elements under &lt;stream:stream&gt; tags must be encoded as a standalone EXI
+				body (document). If namespace prefixes are declared in the root element of XML process (&lt;stream:stream&gt; tag), 
+				the prefix should be recovered on decoded XML on the receiver side (EXI may or may not preserve prefix).
+				Therefore, some preprocessing and postprocessing is required to make current XMPP implementations work properly over
+				EXI/XMPP channel. An example of the configuration is described in the following figure.
+			</p>
+			<example caption='Example configuration of communication channels.'>
+<![CDATA[
+
+ +-------------------------+  			 +-----------------------+
+ | +----+		   |  			 |  	          +----+ |
+ | |    | <----------------- Plain XMPP Channel ----------------> |    | |
+ | |XMPP|   	  	   |  	       	       	 |     	          |XMPP| |
+ | |    | <-[Proc]-[EXI]<------ EXI Channel ------>[EXI]-[Proc]-> |    | |
+ | +----+      	       	   |		     	 |	          +----+ |
+ +-------------------------+		     	 +-----------------------+
+
+]]>
+
+			</example>
+			<p>
+				In the example, the box XMPP is XMPP process. [EXI] represents EXI processor (encoder and decoder). [Proc] means preprocessor and postprocessor.
+				Following pre-process must be applied to XML streams from XMPP process before giving the stream to EXI processors.
+			</p>
+			<ol>
+				<li>&lt;stream:stream&gt; start tag must be converted to standalone &lt;exi:startStream&gt; element. All attributes defined in the input XML except namespace declarations should be copied as is. Namespace declarations and prefixes must be converted to FIXME.</li>
+				<li>All first level elements under the root &lt;stream:stream&gt; element must be converted to standalone (root) element of corresponding stanza elements under urn:xmpp:exi:base:0 namespace. If there are missing namespace declarations in the element, appropriate prefix declarations should be added to the element before giving the element to the EXI encoder as a document. Contents of the elements should not be modified.</li>
+				<li>&lt;/stream:stream&gt; end tag must be converted to standalone &lt;exi:endStream&gt; elements.</li>
+			</ol>
+			
+			<p>
+				Following post-process must be applied to XML streams from EXI processors before giving the stream to XMPP process. 
+			</p>
+			<ol>
+				<li>Received &lt;exi:startStream&gt; element must be converted to &lt;stream:stream&gt; start tag with appropriate attributes and namespace declarations. Prefixies defined in the &lt;exi:startStream&gt; content must be saved under the current connection context of postprocessor.</li>
+				<li>Received stanzas under urn:xmpp:exi:base:0 namespace must be converted to elements under &lt;stream:stream&gt; root element. In addition, the namespace declarations in the element must be replaced to prefixes given in the startStream tag content if there is a corresponding namespace declaration.</li>
+				<li>&lt;exi:endStream&gt; element must be converted to &lt;/stream:stream&gt; end tag. The context created under the connection may be released.</li>
+			</ol>
+
+		</section2>
 		<section2 topic='EXI options'>
 			<p>
 				The following segment is taken from the <link url='http://www.w3.org/TR/exi/#options'>EXI specification</link>. It describes the different EXI options that need to be negotiated before enabling EXI.
