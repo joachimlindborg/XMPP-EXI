@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<iq xmlns="jabber:client" type="set" id="bind_1">
+ <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+  <resource>sensor</resource>
+ </bind>
+</iq>
+
+

@@ -482,11 +482,13 @@
 			<ol>
 				<li>
 					<p>
+						(Optional) 
 						A client (foo@example.net) try to resolve a server with alternative binding for EXI/XMPP with DNS SRV lookup (ex. _xmpp-bclient._tcp.example.net. IN SRV)
 					</p>
 				</li>
 				<li>
 					<p>
+						(Optional)
 						A DNS server tells a set of DNS RR to notify a server accepts EXI/XMPP binding (ex. SRV 10 10 15222 srv.example.net.) (Optional: the DNS server may tell the version of the default schema supported by the server. Currently there is only one version and has no effect. For further discussion, see <link url="http://tools.ietf.org/html/draft-doi-exi-messaging-requirements-01">draft-doi-exi-messaging-requirement</link>.
 					</p>
 				</li>
@@ -495,21 +497,128 @@
 				</li>
 				<li>
 					<p>
-						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. For example, SD,SE(stream:stream)AT(from="foo@example.net")AT(to="srv.example.net")AT(version="1.0")AT(xml:lang="en") etc.
+						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. Following shows XML Equivalent and EXI events <!-- TBD: shall be fixed after schema fix. -->
 					</p>
+					<example caption="XML equivalent of stream start element (Client to Server)">
+<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 				<li>
 					<p>The server responds with EXI stream, with EXI cookie, without EXI option, and with appropriate events for stream tag.</p>
+					<example caption="XML equivalent of stream start element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 				<li>
 					<p>
-						If client needs TLS or SASL negotiation, it should be done at this step. As specified in <link url="http://xmpp.org/rfcs/rfc6120.html#streams-negotiation-restart">Section 4.3.3 of RFC6120</link>, both parties MUST not send events corresponds to &lt;/stream:stream> tag (e.g. EE,ED events).
+						(Optional)
+						If client needs TLS or SASL negotiation, it should be done at this step. As specified in <link url="http://xmpp.org/rfcs/rfc6120.html#streams-negotiation-restart">Section 4.3.3 of RFC6120</link>, both parties MUST not send events corresponds to &lt;/stream:stream> tag (e.g. exi:endStream element)
 					</p>
 				</li>
 				<li>
 					<p>
 						If client needs to use different encoding option or schema than the default encoding options or <link url="#default">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
 					</p>
+					<p>
+						For example, the client want to use MUC option (XEP-0045<!-- FIXME: reference -->), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
+					</p>
+					<example caption="XML equivalent of setup element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:setup xmlns:exi='urn:xmpp:exi:base:0'>
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
+</exi:setup>
+]]>		
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>
+						In the response the server accepts schema change.
+					</p>
+					<example caption="XML equivalent of setup element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:setupResponse xmlns:exi='urn:xmpp:exi:base:0' agreement="true" agreedSchemaId="a83b19b31e016409d3001331d9f084fc">
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
+</exi:setupResponse>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>Just after receiving the setupResponse, client re-opens the stream. The new stream should have EXI header and may have EXI option header with updated options.</p>
+					<example caption="XML equivalent of stream start element (Client to Server)">
+<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>Server also respond to the client with new schema stream.</p>
+					<example caption="XML equivalent of stream start element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
 				</li>
 				<li>
 					<p>The client and the server can now communicate as usual, with efficient encoding. Connection terminates when an entity sends EE(stream:stream)ED events.</p>

@@ -1,0 +1,6 @@
+-dummy dir is to update loopDecoder's state. actual order of stream should be
+
+base/*.exi
+base+muc/*.exi
+
+

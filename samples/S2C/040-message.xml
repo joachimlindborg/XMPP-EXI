@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<message xmlns="jabber:client" type="chat" to="exi@jabber.example.org/sensor" id="ab1ea" >
+  <body>How are you?</body>
+</message>
+
+

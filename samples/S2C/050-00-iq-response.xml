@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<iq xmlns='jabber:client' type='result' to='exi@jabber.example.org/sensor' id='ab26a' from='sensors@conference.example.org'/>
