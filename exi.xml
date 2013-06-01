@@ -834,18 +834,32 @@
 			</p>
 		</section2>
 		<section2 topic="Snapshot Repository for Well-known Schemas (Group Discussion Needed)" anchor='wellknown'>
+			<!--
+				[YD] TODO FIXME move it to implementation note.
+			-->
 			<p>
 				Errata and other updates may happen to well-known schemas.  Slightest
 				modification to XML schemas may break interoperability of EXI
-				nodes. In some use cases, common schemas embedded in ROM may reduce 
+				nodes.
+
+				In some use cases, common schemas embedded in ROM may reduce
 				complexity of client implementations significantly.
+
+
 				In addition, implementation glitches such as <link ref="#patch">UPA</link> may
 				cause large variety of 'patches' to schemas and a server of mixed XMPP system
 				may need to have unnessesarily large amount of EXI grammars for them.
+
+			</p>
+			<p>
+				A node may reduce its ROM size by relying external XML Schema repository using download feature of this proposal.
+				However, using XSF's schema repository may make single point of failure and may make XSF under pressure of 
+				DoS attacks. Therefore, products and devices shall not use the XSF repository. If a product need to reduce
+				the ROM size by schema downloading feature, the product maker shall make a repository for the line of products.
 			</p>
 			<p>
 				To keep major part of implementations burned in flash ROMs and make them interoperable,
-				this proposal recommends XSF to have a snapshot XSD repository under a stable URL and short alias schemaId may be 
+				this proposal recommends XSF to have a snapshot XSD repository under a stable URL and short alias schemaId may be
 				assigned to each snapshot schema.
 			</p>
 			<p>
