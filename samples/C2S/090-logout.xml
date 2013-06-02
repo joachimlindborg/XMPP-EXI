@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<presence xmlns="jabber:client" type="unavailable" >
+  <status>Logged out</status>
+</presence>
+

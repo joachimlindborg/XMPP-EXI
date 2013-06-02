@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<iq xmlns="jabber:client" type="get" id="ab19a">
+ <query xmlns="jabber:iq:roster"/>
+</iq>
+
+

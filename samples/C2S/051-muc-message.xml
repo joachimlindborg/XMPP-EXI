@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<message xmlns="jabber:client" type="groupchat" to="sensors@conference.example.org" id="ab28a" >
+<body>I'm Active!</body>
+<nick xmlns="http://jabber.org/protocol/nick">exi-sensor</nick>
+</message>
