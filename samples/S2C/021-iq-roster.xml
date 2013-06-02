@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<iq xmlns="jabber:client" type="result" id="ab19a">
+  <query xmlns='jabber:iq:roster'>
+    <item subscription='both' jid='manager@jabber.example.org'/>
+    <item subscription='both' jid='service@jabber.example.org'/>
+    <item subscription='both' jid='admin@jabber.example.org'/>
+  </query>
+</iq>

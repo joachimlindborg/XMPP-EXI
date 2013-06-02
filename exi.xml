@@ -467,7 +467,6 @@
 		</section2>
 		<section2 topic='Alternative Transport Binding for EXI/XMPP over TCP' anchor='alttrans'>
 			<!-- [YD] merged from yd's proposal 2013-04-16 -->
-			<!-- TODO: [PW] Revise use of MUST, SHOULD, COULD, etc. It seems SHOULD and SHOULD NOT is used when MUST/MUST NOT should be used. RECOMMENDED should be SHOULD. -->
 			<p>
 				Alternative binding for EXI/XMPP is suitable for use cases such as factory automation, smart grid appliances, and other
 				embedded use of communications. It works best if clients are constrained and does not update its specification frequently.
@@ -483,11 +482,13 @@
 			<ol>
 				<li>
 					<p>
+						(Optional) 
 						A client (foo@example.net) try to resolve a server with alternative binding for EXI/XMPP with DNS SRV lookup (ex. _xmpp-bclient._tcp.example.net. IN SRV)
 					</p>
 				</li>
 				<li>
 					<p>
+						(Optional)
 						A DNS server tells a set of DNS RR to notify a server accepts EXI/XMPP binding (ex. SRV 10 10 15222 srv.example.net.) (Optional: the DNS server may tell the version of the default schema supported by the server. Currently there is only one version and has no effect. For further discussion, see <link url="http://tools.ietf.org/html/draft-doi-exi-messaging-requirements-01">draft-doi-exi-messaging-requirement</link>.
 					</p>
 				</li>
@@ -496,36 +497,204 @@
 				</li>
 				<li>
 					<p>
-						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. For example, SD,SE(stream:stream)AT(from="foo@example.net")AT(to="srv.example.net")AT(version="1.0")AT(xml:lang="en") etc.
-						<!-- TODO: [PW] Is the stream header really important. Cannit not be assumed? Fragments could be sent independently without having to within the context of a stream element. [YD] response recorded as comment #9-->
+						The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. Following shows XML Equivalent and EXI events <!-- TBD: shall be fixed after schema fix. -->
 					</p>
+					<example caption="XML equivalent of stream start element (Client to Server)">
+<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 				<li>
 					<p>The server responds with EXI stream, with EXI cookie, without EXI option, and with appropriate events for stream tag.</p>
+					<example caption="XML equivalent of stream start element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 				<li>
 					<p>
-						If client needs TLS or SASL negotiation, it should be done at this step. As specified in <link url="http://xmpp.org/rfcs/rfc6120.html#streams-negotiation-restart">Section 4.3.3 of RFC6120</link>, both parties MUST not send events corresponds to &lt;/stream:stream> tag (e.g. EE,ED events).
+						(Optional)
+						If client needs TLS or SASL negotiation, it should be done at this step. As specified in <link url="http://xmpp.org/rfcs/rfc6120.html#streams-negotiation-restart">Section 4.3.3 of RFC6120</link>, both parties MUST not send events corresponds to &lt;/stream:stream> tag (e.g. exi:endStream element)
 					</p>
 				</li>
 				<li>
 					<p>
 						If client needs to use different encoding option or schema than the default encoding options or <link url="#default">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
 					</p>
+					<p>
+						For example, the client want to use MUC option (XEP-0045<!-- FIXME: reference -->), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
+					</p>
+					<example caption="XML equivalent of setup element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:setup xmlns:exi='urn:xmpp:exi:base:0'>
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
+</exi:setup>
+]]>		
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>
+						In the response the server accepts schema change.
+					</p>
+					<example caption="XML equivalent of setup element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:setupResponse xmlns:exi='urn:xmpp:exi:base:0' agreement="true" agreedSchemaId="a83b19b31e016409d3001331d9f084fc">
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
+</exi:setupResponse>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>Just after receiving the setupResponse, client re-opens the stream. The new stream should have EXI header and may have EXI option header with updated options.</p>
+					<example caption="XML equivalent of stream start element (Client to Server)">
+<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>Server also respond to the client with new schema stream.</p>
+					<example caption="XML equivalent of stream start element (Server to Client)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
 				</li>
 				<li>
 					<p>The client and the server can now communicate as usual, with efficient encoding. Connection terminates when an entity sends EE(stream:stream)ED events.</p>
-					<!-- TODO: [PW] Not sufficient with just closing the connection?-->
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<endStream xmlns='urn:xmpp:exi:base:0' />
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>In response, server also closes the stream.</p>
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<endStream xmlns='urn:xmpp:exi:base:0' />
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<!-- TODO: [PW] Not sufficient with just closing the connection? [YD] should be fixed with endStream tag-->
 				</li>
 				<li>
 					<p>
-						The client now can start the initial EXI/XMPP stream or the first encrypted EXI/XMPP stream (if it uses TLS/SASL) with explicit EXI option with the encoding option and schemaId used in the previous negotiated session (<link url="#shortcut">shortcut setup</link>)
+						The client now can start the initial EXI/XMPP stream with explicit EXI option with the encoding option and schemaId given from the server in setupResponse of previous negotiated session. (<link url="#shortcut">shortcut setup</link>)
 					</p>
+					<example caption="XML equivalent of EXI encoding document for shortcut setup.">
+						<![CDATA[
+<?xml version="1.0"?>
+<header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <lesscommon>
+  <uncommon>
+    <p xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="xsd:decimal">
+    1.1
+    </p>
+   <valueMaxLength>64</valueMaxLength>
+   <valuePartitionCapacity>64</valuePartitionCapacity>
+  </uncommon>
+ </lesscommon>
+ <common>
+  <schemaId>a83b19b31e016409d3001331d9f084fc</schemaId>
+ </common>
+ <strict/>
+</header>
+]]>
+					</example>
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream (including EXI header, EXI encoding options and startStream element)"> 
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 			</ol>
 			<section3 topic="DNS SRV lookup" anchor="srv">
 				<p>
-					Just same with section 3.2.1 of RFC6120. The service name SHOULD be
+					Just same with section 3.2.1 of RFC6120. The service name MUST be
 					'xmpp-bclient' (for binary client-to-server connections) or
 					'xmpp-bserver' (for binary server-to-server connections).
 				</p>
@@ -539,7 +708,7 @@
 				</p>
 				<p>
 					When an initiating entity tries to communicate with an XMPP server
-					with EXI, it is RECOMMENDED to start the stream with an EXI cookie
+					with EXI, it SHOULD start the stream with an EXI cookie
 					('$EXI') to avoid ambiguity.
 				</p>
 				<p>
@@ -554,17 +723,17 @@
  analysis of actual traffics. [YD]
 -->
 				<p>
-					When no EXI encoding option is given, followings are the default
+					When no EXI encoding option is given, or not specified by given EXI encoding option, followings are the default
 					encoding options for EXI/XMPP stream.
 				</p>
 				<ul>
-					<li>alignment: byte-alignment</li>
+					<li>alignment: bit-packed</li>
 					<li>compression: false</li>
 					<li>strict: true</li>
 					<li>fragment: false</li>
 					<li>preserve: all false</li>
 					<li>selfContained: false</li>
-					<li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li>
+					<li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li> <!-- [YD] required for future update -->
 					<li>datatypeReresentationMap: not exist</li>
 					<li>blockSize: N/A</li>
 					<li>valueMaxLength: 64</li>
@@ -640,6 +809,54 @@
 		</section2>
 	</section1>
 	<section1 topic='Implementation Notes' anchor='impl'>
+
+		<section2 topic='EXI Encoding Preprocessing and Postprocessing'>
+			<!-- [YD] added to provide 'standard view' on communication. This can be introductionaly and I placed as the first section of implementation notes. Please move this section to somewhere else to improve readability -->
+			<p>
+				This section describes a standard view on programming model between EXI/XMPP servers and clients.
+			</p>
+			<p>
+				As shown in this document, XMPP documents represented by EXI is slightly different from documents represented in XML.
+				For example, each stanzas and first level elements under &lt;stream:stream&gt; tags must be encoded as a standalone EXI
+				body (document). If namespace prefixes are declared in the root element of XML process (&lt;stream:stream&gt; tag), 
+				the prefix should be recovered on decoded XML on the receiver side (EXI may or may not preserve prefix).
+				Therefore, some preprocessing and postprocessing is required to make current XMPP implementations work properly over
+				EXI/XMPP channel. An example of the configuration is described in the following figure.
+			</p>
+			<example caption='Example configuration of communication channels.'>
+<![CDATA[
+
+ +-------------------------+  			 +-----------------------+
+ | +----+		   |  			 |  	          +----+ |
+ | |    | <----------------- Plain XMPP Channel ----------------> |    | |
+ | |XMPP|   	  	   |  	       	       	 |     	          |XMPP| |
+ | |    | <-[Proc]-[EXI]<------ EXI Channel ------>[EXI]-[Proc]-> |    | |
+ | +----+      	       	   |		     	 |	          +----+ |
+ +-------------------------+		     	 +-----------------------+
+
+]]>
+
+			</example>
+			<p>
+				In the example, the box XMPP is XMPP process. [EXI] represents EXI processor (encoder and decoder). [Proc] means preprocessor and postprocessor.
+				Following pre-process must be applied to XML streams from XMPP process before giving the stream to EXI processors.
+			</p>
+			<ol>
+				<li>&lt;stream:stream&gt; start tag must be converted to standalone &lt;exi:startStream&gt; element. All attributes defined in the input XML except namespace declarations should be copied as is. Namespace declarations and prefixes must be converted to FIXME.</li>
+				<li>All first level elements under the root &lt;stream:stream&gt; element must be converted to standalone (root) element of corresponding stanza elements under urn:xmpp:exi:base:0 namespace. If there are missing namespace declarations in the element, appropriate prefix declarations should be added to the element before giving the element to the EXI encoder as a document. Contents of the elements should not be modified.</li>
+				<li>&lt;/stream:stream&gt; end tag must be converted to standalone &lt;exi:endStream&gt; elements.</li>
+			</ol>
+			
+			<p>
+				Following post-process must be applied to XML streams from EXI processors before giving the stream to XMPP process. 
+			</p>
+			<ol>
+				<li>Received &lt;exi:startStream&gt; element must be converted to &lt;stream:stream&gt; start tag with appropriate attributes and namespace declarations. Prefixies defined in the &lt;exi:startStream&gt; content must be saved under the current connection context of postprocessor.</li>
+				<li>Received stanzas under urn:xmpp:exi:base:0 namespace must be converted to elements under &lt;stream:stream&gt; root element. In addition, the namespace declarations in the element must be replaced to prefixes given in the startStream tag content if there is a corresponding namespace declaration.</li>
+				<li>&lt;exi:endStream&gt; element must be converted to &lt;/stream:stream&gt; end tag. The context created under the connection may be released.</li>
+			</ol>
+
+		</section2>
 		<section2 topic='EXI options'>
 			<p>
 				The following segment is taken from the <link url='http://www.w3.org/TR/exi/#options'>EXI specification</link>. It describes the different EXI options that need to be negotiated before enabling EXI.
@@ -787,21 +1004,37 @@
 				settings are most common.
 			</p>
 		</section2>
-		<section2 topic="Snapshot Repository for Well-known Schemas" anchor='wellknown'>
-			<!-- [YD] -->
-			<!-- TODO: Should be in section Implementation Notes. This section is for the protocol schema, not the schemas used for compression. -->
+		<section2 topic="Snapshot Repository for Well-known Schemas (Group Discussion Needed)" anchor='wellknown'>
+			<!--
+				[YD] TODO FIXME move it to implementation note.
+			-->
 			<p>
 				Errata and other updates may happen to well-known schemas.  Slightest
 				modification to XML schemas may break interoperability of EXI
-				nodes. However, negotiating everything is not efficient. Well-known
-				and aged schemas that referred from the schema for EXI/XMPP shall be
-				snapshoted for use in EXI processors.
-				
-				<!-- TODO: [PW] Why not efficient? In terms of total amount of communication performed during a device's lifetime, its a very very small fraction (insignificant). 
-				This is a subjective opinion, termed in absolute phraseology. -->
+				nodes.
+
+				In some use cases, common schemas embedded in ROM may reduce
+				complexity of client implementations significantly.
+
+
+				In addition, implementation glitches such as <link ref="#patch">UPA</link> may
+				cause large variety of 'patches' to schemas and a server of mixed XMPP system
+				may need to have unnessesarily large amount of EXI grammars for them.
+
 			</p>
 			<p>
-				Actual snapshot is located in (TBD-URL).
+				A node may reduce its ROM size by relying external XML Schema repository using download feature of this proposal.
+				However, using XSF's schema repository may make single point of failure and may make XSF under pressure of 
+				DoS attacks. Therefore, products and devices shall not use the XSF repository. If a product need to reduce
+				the ROM size by schema downloading feature, the product maker shall make a repository for the line of products.
+			</p>
+			<p>
+				To keep major part of implementations burned in flash ROMs and make them interoperable,
+				this proposal recommends XSF to have a snapshot XSD repository under a stable URL and short alias schemaId may be
+				assigned to each snapshot schema.
+			</p>
+			<p>
+				Actual snapshot is located in (TBD).
 			</p>
 		</section2>
 	</section1>

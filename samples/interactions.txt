@@ -1,0 +1,42 @@
+TBD: header representation and semantics
+
+Client                                         Server
+
+* start with basic schema (To be defined) /w header
+
+-- C2S/001-start.xml ->
+                                    <- S2C/001-start.xml --
+
+* bootstrap and schema/option negotiation with basic schema
+
+-- C2S/002-setup.xml ->
+                            <- S2C/002-setupResponse.xml --
+			       (with schemaId in response)
+
+* regular stream starts with new schema, profile
+  (TBD: should it have a header or not? -- maybe no)
+
+-- C2S/010-restart.xml ->
+                                  <- S2C/010-restart.xml --
+
+(regular communication, just for example)
+-- C2S/020-iq-bind.xml ->
+                                  <- S2C/020-iq-bind.xml --
+-- C2S/030-presense.xml ->
+                                 <- S2C/030-presense.xml --
+                                  <- S2C/040-message.xml --
+-- C2S/041-message.xml ->
+-- C2S/050-muc-xx.xml ->
+                                   <- S2C/050-muc-xx.xml --
+
+* end (with handshaked schema)
+-- C2S/090-logout.xml ->
+                                   <- S2C/090-logout.xml --
+
+
+
+
+* restart /w EXI header
+-- C2S/100-restart.xml ->
+                                  <- S2C/100-restart.xml --
+

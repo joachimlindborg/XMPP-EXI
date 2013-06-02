@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <lesscommon>
+  <uncommon>
+    <p xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="xsd:decimal">
+    1.1
+    </p>
+   <valueMaxLength>64</valueMaxLength>
+   <valuePartitionCapacity>64</valuePartitionCapacity>
+  </uncommon>
+ </lesscommon>
+ <common>
+  <schemaId>a83b19b31e016409d3001331d9f084fc</schemaId>
+ </common>
+ <strict/>
+</header>
