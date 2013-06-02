@@ -622,12 +622,74 @@
 				</li>
 				<li>
 					<p>The client and the server can now communicate as usual, with efficient encoding. Connection terminates when an entity sends EE(stream:stream)ED events.</p>
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<endStream xmlns='urn:xmpp:exi:base:0' />
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<p>In response, server also closes the stream.</p>
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<endStream xmlns='urn:xmpp:exi:base:0' />
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream with EXI Header">
+						(TBD: will be fixed after XML schema fix)
+					</example>
 					<!-- TODO: [PW] Not sufficient with just closing the connection? [YD] should be fixed with endStream tag-->
 				</li>
 				<li>
 					<p>
-						The client now can start the initial EXI/XMPP stream or the first encrypted EXI/XMPP stream (if it uses TLS/SASL) with explicit EXI option with the encoding option and schemaId used in the previous negotiated session (<link url="#shortcut">shortcut setup</link>)
+						The client now can start the initial EXI/XMPP stream with explicit EXI option with the encoding option and schemaId given from the server in setupResponse of previous negotiated session. (<link url="#shortcut">shortcut setup</link>)
 					</p>
+					<example caption="XML equivalent of EXI encoding document for shortcut setup.">
+						<![CDATA[
+<?xml version="1.0"?>
+<header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <lesscommon>
+  <uncommon>
+    <p xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="xsd:decimal">
+    1.1
+    </p>
+   <valueMaxLength>64</valueMaxLength>
+   <valuePartitionCapacity>64</valuePartitionCapacity>
+  </uncommon>
+ </lesscommon>
+ <common>
+  <schemaId>a83b19b31e016409d3001331d9f084fc</schemaId>
+ </common>
+ <strict/>
+</header>
+]]>
+					</example>
+					<example caption="XML equivalent of stream end element (Client to Server)">
+						<![CDATA[
+<?xml version="1.0"?>
+<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
+ <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
+</exi:startStream>
+]]>
+					</example>
+					<example caption="Corresponding EXI Events">
+						(TBD: will be fixed after XML schema fix)
+					</example>
+					<example caption="Actual EXI Stream (including EXI header, EXI encoding options and startStream element)"> 
+						(TBD: will be fixed after XML schema fix)
+					</example>
+
 				</li>
 			</ol>
 			<section3 topic="DNS SRV lookup" anchor="srv">
@@ -661,17 +723,17 @@
  analysis of actual traffics. [YD]
 -->
 				<p>
-					When no EXI encoding option is given, followings are the default
+					When no EXI encoding option is given, or not specified by given EXI encoding option, followings are the default
 					encoding options for EXI/XMPP stream.
 				</p>
 				<ul>
-					<li>alignment: byte-alignment</li>
+					<li>alignment: bit-packed</li>
 					<li>compression: false</li>
 					<li>strict: true</li>
 					<li>fragment: false</li>
 					<li>preserve: all false</li>
 					<li>selfContained: false</li>
-					<li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li>
+					<li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li> <!-- [YD] required for future update -->
 					<li>datatypeReresentationMap: not exist</li>
 					<li>blockSize: N/A</li>
 					<li>valueMaxLength: 64</li>
