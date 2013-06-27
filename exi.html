@@ -12,7 +12,7 @@
     <meta name="DC.Description" content="This specification describes how EXI compression can be used in XMPP networks.">
     <meta name="DC.Publisher" content="XMPP Standards Foundation">
     <meta name="DC.Contributor" content="XMPP Extensions Editor">
-    <meta name="DC.Date" content="?">
+    <meta name="DC.Date" content="2013-06-27">
     <meta name="DC.Type" content="XMPP Extension Protocol">
     <meta name="DC.Format" content="XHTML">
     <meta name="DC.Identifier" content="XEP-0322">
@@ -44,11 +44,11 @@
       </tr>
       <tr valign="top">
         <td><strong>Version:</strong></td>
-        <td>0.0.5</td>
+        <td>0.1.1</td>
       </tr>
       <tr valign="top">
         <td><strong>Last Updated:</strong></td>
-        <td>?</td>
+        <td>2013-06-27</td>
       </tr>
     </table>
     <hr>
@@ -57,17 +57,17 @@
     <h2>Table of Contents</h2>
     <div class="indent">
       <p><br>1.  <a href="#intro">Introduction</a><br>2.  <a href="#usecases">Use Cases</a><br>   
-      2.1.  <a href="#sect-ID0EKBAC">Two approaches to use EXI</a><br>   
+      2.1.  <a href="#sect-ID0E3BAC">Two approaches to use EXI</a><br>   
       2.2.  <a href="#streamcompression">Stream Compression</a><br>      
-      2.2.1.  <a href="#sect-ID0EHDAC">Invalid setup</a><br>      
+      2.2.1.  <a href="#sect-ID0EZDAC">Invalid setup</a><br>      
       2.2.2.  <a href="#setup">Proposing compression parameters</a><br>      
-      2.2.3.  <a href="#sect-ID0E3FAC">Uploading new schema files</a><br>      
-      2.2.4.  <a href="#sect-ID0EUHAC">Uploading compressed schema files</a><br>      
-      2.2.5.  <a href="#sect-ID0EUOAC">Downloading new schema files on server</a><br>      
-      2.2.6.  <a href="#sect-ID0EEBAE">Accessing quick configurations</a><br>      
-      2.2.7.  <a href="#sect-ID0EHCAE">Quick configuration failure</a><br>      
-      2.2.8.  <a href="#sect-ID0E2CAE">Start compression</a><br>   
-      2.3.  <a href="#sect-ID0EGEAE">EXI-specific stream elements</a><br>      
+      2.2.3.  <a href="#sect-ID0EOGAC">Uploading new schema files</a><br>      
+      2.2.4.  <a href="#sect-ID0EGIAC">Uploading compressed schema files</a><br>      
+      2.2.5.  <a href="#sect-ID0EGPAC">Downloading new schema files on server</a><br>      
+      2.2.6.  <a href="#sect-ID0EWBAE">Accessing quick configurations</a><br>      
+      2.2.7.  <a href="#sect-ID0EZCAE">Quick configuration failure</a><br>      
+      2.2.8.  <a href="#sect-ID0ENDAE">Start compression</a><br>   
+      2.3.  <a href="#sect-ID0EYEAE">EXI-specific stream elements</a><br>      
       2.3.1.  <a href="#startStream">streamStart</a><br>      
       2.3.2.  <a href="#streamEnd">streamEnd</a><br>   
       2.4.  <a href="#alttrans">Alternative Transport Binding for EXI/XMPP over TCP</a><br>      
@@ -75,26 +75,27 @@
       2.4.2.  <a href="#fallback">Fallback Process</a><br>      
       2.4.3.  <a href="#defaultParam">Default Payload Encoding Options for EXI/XMPP</a><br>      
       2.4.4.  <a href="#recommendedParams">Recommended Payload Encoding Options for EXI/XMPP Stream</a><br>3.  <a href="#impl">Implementation Notes</a><br>   
-      3.1.  <a href="#sect-ID0E1QAE">EXI options</a><br>   
-      3.2.  <a href="#sect-ID0E1UAE">Transmission of EXI bodies and Session-wide Buffers</a><br>   
-      3.3.  <a href="#sect-ID0E5VAE">Preserving prefixes</a><br>   
-      3.4.  <a href="#sect-ID0ESWAE">Networks containing clients having limited memory</a><br>   
-      3.5.  <a href="#sect-ID0E6WAE">Caching schema files</a><br>   
-      3.6.  <a href="#sect-ID0EVXAE">Uploading vs. Downloading schemas</a><br>   
-      3.7.  <a href="#sect-ID0EGYAE">Server decompression and recompression vs. binary forwarding</a><br>   
+      3.1.  <a href="#sect-ID0EQRAE">EXI options</a><br>   
+      3.2.  <a href="#sect-ID0EQVAE">Transmission of EXI bodies and Session-wide Buffers</a><br>   
+      3.3.  <a href="#sect-ID0EUWAE">Preserving prefixes</a><br>   
+      3.4.  <a href="#sect-ID0EIXAE">Networks containing clients having limited memory</a><br>   
+      3.5.  <a href="#sect-ID0EVXAE">Caching schema files</a><br>   
+      3.6.  <a href="#sect-ID0ELYAE">Uploading vs. Downloading schemas</a><br>   
+      3.7.  <a href="#sect-ID0E3YAE">Server decompression and recompression vs. binary forwarding</a><br>   
       3.8.  <a href="#wellknown">Snapshot Repository for Well-known Schemas</a><br>   
-      3.9.  <a href="#sect-ID0EHZAE">Generation of Canonic Schemas</a><br>   
+      3.9.  <a href="#sect-ID0EB1AE">Generation of Canonic Schemas</a><br>   
       3.10.  <a href="#shortcut">Using EXI Option Documents for Shortcut Setup</a><br>   
       3.11.  <a href="#knownhashes">XMPP Schema files and their hash values</a><br>   
       3.12.  <a href="#knownproblems">Known problems with existing schemas</a><br>      
-      3.12.1.  <a href="#patch">Patch to avoid UPA for streams.xsd</a><br>4.  <a href="#security">Security Considerations</a><br>5.  <a href="#iana">IANA Considerations</a><br>6.  <a href="#registrar">XMPP Registrar Considerations</a><br>7.  <a href="#schema">XML Schema</a><br>8.  <a href="#ack">Acknowledgements</a></p>
+      3.12.1.  <a href="#patch">Patch to avoid UPA for streams.xsd</a><br>      
+      3.12.2.  <a href="#sect-ID0EQVAI">Patch for missing wildcards in extensible schemas</a><br>4.  <a href="#security">Security Considerations</a><br>5.  <a href="#iana">IANA Considerations</a><br>6.  <a href="#registrar">XMPP Registrar Considerations</a><br>7.  <a href="#schema">XML Schema</a><br>8.  <a href="#ack">Acknowledgements</a></p>
       <p><a href="#appendices">Appendices</a><br>    <a href="#appendix-docinfo">A: Document Information</a><br>    <a href="#appendix-authorinfo">B: Author Information</a><br>    <a href="#appendix-legal">C: Legal Notices</a><br>    <a href="#appendix-xmpp">D: Relation to XMPP</a><br>    <a href="#appendix-discuss">E: Discussion Venue</a><br>    <a href="#appendix-conformance">F: Requirements Conformance</a><br>    <a href="#appendix-notes">G: Notes</a><br>    <a href="#appendix-revs">H: Revision History</a></p>
     </div>
     <hr>
     <h2>1.
        <a name="intro">Introduction</a></h2>
         <p class="" style="">
-            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0EJG">1</a>] is an
+            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0E2G">1</a>] is an
             efficient way to compress XML documents and XML fragments. This document provides information on how EXI can be used in XMPP streams to efficiently compress data transmitted between
             the server and the client. For certain applications (like applications in sensor networks) EXI is a vital component, decreasing packet size enabling sensors with limited memory to
             communicate efficiently. The strong support in EXI for generating efficient stubcodes is also vital to build efficient code in constrained devices.
@@ -138,9 +139,9 @@
        <a name="usecases">Use Cases</a></h2>
         
         <div class="indent">
-      <h3>2.1 <a name="sect-ID0EKBAC">Two approaches to use EXI</a></h3>
+      <h3>2.1 <a name="sect-ID0E3BAC">Two approaches to use EXI</a></h3>
             <p class="" style="">
-                There are two ways to use EXI to make efficient XMPP communication. The first method describes how to activate EXI-compression using <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0EYBAC">2</a>] (XEP-0138).
+                There are two ways to use EXI to make efficient XMPP communication. The first method describes how to activate EXI-compression using <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0EKCAC">2</a>] (XEP-0138).
                 The second method describes an alternative binding. This method does not use Stream compression as defined in 
                 <a href="http://xmpp.org/extensions/xep-0138.html">XEP-0138</a>, rather it allows clients to connect
                 to the server and start using EXI directly from the beginning.
@@ -180,7 +181,7 @@
                 Following is a list of use cases displaying how the client can configure and activate EXI compression on the current binding.
             </p>
             <div class="indent">
-        <h3>2.2.1 <a name="sect-ID0EHDAC">Invalid setup</a></h3>
+        <h3>2.2.1 <a name="sect-ID0EZDAC">Invalid setup</a></h3>
                 <p class="" style="">
                     If the client attempts to activate an EXI stream at this point, before the negotiation of EXI properties has been performed, the server must respond with a
                     <span class="strong">setup-failed</span> response.
@@ -278,7 +279,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.3 <a name="sect-ID0E3FAC">Uploading new schema files</a></h3>
+        <h3>2.2.3 <a name="sect-ID0EOGAC">Uploading new schema files</a></h3>
                 <p class="" style="">
                     If the server lacks information about a schema file, it is specified in the response through the <span class="strong">missingSchema</span> elements. At this point, the client can
                     either choose to accept that these schema files are not available, making compression less efficient, or choose to upload the missing schema files to the server. Of course,
@@ -365,11 +366,11 @@
                 <p class="" style="">
                     Note the <span class="strong">agreement</span> attribute in the response this time. The server must set this attribute to true if it agrees with the proposal from the client.
                     The client in turn can check this attribute as a quick way to check if agreement exists. When the server is in agreement it must also return a Configuration ID
-                    in the<span class="strong">configurationId</span> attribute. This Configuration ID can be used later to quicker enter into EXI compressed mode.
+                    in the <span class="strong">configurationId</span> attribute. This Configuration ID can be used later to quicker enter into EXI compressed mode.
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.4 <a name="sect-ID0EUHAC">Uploading compressed schema files</a></h3>
+        <h3>2.2.4 <a name="sect-ID0EGIAC">Uploading compressed schema files</a></h3>
                 <p class="" style="">
                     The <span class="strong">uploadSchema</span> command has an optional attribute called <span class="strong">contentType</span> that can be used to send different types of documents
                     to the server. This is not a MIME content type, but an enumeration with the following options:
@@ -467,7 +468,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.5 <a name="sect-ID0EUOAC">Downloading new schema files on server</a></h3>
+        <h3>2.2.5 <a name="sect-ID0EGPAC">Downloading new schema files on server</a></h3>
                 <p class="" style="">
                     As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <span class="strong">downloadSchema</span>
                     command, as follows:
@@ -562,7 +563,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.6 <a name="sect-ID0EEBAE">Accessing quick configurations</a></h3>
+        <h3>2.2.6 <a name="sect-ID0EWBAE">Accessing quick configurations</a></h3>
                 <p class="" style="">
                     Once an EXI setup has been accepted by the server, and agreement is reched, the server will provide the client with a quick Configuration ID
                     through the <span class="strong">configurationId</span> attribute. This Configuration ID can be used by the client during successive connections to the server,
@@ -595,7 +596,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.7 <a name="sect-ID0EHCAE">Quick configuration failure</a></h3>
+        <h3>2.2.7 <a name="sect-ID0EZCAE">Quick configuration failure</a></h3>
                 <p class="" style="">
                     If the server for some reason does not remember the specific configuration requested by the client (the client might have been disconnected for
                     a long time), it responds in the following manner:
@@ -614,7 +615,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.2.8 <a name="sect-ID0E2CAE">Start compression</a></h3>
+        <h3>2.2.8 <a name="sect-ID0ENDAE">Start compression</a></h3>
                 <p class="" style="">
                     When EXI option negotiation has been completed, the client can tell the server that it is ready to start compression. It does this using the normal <span class="strong">compress</span>
                     stanza, as follows:
@@ -648,9 +649,9 @@
             </div>
         </div>
         <div class="indent">
-      <h3>2.3 <a name="sect-ID0EGEAE">EXI-specific stream elements</a></h3>
+      <h3>2.3 <a name="sect-ID0EYEAE">EXI-specific stream elements</a></h3>
             <p class="" style="">
-                Becuase EXI engines cannot work in open mode, and needs to close all XML elements, it cannot start the stream by sending an open &lt;stream&gt; element,
+                Becuase EXI engines need to close all open XML elements before decompressing, it cannot start the stream by sending only an open &lt;stream&gt; element,
                 and close the stream by sending a closing &lt;/stream&gt; element. Instead separate <span class="strong">streamStart</span> and <span class="strong">streamEnd</span> elements
                 have to be sent, allowing for similar semantics on the EXI-compressed channel, as described in the following subsections.
             </p>
@@ -668,15 +669,24 @@
         <div class="indent">
           <pre class="prettyprint">
                     
-    &lt;exi:streamStart
-        from='client@im.example.com'
-        to='im.example.com'
-        version='1.0'
-        xml:lang='en'
-        xmlns='jabber:client'
-        xmlns:exi='http://jabber.org/protocol/compress/exi'/&gt;
+    &lt;exi:streamStart from='client@im.example.com'
+                     to='im.example.com'
+                     version='1.0'
+                     xml:lang='en'
+                     xmlns:exi='http://jabber.org/protocol/compress/exi'&gt;
+        &lt;exi:xmlns prefix='' namespace='jabber:client'/&gt;
+        &lt;exi:xmlns prefix='streams' namespace='http://etherx.jabber.org/streams'/&gt;
+        &lt;exi:xmlns prefix='exi' namespace='http://jabber.org/protocol/compress/exi'/&gt;
+    &lt;/exi:streamStart&gt;
                 </pre>
         </div>
+                <p class="" style="">
+                    There's a semantic difference between only writing an open XML element, and sending a closed XML element separately, and that is in the definition
+                    of XML namespaces. XML namespaces and their corresponding prefixes defined in the normal &lt;streams:stream&gt; element will be available to all
+                    child elements following in a normal XMPP stream. However, to be able to do the same in an EXP-compressed XMPP stream, you need to define the
+                    namespaces and prefixes separately. Furthermore, the EXI/XMPP layer needs to make these namespace and prefix-definitions available to all following
+                    elements sent on the stream. The empty prefix is synonymous with the default namespace to use.
+                </p>
             </div>
             <div class="indent">
         <h3>2.3.2 <a name="streamEnd">streamEnd</a></h3>
@@ -703,7 +713,7 @@
                 alternative TCP port.
             </p>
             <p class="" style="">
-                Typical steps of communication is as follows (based on <span class="ref" style=""><a href="http://tools.ietf.org/html/rfc6120">RFC 6120</a></span>  [<a href="#nt-ID0EMGAE">3</a>]).
+                Typical steps of communication is as follows (based on <span class="ref" style=""><a href="http://tools.ietf.org/html/rfc6120">RFC 6120</a></span>  [<a href="#nt-ID0ECHAE">3</a>]).
             </p>
             
             
@@ -865,7 +875,7 @@
     <h2>3.
        <a name="impl">Implementation Notes</a></h2>
         <div class="indent">
-      <h3>3.1 <a name="sect-ID0E1QAE">EXI options</a></h3>
+      <h3>3.1 <a name="sect-ID0EQRAE">EXI options</a></h3>
             <p class="" style="">
                 The following segment is taken from the <a href="http://www.w3.org/TR/exi/#options">EXI specification</a>. It describes the different EXI options that need to be negotiated before enabling EXI.
             </p>
@@ -913,7 +923,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.2 <a name="sect-ID0E1UAE">Transmission of EXI bodies and Session-wide Buffers</a></h3>
+      <h3>3.2 <a name="sect-ID0EQVAE">Transmission of EXI bodies and Session-wide Buffers</a></h3>
             <p class="" style="">
                 The transmission of EXI-compressed stanzas takes the form of a sequence of EXI bodies. In order for the recipient to be able to correctly interpret these incoming
                 EXI bodies, the sender is required to flush any pending bits at the end of the last End Document (ED) event for each stanza and then send any pending bytes available
@@ -950,7 +960,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.3 <a name="sect-ID0E5VAE">Preserving prefixes</a></h3>
+      <h3>3.3 <a name="sect-ID0EUWAE">Preserving prefixes</a></h3>
             <p class="" style="">
                 Normally, prefixes are not preserved during EXI compression and decompression. If the communicating parties (sending client, XMPP server(s) and receiving clients)
                 interpret incoming stanzas and content according to namespace, this should be sufficient. However, some implementations do not check namespaces, but prefix names used.
@@ -966,7 +976,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.4 <a name="sect-ID0ESWAE">Networks containing clients having limited memory</a></h3>
+      <h3>3.4 <a name="sect-ID0EIXAE">Networks containing clients having limited memory</a></h3>
             <p class="" style="">
                 To successfully implement a network with clients having limited memory, such as sensor networks, care should be taken to make sure necessary schema files are
                 preinstalled on the server, to avoid the necessity to upload schema files from the clients. Clients with limited memory might be unable to perform this task.
@@ -977,7 +987,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.5 <a name="sect-ID0E6WAE">Caching schema files</a></h3>
+      <h3>3.5 <a name="sect-ID0EVXAE">Caching schema files</a></h3>
             <p class="" style="">
                 Schema files uploaded to the server should be cached on the server in some kind of schema repository. If memory is limited on the server, schema files should be
                 sorted by last access. Schema files with the oldest last access timestamp could be removed to maintain the cache within an approved cache size.
@@ -990,7 +1000,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.6 <a name="sect-ID0EVXAE">Uploading vs. Downloading schemas</a></h3>
+      <h3>3.6 <a name="sect-ID0ELYAE">Uploading vs. Downloading schemas</a></h3>
             <p class="" style="">
                 When the server lacks information about a given XML schema, the client has two options for updating the server. Either it uploads the schema, or it asks the server to
                 download one.
@@ -1006,7 +1016,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.7 <a name="sect-ID0EGYAE">Server decompression and recompression vs. binary forwarding</a></h3>
+      <h3>3.7 <a name="sect-ID0E3YAE">Server decompression and recompression vs. binary forwarding</a></h3>
             <p class="" style="">
                 If two XMPP clients communicate with each other through an XMPP server, and both clients use EXI compression, the server must only forward
                 binary packets if both EXI compressed channels have exactly the same setup. If any parameter is different, the server MUST always recompress
@@ -1016,6 +1026,9 @@
                 Since the server always needs to decompress incoming EXI compressed packets to decode headers, omitting the compression part might save the server
                 some processing power, but not all. Note that, in some networks it might be common using similar compression settings, while in others different compression
                 settings are most common.
+            </p>
+            <p class="" style="">
+                Also note that binary forwarding is only possible if session-wide buffers are not used.
             </p>
         </div>
         <div class="indent">
@@ -1036,7 +1049,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.9 <a name="sect-ID0EHZAE">Generation of Canonic Schemas</a></h3>
+      <h3>3.9 <a name="sect-ID0EB1AE">Generation of Canonic Schemas</a></h3>
             <p class="" style="">
                 The interface between the XMPP engine, whether in the client or the server, and the EXI compression engine is required to provide the engine
                 with ONE XML Schema to use during the compression. The <a href="http://www.w3.org/TR/exi/">Efficient XML Interchange (EXI) Format</a>
@@ -1053,28 +1066,35 @@
                 order.
             </p>
             <p class="" style="">
+                After generating the canonical schema, it's a good idea to create a corresponding Configuration ID. The Configuration ID however, includes not only
+                the schemas imported into the canonical schema, but also the EXI options to use during compression/decompression. The canonical schema should be
+                persisted for simple reuse when quick setup is used.
+            </p>
+            <p class="" style="">
+                The target namespace of the canonical schema MUST be <span class="strong">urn:xmpp:exi:cs</span>.
+            </p>
+            <p class="" style="">
                 The Schema ID to use is irrelevant in the XMPP layer of communiction. Therefore, the server and client can create their own Schema IDs, according to some
                 algorithm. It is not important if the Schema IDs match, since they are not used in data transmitted between the client and server.
             </p>
         </div>
         <div class="indent">
       <h3>3.10 <a name="shortcut">Using EXI Option Documents for Shortcut Setup</a></h3>
-            <p class="" style="">
-                The <span class="strong">configurationId</span> attribute in the <span class="strong">setup</span> element provides a mechanism to setup an EXI connection rapidly.
-                This specification does not define the format of this Configuration ID, and so it is server specific. However, the server must make sure the
-                Configuration IDs are unique among themselves.
+			<p class="" style="">
+				The <span class="strong">configurationId</span> attribute has a similar attribute called <span class="strong">configurationLocation</span>. This attribute provides
+				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
+				through an URL.
+			</p>
+			<p class="" style="">
+                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
+				If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <span class="strong">agreement=false</span>
+				response. Otherwise the semantics of the <span class="strong">configurationLocation</span> attribute is the same as for the <span class="strong">configurationId</span>
+				attribute, except it provide a mechism for static configurations, while the <span class="strong">configurationId</span> provides a mechanism for
+				dynamic configurations.
             </p>
-            <p class="" style="">
-                When EXI options negotiation is complete, and agreement exists, the server returns a dynamic Configuration ID that can be used at a later time.
-                How long the Configuration ID will be available on the server is also implementation specific. Preferrably it is a configurable option on the
-                server. But it is assumed, that if the client remains offline for a "long" period of time, the server will remove the Connection ID from its
-                cache.
-            </p>
-            <p class="" style="">
-                The use of Configuration IDs in this case opens the possibility to define EXI Option Documents on the server with static, instead of dynamic,
-                Configuration IDs. The Configuration IDs in these cases could be file names or URLs. In this way, it is possible to configure the server with
-                predefined options documents and then let configure clients with the corresponding static Configuration ID to facilitate configuration.
-            </p>
+			<p class="" style="">
+				The format for these opton documents or locations is beyond the scope of this specification.
+			</p>
         </div>
         <div class="indent">
       <h3>3.11 <a name="knownhashes">XMPP Schema files and their hash values</a></h3>
@@ -2126,6 +2146,10 @@
                 </pre>
         </div>
             </div>
+			<div class="indent">
+        <h3>3.12.2 <a name="sect-ID0EQVAI">Patch for missing wildcards in extensible schemas</a></h3>
+				
+			</div>
         </div>
         
     <h2>4.
@@ -2133,6 +2157,19 @@
         <p class="" style="">
             Note that EXI compressed information, even though it is hard to decode by humans, is by no means encrypted. If sensitive data is to be sent over an EXI compressed
             channel, encryption should be considered as well.
+        </p>
+        <p class="" style="">
+            The reason for using MD5 as a hashing mechanism to identify schema versions, is because MD5 has a small memory footprint and is easy to implement.
+            However, it has a weakness: Given a hash value, it's relatively easy to create another file returning the same hash value. However, it's very
+            difficult to create another file of the same size as the original, resulting in the same hash value. For this reason, file sizes are also included
+            when identifying a schema. Since the security threat, and any possible consequences of somebody trying to inject invalid schemas to a server is 
+            relatively small, this is considered a sufficient protection against such threats.
+        </p>
+        <p class="" style="">
+            The feature of uploading and downloading new schemas to the server is a feature that the server can disable for exceptional high security reasons, for instance,
+            in high-security installations where total control of the domain is necessary. Clients should be aware
+            if this fact and check setup after uploading or asking the server to download new schemas. If the setup fails a second time, i.e. schemas are still missing,
+            the client MUST NOT try to upload or download the missing schemas again, since this would provoke an indefinite loop.
         </p>
     <h2>5.
        <a name="iana">IANA Considerations</a></h2>
@@ -2155,6 +2192,10 @@
         </p>
         <p class="" style="">
             The <a href="#schema">protocol schema</a> needs to be added to the list of <a href="http://xmpp.org/resources/schemas/">XMPP protocol schemas</a>.
+        </p>
+        <p class="" style="">
+            The target namespace for canonical schemas <span class="strong">urn:xmpp:exi:cs</span>, as well as the EXI compress schema namespace
+            <span class="strong">http://jabber.org/protocol/compress/exi</span> need to be registered on the list of known XSF schemas.
         </p>
     <h2>7.
        <a name="schema">XML Schema</a></h2>
@@ -2186,6 +2227,7 @@
         &lt;/xs:choice&gt;
         &lt;xs:attributeGroup ref='Options'/&gt;
         &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
+        &lt;xs:attribute name='configurationLocation' type='xs:string' use='optional'/&gt;
     &lt;/xs:complexType&gt;
  
     &lt;xs:complexType name='SetupResponse'&gt;
@@ -2196,6 +2238,7 @@
                 &lt;/xs:choice&gt;
                 &lt;xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/&gt;
                 &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
+                &lt;xs:attribute name='configurationLocation' type='xs:string' use='optional'/&gt;
             &lt;/xs:extension&gt;
         &lt;/xs:complexContent&gt;
     &lt;/xs:complexType&gt;
@@ -2401,6 +2444,12 @@
     &lt;xs:element name='streamStart'&gt;
         &lt;xs:complexType&gt;
             &lt;xs:sequence&gt;
+                &lt;xs:element name='xmlns' minOccurs='0' maxOccurs='unbounded'&gt;
+                    &lt;xs:complexType&gt;
+                        &lt;xs:attribute name='prefix' type='xs:string' use='required'/&gt;
+                        &lt;xs:attribute name='namespace' type='xs:string' use='required'/&gt;
+                    &lt;/xs:complexType&gt;
+                &lt;/xs:element&gt;
                 &lt;xs:element ref='streams:features'
                             minOccurs='0'
                             maxOccurs='1'/&gt;
@@ -2442,8 +2491,8 @@
             <a href="http://xmpp.org/extensions/xep-0001.html#states-Experimental">Experimental</a><br>
             Type:
             <a href="http://xmpp.org/extensions/xep-0001.html#types-Standards Track">Standards Track</a><br>
-            Version: 0.0.5<br>
-            Last Updated: ?<br>
+            Version: 0.1.1<br>
+            Last Updated: 2013-06-27<br>
                 Approving Body: <a href="http://xmpp.org/council/">XMPP Council</a><br>Dependencies: XMPP Core, XEP-0001, XEP-0138<br>
                 Supersedes: None<br>
                 Superseded By: None<br>
@@ -2487,24 +2536,29 @@
     <p class="indent">The following requirements keywords as used in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>: "MUST", "SHALL", "REQUIRED"; "MUST NOT", "SHALL NOT"; "SHOULD", "RECOMMENDED"; "SHOULD NOT", "NOT RECOMMENDED"; "MAY", "OPTIONAL".</p>
     <hr><a name="appendix-notes"></a><h3>Appendix G: Notes</h3>
     <div class="indent">
-      <p><a name="nt-ID0EJG">1</a>. 
+      <p><a name="nt-ID0E2G">1</a>. 
                 Efficient XML Interchange (EXI) Format &lt;<a href="http://www.w3.org/TR/exi/">http://www.w3.org/TR/exi/</a>&gt;.
             </p>
-      <p><a name="nt-ID0EYBAC">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
-      <p><a name="nt-ID0EMGAE">3</a>. RFC 6120: Extensible Messaging and Presence Protocol (XMPP): Core &lt;<a href="http://tools.ietf.org/html/rfc6120">http://tools.ietf.org/html/rfc6120</a>&gt;.</p>
+      <p><a name="nt-ID0EKCAC">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
+      <p><a name="nt-ID0ECHAE">3</a>. RFC 6120: Extensible Messaging and Presence Protocol (XMPP): Core &lt;<a href="http://tools.ietf.org/html/rfc6120">http://tools.ietf.org/html/rfc6120</a>&gt;.</p>
     </div>
     <hr><a name="appendix-revs"></a><h3>Appendix H: Revision History</h3>
     <p>Note: Older versions of this specification might be available at <a href="http://xmpp.org/extensions/attic/">http://xmpp.org/extensions/attic/</a></p>
     <div class="indent">
-      <h4>Version 0.0.5 (?)</h4>
+      <h4>Version 0.1.1 (2013-06-27)</h4>
       <div class="indent">
                 <p class="" style="">Added support for a binary binding.</p>
                 <p class="" style="">Changed namespace urn:xmpp:sn to urn:xmpp:iot</p>
                 <p class="" style="">Added streamStart and streamEnd elements.</p>
                 <p class="" style="">Added central XMPP schemas used for XMPP communication.</p>
                 <p class="" style="">Added references to core XMPP schemas in examples.</p>
-                <p class="" style="">Added quick setup attribute: <span class="strong">configurationId</span>.</p>
+                <p class="" style="">Added quick setup attributes: <span class="strong">configurationId</span>, <span class="strong">configurationLocation</span>.</p>
              (pw, yd)
+    </div>
+      <h4>Version 0.1 (2013-04-16)</h4>
+      <div class="indent">
+				<p class="" style="">Initial published version approved by the XMPP Council.</p>
+			 (psa)
     </div>
       <h4>Version 0.0.4 (2013-03-19)</h4>
       <div class="indent">

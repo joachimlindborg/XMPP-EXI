@@ -47,8 +47,8 @@
             <uri>http://www.linkedin.com/in/yusukedoi</uri>
         </author>
         <revision>
-            <version>0.0.5</version>
-            <date>?</date>
+            <version>0.1.1</version>
+            <date>2013-06-27</date>
             <initials>pw, yd</initials>
             <remark>
                 <p>Added support for a binary binding.</p>
@@ -56,10 +56,18 @@
                 <p>Added streamStart and streamEnd elements.</p>
                 <p>Added central XMPP schemas used for XMPP communication.</p>
                 <p>Added references to core XMPP schemas in examples.</p>
-                <p>Added quick setup attribute: <strong>configurationId</strong>.</p>
+                <p>Added quick setup attributes: <strong>configurationId</strong>, <strong>configurationLocation</strong>.</p>
             </remark>
         </revision>
-        <revision>
+		<revision>
+			<version>0.1</version>
+			<date>2013-04-16</date>
+			<initials>psa</initials>
+			<remark>
+				<p>Initial published version approved by the XMPP Council.</p>
+			</remark>
+		</revision>
+		<revision>
             <version>0.0.4</version>
             <date>2013-03-19</date>
             <initials>pw</initials>
@@ -345,7 +353,7 @@
                 <p>
                     Note the <strong>agreement</strong> attribute in the response this time. The server must set this attribute to true if it agrees with the proposal from the client.
                     The client in turn can check this attribute as a quick way to check if agreement exists. When the server is in agreement it must also return a Configuration ID
-                    in the<strong>configurationId</strong> attribute. This Configuration ID can be used later to quicker enter into EXI compressed mode.
+                    in the <strong>configurationId</strong> attribute. This Configuration ID can be used later to quicker enter into EXI compressed mode.
                 </p>
             </section3>
             <section3 topic='Uploading compressed schema files'>
@@ -582,7 +590,7 @@
         </section2>
         <section2 topic="EXI-specific stream elements">
             <p>
-                Becuase EXI engines cannot work in open mode, and needs to close all XML elements, it cannot start the stream by sending an open &lt;stream&gt; element,
+                Becuase EXI engines need to close all open XML elements before decompressing, it cannot start the stream by sending only an open &lt;stream&gt; element,
                 and close the stream by sending a closing &lt;/stream&gt; element. Instead separate <strong>streamStart</strong> and <strong>streamEnd</strong> elements
                 have to be sent, allowing for similar semantics on the EXI-compressed channel, as described in the following subsections.
             </p>
@@ -597,14 +605,23 @@
                 </p>
                 <example caption='Start of EXI-compressed stream'>
                     <![CDATA[
-    <exi:streamStart
-        from='client@im.example.com'
-        to='im.example.com'
-        version='1.0'
-        xml:lang='en'
-        xmlns='jabber:client'
-        xmlns:exi='http://jabber.org/protocol/compress/exi'/>]]>
+    <exi:streamStart from='client@im.example.com'
+                     to='im.example.com'
+                     version='1.0'
+                     xml:lang='en'
+                     xmlns:exi='http://jabber.org/protocol/compress/exi'>
+        <exi:xmlns prefix='' namespace='jabber:client'/>
+        <exi:xmlns prefix='streams' namespace='http://etherx.jabber.org/streams'/>
+        <exi:xmlns prefix='exi' namespace='http://jabber.org/protocol/compress/exi'/>
+    </exi:streamStart>]]>
                 </example>
+                <p>
+                    There's a semantic difference between only writing an open XML element, and sending a closed XML element separately, and that is in the definition
+                    of XML namespaces. XML namespaces and their corresponding prefixes defined in the normal &lt;streams:stream&gt; element will be available to all
+                    child elements following in a normal XMPP stream. However, to be able to do the same in an EXP-compressed XMPP stream, you need to define the
+                    namespaces and prefixes separately. Furthermore, the EXI/XMPP layer needs to make these namespace and prefix-definitions available to all following
+                    elements sent on the stream. The empty prefix is synonymous with the default namespace to use.
+                </p>
             </section3>
             <section3 topic="streamEnd" anchor="streamEnd">
                 <p>
@@ -937,6 +954,9 @@
                 some processing power, but not all. Note that, in some networks it might be common using similar compression settings, while in others different compression
                 settings are most common.
             </p>
+            <p>
+                Also note that binary forwarding is only possible if session-wide buffers are not used.
+            </p>
         </section2>
         <section2 topic="Snapshot Repository for Well-known Schemas" anchor='wellknown'>
             <!-- [YD] -->
@@ -972,27 +992,34 @@
                 order.
             </p>
             <p>
+                After generating the canonical schema, it's a good idea to create a corresponding Configuration ID. The Configuration ID however, includes not only
+                the schemas imported into the canonical schema, but also the EXI options to use during compression/decompression. The canonical schema should be
+                persisted for simple reuse when quick setup is used.
+            </p>
+            <p>
+                The target namespace of the canonical schema MUST be <strong>urn:xmpp:exi:cs</strong>.
+            </p>
+            <p>
                 The Schema ID to use is irrelevant in the XMPP layer of communiction. Therefore, the server and client can create their own Schema IDs, according to some
                 algorithm. It is not important if the Schema IDs match, since they are not used in data transmitted between the client and server.
             </p>
         </section2>
         <section2 topic="Using EXI Option Documents for Shortcut Setup" anchor="shortcut">
-            <p>
-                The <strong>configurationId</strong> attribute in the <strong>setup</strong> element provides a mechanism to setup an EXI connection rapidly.
-                This specification does not define the format of this Configuration ID, and so it is server specific. However, the server must make sure the
-                Configuration IDs are unique among themselves.
+			<p>
+				The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
+				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
+				through an URL.
+			</p>
+			<p>
+                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
+				If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <strong>agreement=false</strong>
+				response. Otherwise the semantics of the <strong>configurationLocation</strong> attribute is the same as for the <strong>configurationId</strong>
+				attribute, except it provide a mechism for static configurations, while the <strong>configurationId</strong> provides a mechanism for
+				dynamic configurations.
             </p>
-            <p>
-                When EXI options negotiation is complete, and agreement exists, the server returns a dynamic Configuration ID that can be used at a later time.
-                How long the Configuration ID will be available on the server is also implementation specific. Preferrably it is a configurable option on the
-                server. But it is assumed, that if the client remains offline for a "long" period of time, the server will remove the Connection ID from its
-                cache.
-            </p>
-            <p>
-                The use of Configuration IDs in this case opens the possibility to define EXI Option Documents on the server with static, instead of dynamic,
-                Configuration IDs. The Configuration IDs in these cases could be file names or URLs. In this way, it is possible to configure the server with
-                predefined options documents and then let configure clients with the corresponding static Configuration ID to facilitate configuration.
-            </p>
+			<p>
+				The format for these opton documents or locations is beyond the scope of this specification.
+			</p>
         </section2>
         <section2 topic="XMPP Schema files and their hash values" anchor="knownhashes">
             <p>
@@ -2035,6 +2062,9 @@
                     maxOccurs='1'
                 </code>
             </section3>
+			<section3 topic="Patch for missing wildcards in extensible schemas">
+				<!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
+			</section3>
         </section2>
         <!--
         PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
@@ -2176,6 +2206,19 @@ shall it have other common schemas such as roster, muc, ... ?
             Note that EXI compressed information, even though it is hard to decode by humans, is by no means encrypted. If sensitive data is to be sent over an EXI compressed
             channel, encryption should be considered as well.
         </p>
+        <p>
+            The reason for using MD5 as a hashing mechanism to identify schema versions, is because MD5 has a small memory footprint and is easy to implement.
+            However, it has a weakness: Given a hash value, it's relatively easy to create another file returning the same hash value. However, it's very
+            difficult to create another file of the same size as the original, resulting in the same hash value. For this reason, file sizes are also included
+            when identifying a schema. Since the security threat, and any possible consequences of somebody trying to inject invalid schemas to a server is 
+            relatively small, this is considered a sufficient protection against such threats.
+        </p>
+        <p>
+            The feature of uploading and downloading new schemas to the server is a feature that the server can disable for exceptional high security reasons, for instance,
+            in high-security installations where total control of the domain is necessary. Clients should be aware
+            if this fact and check setup after uploading or asking the server to download new schemas. If the setup fails a second time, i.e. schemas are still missing,
+            the client MUST NOT try to upload or download the missing schemas again, since this would provoke an indefinite loop.
+        </p>
     </section1>
     <section1 topic='IANA Considerations' anchor='iana'>
         <p>
@@ -2197,6 +2240,10 @@ shall it have other common schemas such as roster, muc, ... ?
         </p>
         <p>
             The <link url="#schema">protocol schema</link> needs to be added to the list of <link url="http://xmpp.org/resources/schemas/">XMPP protocol schemas</link>.
+        </p>
+        <p>
+            The target namespace for canonical schemas <strong>urn:xmpp:exi:cs</strong>, as well as the EXI compress schema namespace
+            <strong>http://jabber.org/protocol/compress/exi</strong> need to be registered on the list of known XSF schemas.
         </p>
     </section1>
     <section1 topic='XML Schema' anchor='schema'>
@@ -2225,6 +2272,7 @@ shall it have other common schemas such as roster, muc, ... ?
         </xs:choice>
         <xs:attributeGroup ref='Options'/>
         <xs:attribute name='configurationId' type='xs:string' use='optional'/>
+        <xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
     </xs:complexType>
  
     <xs:complexType name='SetupResponse'>
@@ -2235,6 +2283,7 @@ shall it have other common schemas such as roster, muc, ... ?
                 </xs:choice>
                 <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
                 <xs:attribute name='configurationId' type='xs:string' use='optional'/>
+                <xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -2440,6 +2489,12 @@ shall it have other common schemas such as roster, muc, ... ?
     <xs:element name='streamStart'>
         <xs:complexType>
             <xs:sequence>
+                <xs:element name='xmlns' minOccurs='0' maxOccurs='unbounded'>
+                    <xs:complexType>
+                        <xs:attribute name='prefix' type='xs:string' use='required'/>
+                        <xs:attribute name='namespace' type='xs:string' use='required'/>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element ref='streams:features'
                             minOccurs='0'
                             maxOccurs='1'/>

@@ -21,6 +21,7 @@
         </xs:choice>
         <xs:attributeGroup ref='Options'/>
 		<xs:attribute name='configurationId' type='xs:string' use='optional'/>
+		<xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
 	</xs:complexType>
  
     <xs:complexType name='SetupResponse'>
@@ -31,6 +32,7 @@
                 </xs:choice>
                 <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
 				<xs:attribute name='configurationId' type='xs:string' use='optional'/>
+				<xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
 			</xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -209,6 +211,12 @@
 	<xs:element name='streamStart'>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name='xmlns' minOccurs='0' maxOccurs='unbounded'>
+					<xs:complexType>
+						<xs:attribute name='prefix' type='xs:string' use='required'/>
+						<xs:attribute name='namespace' type='xs:string' use='required'/>
+					</xs:complexType>
+				</xs:element>
 				<xs:element ref='streams:features'
 							minOccurs='0'
 							maxOccurs='1'/>
