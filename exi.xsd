@@ -3,9 +3,14 @@
     xmlns:xs='http://www.w3.org/2001/XMLSchema'
     targetNamespace='http://jabber.org/protocol/compress/exi'
     xmlns='http://jabber.org/protocol/compress/exi'
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	xmlns:client='jabber:client'
+	xmlns:streams='http://etherx.jabber.org/streams'
     elementFormDefault='qualified'>
-
+ 
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+	<xs:import namespace="http://etherx.jabber.org/streams"/>
+ 
     <xs:element name='setup' type='Setup'/>
     <xs:element name='setupResponse' type='SetupResponse'/>
  
@@ -15,7 +20,8 @@
             <xs:element name='datatypeRepresentationMap' type='DatatypeRepresentationMap'/>
         </xs:choice>
         <xs:attributeGroup ref='Options'/>
-    </xs:complexType>
+		<xs:attribute name='configurationId' type='xs:string' use='optional'/>
+	</xs:complexType>
  
     <xs:complexType name='SetupResponse'>
         <xs:complexContent>
@@ -24,7 +30,8 @@
                     <xs:element name='missingSchema' type='Schema'/>
                 </xs:choice>
                 <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
-            </xs:extension>
+				<xs:attribute name='configurationId' type='xs:string' use='optional'/>
+			</xs:extension>
         </xs:complexContent>
     </xs:complexType>
  
@@ -112,7 +119,7 @@
  
     <xs:simpleType name='MD5Hash'>
         <xs:restriction base='xs:string'>
-            <xs:pattern value='^[0-9a-f]{32}$'/>
+            <xs:pattern value='[0-9a-f]{32}'/>
         </xs:restriction>
     </xs:simpleType>
  
@@ -202,7 +209,7 @@
 	<xs:element name='streamStart'>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref='features'
+				<xs:element ref='streams:features'
 							minOccurs='0'
 							maxOccurs='1'/>
 				<xs:any namespace='urn:ietf:params:xml:ns:xmpp-tls'
@@ -211,7 +218,7 @@
 				<xs:any namespace='urn:ietf:params:xml:ns:xmpp-sasl'
 						minOccurs='0'
 						maxOccurs='1'/>
-				<xs:element ref='error' minOccurs='0' maxOccurs='1'/>
+				<xs:element ref='streams:error' minOccurs='0' maxOccurs='1'/>
 			</xs:sequence>
 			<xs:attribute name='from' type='xs:string' use='optional'/>
 			<xs:attribute name='id' type='xs:string' use='optional'/>
@@ -221,36 +228,9 @@
 			<xs:anyAttribute namespace='##other' processContents='lax'/>
 		</xs:complexType>
 	</xs:element>
-
-	<xs:element name='features'>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:any namespace='##other'
-						minOccurs='0'
-						maxOccurs='unbounded'
-						processContents='lax'/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name='error'>
-		<xs:complexType>
-			<xs:sequence  xmlns:err='urn:ietf:params:xml:ns:xmpp-streams'>
-				<xs:group   ref='err:streamErrorGroup'/>
-				<xs:element ref='err:text'
-							minOccurs='0'
-							maxOccurs='1'/>
-				<xs:any     namespace='##other'
-							minOccurs='0'
-							maxOccurs='1'
-							processContents='lax'/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-
+ 
 	<xs:element name='streamEnd'>
 		<xs:complexType/>
 	</xs:element>
- 	
+ 
 </xs:schema>

@@ -5,7 +5,8 @@
     <title>XEP-0322: Efficient XML Interchange (EXI) Format</title>
     <link rel="stylesheet" type="text/css" href="xmpp.css">
     <link href="prettify.css" type="text/css" rel="stylesheet">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"><script type="text/javascript" src="prettify.js"></script><meta name="DC.Title" content="Efficient XML Interchange (EXI) Format">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"><script type="text/javascript" src="prettify.js"></script><meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=2.0">
+    <meta name="DC.Title" content="Efficient XML Interchange (EXI) Format">
     <meta name="DC.Creator" content="Peter Waher">
     <meta name="DC.Creator" content="Yusuke DOI">
     <meta name="DC.Description" content="This specification describes how EXI compression can be used in XMPP networks.">
@@ -56,41 +57,44 @@
     <h2>Table of Contents</h2>
     <div class="indent">
       <p><br>1.  <a href="#intro">Introduction</a><br>2.  <a href="#usecases">Use Cases</a><br>   
-      2.1.  <a href="#sect-ID0E6AAC">Two approaches to use EXI</a><br>   
-      2.2.  <a href="#sect-ID0EBCAC">Detecting support of EXI over XML-based XMPP</a><br>   
-      2.3.  <a href="#sect-ID0EMDAC">Normal XMPP port binding use cases</a><br>      
-      2.3.1.  <a href="#sect-ID0EQDAC">Invalid setup</a><br>      
-      2.3.2.  <a href="#sect-ID0E6DAC">Proposing compression parameters</a><br>      
-      2.3.3.  <a href="#sect-ID0EUFAC">Uploading new schema files</a><br>      
-      2.3.4.  <a href="#sect-ID0EKHAC">Uploading compressed schema files</a><br>      
-      2.3.5.  <a href="#sect-ID0EKOAC">Downloading new schema files on server</a><br>      
-      2.3.6.  <a href="#sect-ID0EWAAE">Start compression</a><br>   
+      2.1.  <a href="#sect-ID0EKBAC">Two approaches to use EXI</a><br>   
+      2.2.  <a href="#streamcompression">Stream Compression</a><br>      
+      2.2.1.  <a href="#sect-ID0EHDAC">Invalid setup</a><br>      
+      2.2.2.  <a href="#setup">Proposing compression parameters</a><br>      
+      2.2.3.  <a href="#sect-ID0E3FAC">Uploading new schema files</a><br>      
+      2.2.4.  <a href="#sect-ID0EUHAC">Uploading compressed schema files</a><br>      
+      2.2.5.  <a href="#sect-ID0EUOAC">Downloading new schema files on server</a><br>      
+      2.2.6.  <a href="#sect-ID0EEBAE">Accessing quick configurations</a><br>      
+      2.2.7.  <a href="#sect-ID0EHCAE">Quick configuration failure</a><br>      
+      2.2.8.  <a href="#sect-ID0E2CAE">Start compression</a><br>   
+      2.3.  <a href="#sect-ID0EGEAE">EXI-specific stream elements</a><br>      
+      2.3.1.  <a href="#startStream">streamStart</a><br>      
+      2.3.2.  <a href="#streamEnd">streamEnd</a><br>   
       2.4.  <a href="#alttrans">Alternative Transport Binding for EXI/XMPP over TCP</a><br>      
       2.4.1.  <a href="#srv">DNS SRV lookup</a><br>      
       2.4.2.  <a href="#fallback">Fallback Process</a><br>      
       2.4.3.  <a href="#defaultParam">Default Payload Encoding Options for EXI/XMPP</a><br>      
       2.4.4.  <a href="#recommendedParams">Recommended Payload Encoding Options for EXI/XMPP Stream</a><br>3.  <a href="#impl">Implementation Notes</a><br>   
-      3.1.  <a href="#sect-ID0ESMAE">EXI options</a><br>   
-      3.2.  <a href="#sect-ID0ESQAE">Transmission of EXI bodies and Session-wide Buffers</a><br>   
-      3.3.  <a href="#sect-ID0EWRAE">Preserving prefixes</a><br>   
-      3.4.  <a href="#sect-ID0EKSAE">Networks containing clients having limited memory</a><br>   
-      3.5.  <a href="#sect-ID0EXSAE">Caching schema files</a><br>   
-      3.6.  <a href="#sect-ID0ENTAE">Uploading vs. Downloading schemas</a><br>   
-      3.7.  <a href="#sect-ID0E5TAE">Server decompression and recompression vs. binary forwarding</a><br>   
-      3.8.  <a href="#wellknown">Snapshot Repository for Well-known Schemas</a><br>4.  <a href="#schemaHandling">Handling of XML Schema in EXI/XMPP Stream</a><br>   
-      4.1.  <a href="#schemaID">SchemaID for (a combination of) registered XML schemas</a><br>   
-      4.2.  <a href="#sect-ID0EMWAE">Server-local SchemaIDs</a><br>   
-      4.3.  <a href="#shortcut">Using EXI Option Document for Shortcut Setup</a><br>5.  <a href="#security">Security Considerations</a><br>6.  <a href="#iana">IANA Considerations</a><br>7.  <a href="#registrar">XMPP Registrar Considerations</a><br>8.  <a href="#schema">XML Schema</a><br>   
-      8.1.  <a href="#default">Default schema for alternative bindings</a><br>   
-      8.2.  <a href="#sect-ID0EMZAE">A schema for Combined Schemas</a><br>   
-      8.3.  <a href="#patch">Patch to avoid UPA for streams.xsd</a><br>9.  <a href="#ack">Acknowledgements</a></p>
+      3.1.  <a href="#sect-ID0E1QAE">EXI options</a><br>   
+      3.2.  <a href="#sect-ID0E1UAE">Transmission of EXI bodies and Session-wide Buffers</a><br>   
+      3.3.  <a href="#sect-ID0E5VAE">Preserving prefixes</a><br>   
+      3.4.  <a href="#sect-ID0ESWAE">Networks containing clients having limited memory</a><br>   
+      3.5.  <a href="#sect-ID0E6WAE">Caching schema files</a><br>   
+      3.6.  <a href="#sect-ID0EVXAE">Uploading vs. Downloading schemas</a><br>   
+      3.7.  <a href="#sect-ID0EGYAE">Server decompression and recompression vs. binary forwarding</a><br>   
+      3.8.  <a href="#wellknown">Snapshot Repository for Well-known Schemas</a><br>   
+      3.9.  <a href="#sect-ID0EHZAE">Generation of Canonic Schemas</a><br>   
+      3.10.  <a href="#shortcut">Using EXI Option Documents for Shortcut Setup</a><br>   
+      3.11.  <a href="#knownhashes">XMPP Schema files and their hash values</a><br>   
+      3.12.  <a href="#knownproblems">Known problems with existing schemas</a><br>      
+      3.12.1.  <a href="#patch">Patch to avoid UPA for streams.xsd</a><br>4.  <a href="#security">Security Considerations</a><br>5.  <a href="#iana">IANA Considerations</a><br>6.  <a href="#registrar">XMPP Registrar Considerations</a><br>7.  <a href="#schema">XML Schema</a><br>8.  <a href="#ack">Acknowledgements</a></p>
       <p><a href="#appendices">Appendices</a><br>    <a href="#appendix-docinfo">A: Document Information</a><br>    <a href="#appendix-authorinfo">B: Author Information</a><br>    <a href="#appendix-legal">C: Legal Notices</a><br>    <a href="#appendix-xmpp">D: Relation to XMPP</a><br>    <a href="#appendix-discuss">E: Discussion Venue</a><br>    <a href="#appendix-conformance">F: Requirements Conformance</a><br>    <a href="#appendix-notes">G: Notes</a><br>    <a href="#appendix-revs">H: Revision History</a></p>
     </div>
     <hr>
     <h2>1.
        <a name="intro">Introduction</a></h2>
         <p class="" style="">
-            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0E5F">1</a>] is an
+            The Efficient XML Interchange (EXI) Format  [<a href="#nt-ID0EJG">1</a>] is an
             efficient way to compress XML documents and XML fragments. This document provides information on how EXI can be used in XMPP streams to efficiently compress data transmitted between
             the server and the client. For certain applications (like applications in sensor networks) EXI is a vital component, decreasing packet size enabling sensors with limited memory to
             communicate efficiently. The strong support in EXI for generating efficient stubcodes is also vital to build efficient code in constrained devices.
@@ -134,18 +138,19 @@
        <a name="usecases">Use Cases</a></h2>
         
         <div class="indent">
-      <h3>2.1 <a name="sect-ID0E6AAC">Two approaches to use EXI</a></h3>
+      <h3>2.1 <a name="sect-ID0EKBAC">Two approaches to use EXI</a></h3>
             <p class="" style="">
-                There are two ways to use EXI to make efficient XMPP communication. As a basic mode, this section desribes 
-                <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0ENBAC">2</a>] based use case.
-                After that, alternative binding is also described. Alternative binding may not use <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0EZBAC">3</a>] based 
-                negotiation and clients can start EXI communication from the start of the stream.
+                There are two ways to use EXI to make efficient XMPP communication. The first method describes how to activate EXI-compression using <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0EYBAC">2</a>] (XEP-0138).
+                The second method describes an alternative binding. This method does not use Stream compression as defined in 
+                <a href="http://xmpp.org/extensions/xep-0138.html">XEP-0138</a>, rather it allows clients to connect
+                to the server and start using EXI directly from the beginning.
             </p>
         </div>
         <div class="indent">
-      <h3>2.2 <a name="sect-ID0EBCAC">Detecting support of EXI over XML-based XMPP</a></h3>
+      <h3>2.2 <a name="streamcompression">Stream Compression</a></h3>
             <p class="" style="">
-                This XEP is based on <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0138.html">Stream Compression</a></span>  [<a href="#nt-ID0EPCAC">4</a>]. When the client connects to the XMPP Server, it will receive a list of features supported by the server:
+                The following sections assume the client connects through the normal XMPP port, and starts communicating with the server using uncompressed XML fragments.
+                When the client connects to the XMPP Server, it will receive a list of features supported by the server:
             </p>
             <p class="caption"><a name="example-1"></a>Example 1. Search Features</p>
       <div class="indent">
@@ -165,17 +170,17 @@
             <p class="" style="">
                 Support for EXI compression through the normal XMPP port is detected by the existence of the <span class="strong">exi</span> compression method in the <span class="strong">features</span> stanza.
                 If a port (static or dynamic) is available for a dedicated binary EXI/XMPP binding, this can be detected by the existence of the <span class="strong">exi:PORT</span> compression method,
-                where PORT is replaced by the port number used.
+                where PORT is replaced by the port number used. More information about this alternative method is available in the <a href="#alttrans">Alternative Bindings</a> section.
             </p>
             <p class="" style="">
                 <span class="strong">Note:</span> If the client already knows the port number of the dedicated binary EXI/XMPP binding, it can connect there directly, without the need to check the
                 server features using the normal XMPP port.
             </p>
-        </div>
-        <div class="indent">
-      <h3>2.3 <a name="sect-ID0EMDAC">Normal XMPP port binding use cases</a></h3>
+            <p class="" style="">
+                Following is a list of use cases displaying how the client can configure and activate EXI compression on the current binding.
+            </p>
             <div class="indent">
-        <h3>2.3.1 <a name="sect-ID0EQDAC">Invalid setup</a></h3>
+        <h3>2.2.1 <a name="sect-ID0EHDAC">Invalid setup</a></h3>
                 <p class="" style="">
                     If the client attempts to activate an EXI stream at this point, before the negotiation of EXI properties has been performed, the server must respond with a
                     <span class="strong">setup-failed</span> response.
@@ -195,7 +200,7 @@
         </div>
             </div>
             <div class="indent">
-        <h3>2.3.2 <a name="sect-ID0E6DAC">Proposing compression parameters</a></h3>
+        <h3>2.2.2 <a name="setup">Proposing compression parameters</a></h3>
                 <p class="" style="">
                     When the client decides to activate EXI compression, it sends a <span class="strong">setup</span> stanza containing parameter proposals to the server as follows:
                 </p>
@@ -203,25 +208,23 @@
         <div class="indent">
           <pre class="prettyprint">
                     
-    &lt;setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'&gt;
-        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/&gt;
-        &lt;schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/&gt;
+    &lt;setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024'
+           valueMaxLength='32' valuePartitionCapacity='100'&gt;
+        &lt;schema ns='http://www.w3.org/XML/1998/namespace' bytes='4726' md5Hash='2e2cf9072dc058dcda41b7ee77a5cb54'/&gt;
+        &lt;schema ns='http://etherx.jabber.org/streams' bytes='3450' md5Hash='68719b98725477c46a70958d1ea7c781'/&gt;
+        &lt;schema ns='jabber:client' bytes='6968' md5Hash='5e2d5cbf0506e3f16336d295093d66c4'/&gt;
+        &lt;schema ns='jabber:server' bytes='6948' md5Hash='dd95bd3055dfdd69984ed427cd6356e0'/&gt;
+        &lt;schema ns='jabber:x:roster' bytes='1077' md5Hash='00cb233dee83919067559c5dcee04f3d'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-sasl' bytes='2769' md5Hash='fd9a83f5c75628486ce18c0eb3a35995'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-streams' bytes='3315' md5Hash='75cd95aecb9f1fd66110c3ddcf00c9b8'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-tls' bytes='688' md5Hash='dc18bc4da35bc1be7a6c52aa43330825'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-stanzas' bytes='3133' md5Hash='1a8d21588424f9134dc497de64b10c3f'/&gt;
+        &lt;schema ns='http://jabber.org/protocol/compress/exi' bytes='15094' md5Hash='8b8f91b95d9101f0781e0ba9b4e106be'/&gt;
+        &lt;schema ns='urn:xmpp:iot:control' bytes='6293' md5Hash='74dcea52300e8c8df8c4de2c9e90495b'/&gt;
+        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='49b101e7deea39ccc31340a3c7871c43'/&gt;
+        &lt;schema ns='urn:xmpp:iot:interoperability' bytes='1275' md5Hash='5d39845a0082715ff8807691698353bb'/&gt;
+        &lt;schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='3ed5360bc17eadb2a8949498c9af3f0c'/&gt;
     &lt;/setup&gt;
-                </pre>
-        </div>
-                <p class="" style="">
-                    The server in turn responds with a <span class="strong">setupResponse</span> stanza containing the parameters it can accept, based on the initial values provided by the client.
-                    Any buffer sizes, etc., may have been changed, but only lowered, never raised.
-                </p>
-                <p class="caption"><a name="example-4"></a>Example 4. Unable to accommodate parameters</p>
-        <div class="indent">
-          <pre class="prettyprint">
-                    
-    &lt;setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true'
-                   blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'&gt;
-        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/&gt;
-        &lt;missingSchema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/&gt;
-    &lt;/setupResponse&gt;
                 </pre>
         </div>
                 <p class="" style="">
@@ -229,16 +232,53 @@
                     <span class="strong">MD5 hash</span>. The <span class="strong">MD5 hash</span> provides a way to detect small changes in the file, even if the byte size and namespace are the same.
                 </p>
                 <p class="" style="">
+                    It is important that the client specify not only application specific namespaces in this request, but also the versions of the schemas for the
+                    core XMPP protocol namespaces and the schema for the XML namespace, containing XML attributes.
+                </p>
+                <p class="" style="">
+                    <span class="strong">Note:</span> Hash values and byte sizes of known schemas at the time of writing, can be found <a href="#knownhashes">here</a>. 
+                    However, these values are informational only. It is recommended that the developer makes sure exactly what version of the schema to use, and 
+                    calculate the hash for it correspondingly. Also, some changes to some schemas might be necessary, which will affect the hash values. For more
+                    information about this, see the inforamtion about <a href="#knownproblems">known problems</a>.
+                </p>
+                <p class="" style="">
+                    After receiving the request, the server responds with a <span class="strong">setupResponse</span> stanza containing the parameters it can accept, based 
+                    on the initial values provided by the client. Any buffer sizes, etc., may have been changed, but only lowered, never raised.
+                </p>
+                <p class="caption"><a name="example-4"></a>Example 4. Unable to accommodate parameters</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true'
+                   blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'&gt;
+        &lt;schema ns='http://www.w3.org/XML/1998/namespace' bytes='4726' md5Hash='2e2cf9072dc058dcda41b7ee77a5cb54'/&gt;
+        &lt;schema ns='http://etherx.jabber.org/streams' bytes='3450' md5Hash='68719b98725477c46a70958d1ea7c781'/&gt;
+        &lt;schema ns='jabber:client' bytes='6968' md5Hash='5e2d5cbf0506e3f16336d295093d66c4'/&gt;
+        &lt;schema ns='jabber:server' bytes='6948' md5Hash='dd95bd3055dfdd69984ed427cd6356e0'/&gt;
+        &lt;schema ns='jabber:x:roster' bytes='1077' md5Hash='00cb233dee83919067559c5dcee04f3d'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-sasl' bytes='2769' md5Hash='fd9a83f5c75628486ce18c0eb3a35995'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-streams' bytes='3315' md5Hash='75cd95aecb9f1fd66110c3ddcf00c9b8'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-tls' bytes='688' md5Hash='dc18bc4da35bc1be7a6c52aa43330825'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-stanzas' bytes='3133' md5Hash='1a8d21588424f9134dc497de64b10c3f'/&gt;
+        &lt;schema ns='http://jabber.org/protocol/compress/exi' bytes='15094' md5Hash='8b8f91b95d9101f0781e0ba9b4e106be'/&gt;
+        &lt;schema ns='urn:xmpp:iot:control' bytes='6293' md5Hash='74dcea52300e8c8df8c4de2c9e90495b'/&gt;
+        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='49b101e7deea39ccc31340a3c7871c43'/&gt;
+        &lt;schema ns='urn:xmpp:iot:interoperability' bytes='1275' md5Hash='5d39845a0082715ff8807691698353bb'/&gt;
+        &lt;missingSchema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='3ed5360bc17eadb2a8949498c9af3f0c'/&gt;
+    &lt;/setupResponse&gt;
+                </pre>
+        </div>
+                <p class="" style="">
                     Schema files that the server does not have (based on namespace, byte size and MD5 hash) are marked with the <span class="strong">missingSchema</span> element instead of the
                     normal <span class="strong">schema</span> element.
                 </p>
                 <p class="" style="">
-                    At this point the client can choose to abort the EXI enablement sequence, if it cannot accommodate itself with the proposed parameter settings provided by the server.
+                    At this point the client can choose to abort the EXI enablement sequence if it cannot accommodate itself with the proposed parameter settings provided by the server.
                     The XMPP session will continue to work in its current state. Aborting does not require taking further action from the client.
                 </p>
             </div>
             <div class="indent">
-        <h3>2.3.3 <a name="sect-ID0EUFAC">Uploading new schema files</a></h3>
+        <h3>2.2.3 <a name="sect-ID0E3FAC">Uploading new schema files</a></h3>
                 <p class="" style="">
                     If the server lacks information about a schema file, it is specified in the response through the <span class="strong">missingSchema</span> elements. At this point, the client can
                     either choose to accept that these schema files are not available, making compression less efficient, or choose to upload the missing schema files to the server. Of course,
@@ -276,9 +316,22 @@
         <div class="indent">
           <pre class="prettyprint">
                     
-    &lt;setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100'&gt;
-        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/&gt;
-        &lt;schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/&gt;
+    &lt;setup xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' blockSize='1024' 
+           valueMaxLength='32' valuePartitionCapacity='100'&gt;
+        &lt;schema ns='http://www.w3.org/XML/1998/namespace' bytes='4726' md5Hash='2e2cf9072dc058dcda41b7ee77a5cb54'/&gt;
+        &lt;schema ns='http://etherx.jabber.org/streams' bytes='3450' md5Hash='68719b98725477c46a70958d1ea7c781'/&gt;
+        &lt;schema ns='jabber:client' bytes='6968' md5Hash='5e2d5cbf0506e3f16336d295093d66c4'/&gt;
+        &lt;schema ns='jabber:server' bytes='6948' md5Hash='dd95bd3055dfdd69984ed427cd6356e0'/&gt;
+        &lt;schema ns='jabber:x:roster' bytes='1077' md5Hash='00cb233dee83919067559c5dcee04f3d'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-sasl' bytes='2769' md5Hash='fd9a83f5c75628486ce18c0eb3a35995'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-streams' bytes='3315' md5Hash='75cd95aecb9f1fd66110c3ddcf00c9b8'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-tls' bytes='688' md5Hash='dc18bc4da35bc1be7a6c52aa43330825'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-stanzas' bytes='3133' md5Hash='1a8d21588424f9134dc497de64b10c3f'/&gt;
+        &lt;schema ns='http://jabber.org/protocol/compress/exi' bytes='15094' md5Hash='8b8f91b95d9101f0781e0ba9b4e106be'/&gt;
+        &lt;schema ns='urn:xmpp:iot:control' bytes='6293' md5Hash='74dcea52300e8c8df8c4de2c9e90495b'/&gt;
+        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='49b101e7deea39ccc31340a3c7871c43'/&gt;
+        &lt;schema ns='urn:xmpp:iot:interoperability' bytes='1275' md5Hash='5d39845a0082715ff8807691698353bb'/&gt;
+        &lt;schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='3ed5360bc17eadb2a8949498c9af3f0c'/&gt;
     &lt;/setup&gt;
                 </pre>
         </div>
@@ -290,19 +343,33 @@
           <pre class="prettyprint">
                     
     &lt;setupResponse xmlns='http://jabber.org/protocol/compress/exi' version='1' strict='true' 
-                   blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100' agreement='true'&gt;
-        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='18829242ca7a72a552a7e15af5b9e44d'/&gt;
-        &lt;schema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='e5301add51f3b24c15a71256b53daa47'/&gt;
+                   blockSize='1024' valueMaxLength='32' valuePartitionCapacity='100' agreement='true'
+                   configurationId='c76ab4ec-4993-4285-8c7a-098060581bb8'&gt;
+        &lt;schema ns='http://www.w3.org/XML/1998/namespace' bytes='4726' md5Hash='2e2cf9072dc058dcda41b7ee77a5cb54'/&gt;
+        &lt;schema ns='http://etherx.jabber.org/streams' bytes='3450' md5Hash='68719b98725477c46a70958d1ea7c781'/&gt;
+        &lt;schema ns='jabber:client' bytes='6968' md5Hash='5e2d5cbf0506e3f16336d295093d66c4'/&gt;
+        &lt;schema ns='jabber:server' bytes='6948' md5Hash='dd95bd3055dfdd69984ed427cd6356e0'/&gt;
+        &lt;schema ns='jabber:x:roster' bytes='1077' md5Hash='00cb233dee83919067559c5dcee04f3d'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-sasl' bytes='2769' md5Hash='fd9a83f5c75628486ce18c0eb3a35995'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-streams' bytes='3315' md5Hash='75cd95aecb9f1fd66110c3ddcf00c9b8'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-tls' bytes='688' md5Hash='dc18bc4da35bc1be7a6c52aa43330825'/&gt;
+        &lt;schema ns='urn:ietf:params:xml:ns:xmpp-stanzas' bytes='3133' md5Hash='1a8d21588424f9134dc497de64b10c3f'/&gt;
+        &lt;schema ns='http://jabber.org/protocol/compress/exi' bytes='15094' md5Hash='8b8f91b95d9101f0781e0ba9b4e106be'/&gt;
+        &lt;schema ns='urn:xmpp:iot:control' bytes='6293' md5Hash='74dcea52300e8c8df8c4de2c9e90495b'/&gt;
+        &lt;schema ns='urn:xmpp:iot:sensordata' bytes='8092' md5Hash='49b101e7deea39ccc31340a3c7871c43'/&gt;
+        &lt;schema ns='urn:xmpp:iot:interoperability' bytes='1275' md5Hash='5d39845a0082715ff8807691698353bb'/&gt;
+        &lt;missingSchema ns='urn:xmpp:iot:provisioning' bytes='6303' md5Hash='3ed5360bc17eadb2a8949498c9af3f0c'/&gt;
     &lt;/setupResponse&gt;
                 </pre>
         </div>
                 <p class="" style="">
                     Note the <span class="strong">agreement</span> attribute in the response this time. The server must set this attribute to true if it agrees with the proposal from the client.
-                    The client in turn can check this attribute as a quick way to check if agreement exists.
+                    The client in turn can check this attribute as a quick way to check if agreement exists. When the server is in agreement it must also return a Configuration ID
+                    in the<span class="strong">configurationId</span> attribute. This Configuration ID can be used later to quicker enter into EXI compressed mode.
                 </p>
             </div>
             <div class="indent">
-        <h3>2.3.4 <a name="sect-ID0EKHAC">Uploading compressed schema files</a></h3>
+        <h3>2.2.4 <a name="sect-ID0EUHAC">Uploading compressed schema files</a></h3>
                 <p class="" style="">
                     The <span class="strong">uploadSchema</span> command has an optional attribute called <span class="strong">contentType</span> that can be used to send different types of documents
                     to the server. This is not a MIME content type, but an enumeration with the following options:
@@ -316,7 +383,8 @@
                     </tr>
                     <tr class="body">
                         <td colspan="" rowspan="">Text</td>
-                        <td colspan="" rowspan="">The schema is sent as plain text. If no encoding is provided in the XML header of the schema file, UTF-8 encoding is assumed. This is the default value.</td>
+                        <td colspan="" rowspan="">The schema is sent as plain text, albeit base-64 encoded. If no encoding is provided in the XML header of the schema file, 
+                        UTF-8 encoding is assumed. This is the default value.</td>
                     </tr>
                     <tr class="body">
                         <td colspan="" rowspan="">ExiBody</td>
@@ -399,7 +467,7 @@
                 </p>
             </div>
             <div class="indent">
-        <h3>2.3.5 <a name="sect-ID0EKOAC">Downloading new schema files on server</a></h3>
+        <h3>2.2.5 <a name="sect-ID0EUOAC">Downloading new schema files on server</a></h3>
                 <p class="" style="">
                     As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <span class="strong">downloadSchema</span>
                     command, as follows:
@@ -487,16 +555,71 @@
         </div>
                 <p class="" style="">
                     <span class="strong">Note:</span> Downloading a schema, might download a version which does not correspond to the desired version
-                    of the schema. It's more important in this case so the client checks that the server actually has the version of the schema required by the client.
+                    of the schema. It might for instance have been updated. This means the <span class="strong">bytes</span> and <span class="strong">md5Hash</span> values
+                    corresponding to the downloaded file will not match the values expected by the client. Therefore, it's in this case important the client 
+                    checks that the server actually downloaded the version of the schema required by the client so it doesn't assume the server uses
+                    the same version of the schema when in actuality it doesn't.
                 </p>
             </div>
             <div class="indent">
-        <h3>2.3.6 <a name="sect-ID0EWAAE">Start compression</a></h3>
+        <h3>2.2.6 <a name="sect-ID0EEBAE">Accessing quick configurations</a></h3>
+                <p class="" style="">
+                    Once an EXI setup has been accepted by the server, and agreement is reched, the server will provide the client with a quick Configuration ID
+                    through the <span class="strong">configurationId</span> attribute. This Configuration ID can be used by the client during successive connections to the server,
+                    to skip the larger part of the handshake, as is shown in the following example:
+                </p>
+                <p class="caption"><a name="example-15"></a>Example 15. Accessing quick configurations</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;setup xmlns='http://jabber.org/protocol/compress/exi' configurationId='c76ab4ec-4993-4285-8c7a-098060581bb8'/&gt;
+                </pre>
+        </div>
+                <p class="" style="">
+                    <span class="strong">Note:</span> the quick configuration includes all accepted schemas and all EXI options agreed upon during the
+                    session when the configuration ID was returned. The <span class="strong">configurationId</span> attribute MUST NOT be used together
+                    with other option attributes or schema definitions in the setup request.
+                </p>
+                <p class="" style="">
+                    If the configuration is still available on the server, the server responds:
+                </p>
+                <p class="caption"><a name="example-16"></a>Example 16. Quick configuration accepted</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;setupResponse xmlns='http://jabber.org/protocol/compress/exi' agreement='true' configurationId='c76ab4ec-4993-4285-8c7a-098060581bb8'/&gt;
+                </pre>
+        </div>
+                <p class="" style="">
+                    Note that schemas or options are not mentioned explicitly when using this quick setup approach.
+                </p>
+            </div>
+            <div class="indent">
+        <h3>2.2.7 <a name="sect-ID0EHCAE">Quick configuration failure</a></h3>
+                <p class="" style="">
+                    If the server for some reason does not remember the specific configuration requested by the client (the client might have been disconnected for
+                    a long time), it responds in the following manner:
+                </p>
+                <p class="caption"><a name="example-17"></a>Example 17. Quick configuration failure</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;setupResponse xmlns='http://jabber.org/protocol/compress/exi' agreement='false' configurationId='c76ab4ec-4993-4285-8c7a-098060581bb8'/&gt;
+                </pre>
+        </div>
+                <p class="" style="">
+                    The agreement attribute is optional, with a default value of false. So, if the attribute is omitted, the client must consider the
+                    agreement to be nonexistent. When no agreement is reached using the quick configuration approach, the client must restart the handshake
+                    and <a href="#setup">propose new compression parameters</a>.
+                </p>
+            </div>
+            <div class="indent">
+        <h3>2.2.8 <a name="sect-ID0E2CAE">Start compression</a></h3>
                 <p class="" style="">
                     When EXI option negotiation has been completed, the client can tell the server that it is ready to start compression. It does this using the normal <span class="strong">compress</span>
                     stanza, as follows:
                 </p>
-                <p class="caption"><a name="example-15"></a>Example 15. </p>
+                <p class="caption"><a name="example-18"></a>Example 18. </p>
         <div class="indent">
           <pre class="prettyprint">
                     
@@ -508,7 +631,7 @@
                 <p class="" style="">
                     The server now has the necessary knowledge on how the EXI engine should be configured for the current session and it responds as follows:
                 </p>
-                <p class="caption"><a name="example-16"></a>Example 16. Compression accepted</p>
+                <p class="caption"><a name="example-19"></a>Example 19. Compression accepted</p>
         <div class="indent">
           <pre class="prettyprint">
                     
@@ -518,8 +641,55 @@
                 <p class="" style="">
                     When the client receives acknowledgement that the compression method has been accepted, it restarts the stream, as explained in
                     <a href="http://xmpp.org/extensions/xep-0138.html#usecase">XEP 0138</a>, except that it <span class="strong">must not</span> resend the <span class="strong">&lt;stream&gt;</span>
-                    start element sequence. Similarly, the client must not send a <span class="strong">&lt;/stream&gt;</span> element when closing the session. Closing the connection is sufficient.
+                    start element sequence. Similarly, the client must not send a <span class="strong">&lt;/stream&gt;</span> element when closing the session. 
+                    Instead, special <a href="#streamStart">streamStart</a> and <a href="#streamEnd">streamEnd</a> elements are sent. More information
+                    about that later.
                 </p>
+            </div>
+        </div>
+        <div class="indent">
+      <h3>2.3 <a name="sect-ID0EGEAE">EXI-specific stream elements</a></h3>
+            <p class="" style="">
+                Becuase EXI engines cannot work in open mode, and needs to close all XML elements, it cannot start the stream by sending an open &lt;stream&gt; element,
+                and close the stream by sending a closing &lt;/stream&gt; element. Instead separate <span class="strong">streamStart</span> and <span class="strong">streamEnd</span> elements
+                have to be sent, allowing for similar semantics on the EXI-compressed channel, as described in the following subsections.
+            </p>
+            <p class="" style="">
+                For clarity, examples in this section are displayed in XML for readability. But it is understood that the elements are sent using EXI compression and 
+                using the options defined during setup.
+            </p>
+            <div class="indent">
+        <h3>2.3.1 <a name="startStream">streamStart</a></h3>
+                <p class="" style="">
+                    The first thing the client needs to do, once it opens the new EXI-compressed connection, whether it be through the normal XMPP connection or through
+                    the alternative EXI-only binding, is to send a <span class="strong">streamStart</span> element. This element replaces the start stream tag normally sent.
+                </p>
+                <p class="caption"><a name="example-20"></a>Example 20. Start of EXI-compressed stream</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;exi:streamStart
+        from='client@im.example.com'
+        to='im.example.com'
+        version='1.0'
+        xml:lang='en'
+        xmlns='jabber:client'
+        xmlns:exi='http://jabber.org/protocol/compress/exi'/&gt;
+                </pre>
+        </div>
+            </div>
+            <div class="indent">
+        <h3>2.3.2 <a name="streamEnd">streamEnd</a></h3>
+                <p class="" style="">
+                    Before closing the connection, the client needs to send a <span class="strong">streamEnd</span> element. This element replaces the closing stream tag send normally.
+                </p>
+                <p class="caption"><a name="example-21"></a>Example 21. End of EXI-compressed stream</p>
+        <div class="indent">
+          <pre class="prettyprint">
+                    
+    &lt;exi:streamEnd xmlns:exi='http://jabber.org/protocol/compress/exi'/&gt;
+                </pre>
+        </div>
             </div>
         </div>
         <div class="indent">
@@ -533,7 +703,7 @@
                 alternative TCP port.
             </p>
             <p class="" style="">
-                Typical steps of communication is as follows (based on RFC6120).
+                Typical steps of communication is as follows (based on <span class="ref" style=""><a href="http://tools.ietf.org/html/rfc6120">RFC 6120</a></span>  [<a href="#nt-ID0EMGAE">3</a>]).
             </p>
             
             
@@ -695,7 +865,7 @@
     <h2>3.
        <a name="impl">Implementation Notes</a></h2>
         <div class="indent">
-      <h3>3.1 <a name="sect-ID0ESMAE">EXI options</a></h3>
+      <h3>3.1 <a name="sect-ID0E1QAE">EXI options</a></h3>
             <p class="" style="">
                 The following segment is taken from the <a href="http://www.w3.org/TR/exi/#options">EXI specification</a>. It describes the different EXI options that need to be negotiated before enabling EXI.
             </p>
@@ -743,7 +913,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.2 <a name="sect-ID0ESQAE">Transmission of EXI bodies and Session-wide Buffers</a></h3>
+      <h3>3.2 <a name="sect-ID0E1UAE">Transmission of EXI bodies and Session-wide Buffers</a></h3>
             <p class="" style="">
                 The transmission of EXI-compressed stanzas takes the form of a sequence of EXI bodies. In order for the recipient to be able to correctly interpret these incoming
                 EXI bodies, the sender is required to flush any pending bits at the end of the last End Document (ED) event for each stanza and then send any pending bytes available
@@ -780,7 +950,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.3 <a name="sect-ID0EWRAE">Preserving prefixes</a></h3>
+      <h3>3.3 <a name="sect-ID0E5VAE">Preserving prefixes</a></h3>
             <p class="" style="">
                 Normally, prefixes are not preserved during EXI compression and decompression. If the communicating parties (sending client, XMPP server(s) and receiving clients)
                 interpret incoming stanzas and content according to namespace, this should be sufficient. However, some implementations do not check namespaces, but prefix names used.
@@ -796,7 +966,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.4 <a name="sect-ID0EKSAE">Networks containing clients having limited memory</a></h3>
+      <h3>3.4 <a name="sect-ID0ESWAE">Networks containing clients having limited memory</a></h3>
             <p class="" style="">
                 To successfully implement a network with clients having limited memory, such as sensor networks, care should be taken to make sure necessary schema files are
                 preinstalled on the server, to avoid the necessity to upload schema files from the clients. Clients with limited memory might be unable to perform this task.
@@ -807,7 +977,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.5 <a name="sect-ID0EXSAE">Caching schema files</a></h3>
+      <h3>3.5 <a name="sect-ID0E6WAE">Caching schema files</a></h3>
             <p class="" style="">
                 Schema files uploaded to the server should be cached on the server in some kind of schema repository. If memory is limited on the server, schema files should be
                 sorted by last access. Schema files with the oldest last access timestamp could be removed to maintain the cache within an approved cache size.
@@ -820,7 +990,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.6 <a name="sect-ID0ENTAE">Uploading vs. Downloading schemas</a></h3>
+      <h3>3.6 <a name="sect-ID0EVXAE">Uploading vs. Downloading schemas</a></h3>
             <p class="" style="">
                 When the server lacks information about a given XML schema, the client has two options for updating the server. Either it uploads the schema, or it asks the server to
                 download one.
@@ -836,7 +1006,7 @@
             </p>
         </div>
         <div class="indent">
-      <h3>3.7 <a name="sect-ID0E5TAE">Server decompression and recompression vs. binary forwarding</a></h3>
+      <h3>3.7 <a name="sect-ID0EGYAE">Server decompression and recompression vs. binary forwarding</a></h3>
             <p class="" style="">
                 If two XMPP clients communicate with each other through an XMPP server, and both clients use EXI compression, the server must only forward
                 binary packets if both EXI compressed channels have exactly the same setup. If any parameter is different, the server MUST always recompress
@@ -865,112 +1035,1128 @@
                 Actual snapshot is located in (TBD-URL).
             </p>
         </div>
-    <h2>4.
-       <a name="schemaHandling">Handling of XML Schema in EXI/XMPP Stream</a></h2>
-        
-        
-        
-        
-        
-        
         <div class="indent">
-      <h3>4.1 <a name="schemaID">SchemaID for (a combination of) registered XML schemas</a></h3>
+      <h3>3.9 <a name="sect-ID0EHZAE">Generation of Canonic Schemas</a></h3>
             <p class="" style="">
-                In EXI binding, schemaId may be used to initiate a shortcut setup.
-                A schemaID SHALL contain only characters in [a-zA-Z0-9].
-                Initial character SHOULD be 'X' for XEP-based <a href="#wellknown">well-known schemas</a>,
-                'L' for server-local schema.
+                The interface between the XMPP engine, whether in the client or the server, and the EXI compression engine is required to provide the engine
+                with ONE XML Schema to use during the compression. The <a href="http://www.w3.org/TR/exi/">Efficient XML Interchange (EXI) Format</a>
+                also specifies the use of Schema IDs identifying the schema to use.
             </p>
             <p class="" style="">
-                A schemaId corresponds to a schema-informed grammar created from a
-                schema. In XMPP use case, it is common to add an independent
-                schema as a schema for extension. Hence, a set of schema should be
-                used to define a EXI stream.
+                However, in the XMPP case, the schema to provide to the EXI compression engine must be created dynamically based on the handshake provided during
+                setup of the connection. Since this generation must be done both on the server side as well as the client side, it is important that the schemas be
+                created semantically equivalent. This section describes how to create such schemas, henceforth called <span class="strong">Canonical Schemas</span> is described
+                in this section.
             </p>
             <p class="" style="">
-                Combined schemaId is given by plus-delimited list of component schemaIds.
-                For example,
-                base schema defined in this document plus the some locally-cached schema will be
-                something like:
+                A canonical schema is simply a wrapper importing each of the schemas negotiated for the connection. The schemas MUST be imported in ascending namespace
+                order.
             </p>
-            <p class="caption">
-      </p>
-      <div class="indent">
-        <pre class="prettyprint">
-                "X322.0.20120423+Lf5b9e44d"
-            </pre>
+            <p class="" style="">
+                The Schema ID to use is irrelevant in the XMPP layer of communiction. Therefore, the server and client can create their own Schema IDs, according to some
+                algorithm. It is not important if the Schema IDs match, since they are not used in data transmitted between the client and server.
+            </p>
+        </div>
+        <div class="indent">
+      <h3>3.10 <a name="shortcut">Using EXI Option Documents for Shortcut Setup</a></h3>
+            <p class="" style="">
+                The <span class="strong">configurationId</span> attribute in the <span class="strong">setup</span> element provides a mechanism to setup an EXI connection rapidly.
+                This specification does not define the format of this Configuration ID, and so it is server specific. However, the server must make sure the
+                Configuration IDs are unique among themselves.
+            </p>
+            <p class="" style="">
+                When EXI options negotiation is complete, and agreement exists, the server returns a dynamic Configuration ID that can be used at a later time.
+                How long the Configuration ID will be available on the server is also implementation specific. Preferrably it is a configurable option on the
+                server. But it is assumed, that if the client remains offline for a "long" period of time, the server will remove the Connection ID from its
+                cache.
+            </p>
+            <p class="" style="">
+                The use of Configuration IDs in this case opens the possibility to define EXI Option Documents on the server with static, instead of dynamic,
+                Configuration IDs. The Configuration IDs in these cases could be file names or URLs. In this way, it is possible to configure the server with
+                predefined options documents and then let configure clients with the corresponding static Configuration ID to facilitate configuration.
+            </p>
+        </div>
+        <div class="indent">
+      <h3>3.11 <a name="knownhashes">XMPP Schema files and their hash values</a></h3>
+            <p class="" style="">
+                The following table lists XMPP schemas at the time of writing, and their corresponding bytes sizes and MD5 Hash values.
+            </p>
+            <div class="indent">
+        <p class="caption"><a name="table-3"></a>Table 3: </p>
+        <table border="1" cellpadding="3" cellspacing="0">
+                <tr class="body">
+                    <th colspan="" rowspan="">Namespace</th>
+                    <th colspan="" rowspan="">Schema</th>
+                    <th colspan="" rowspan="">Bytes</th>
+                    <th colspan="" rowspan="">MD5 hash</th>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://etherx.jabber.org/streams</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/streams.xsd">streams.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3450</td>
+                    <td colspan="" rowspan="">68719b98725477c46a70958d1ea7c781</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/features/amp</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/amp-feature.xsd">amp-feature.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">635</td>
+                    <td colspan="" rowspan="">cb4f48c999c1cce15df4f3129e55f381</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/features/compress</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/compress-feature.xsd">compress-feature.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">670</td>
+                    <td colspan="" rowspan="">8ff631b7aaf9a196470ec57897251f7c</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/activity</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/activity.xsd">activity.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">5043</td>
+                    <td colspan="" rowspan="">b6168aac76260aed41071fbe5c930279</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/address</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/address.xsd">address.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1915</td>
+                    <td colspan="" rowspan="">8770419083d7f4044ee4b55e39e3c6e3</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/amp</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/amp.xsd">amp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1858</td>
+                    <td colspan="" rowspan="">b929b5024af92ccb2f21af944e1caa6b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/amp#errors</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/amp-errors.xsd">amp-errors.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">963</td>
+                    <td colspan="" rowspan="">7a366c21bbf2060f2658e9118bfc32e9</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/bytestreams</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/bytestreams.xsd">bytestreams.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2343</td>
+                    <td colspan="" rowspan="">83211fe7c25510d9254a9aa6cf31b1e0</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/caps</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/caps.xsd">caps.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1072</td>
+                    <td colspan="" rowspan="">ed68bc908f301556d1cf9ad111c34184</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/chatstates</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/chatstates.xsd">chatstates.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">827</td>
+                    <td colspan="" rowspan="">c00838d97b9c2a37ac098130a27b1b4c</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/commands</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/commands.xsd">commands.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3551</td>
+                    <td colspan="" rowspan="">98b0e90b35e00b04b2253af26faaab6f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/compress</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/compress.xsd">compress.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1505</td>
+                    <td colspan="" rowspan="">7ac2a9dc7472af2796be239dbc7097ac</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/compress/exi</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/exi.xsd">exi.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">15094</td>
+                    <td colspan="" rowspan="">8b8f91b95d9101f0781e0ba9b4e106be</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/disco#info</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/disco-info.xsd">disco-info.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1783</td>
+                    <td colspan="" rowspan="">d5e696ad7aa800cba7f54740b0e2a6c8</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/disco#items</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/disco-items.xsd">disco-items.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1482</td>
+                    <td colspan="" rowspan="">6010e2e5dafd587fc1609987805c7295</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/feature-neg</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/feature-neg.xsd">feature-neg.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">766</td>
+                    <td colspan="" rowspan="">a154eeb514f8acbe0291c48d4e7335a5</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/geoloc</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/geoloc.xsd">geoloc.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2322</td>
+                    <td colspan="" rowspan="">90b0df99a0e6ee77929955b63b384656</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/http-auth</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/http-auth.xsd">http-auth.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1020</td>
+                    <td colspan="" rowspan="">fdd34da7014b044fd659091843d802cd</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/httpbind</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/httpbind.xsd">httpbind.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4028</td>
+                    <td colspan="" rowspan="">59559ed6a5025c2e4ecf1a9ad675c707</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/ibb</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/ibb.xsd">ibb.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1557</td>
+                    <td colspan="" rowspan="">45bac4486abb974f0d92ee98d8e356de</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/mood</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/mood.xsd">mood.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3994</td>
+                    <td colspan="" rowspan="">93bb8be5dab135b7189c475f3d80a03a</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/muc</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/muc.xsd">muc.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1322</td>
+                    <td colspan="" rowspan="">853ad555f102bb2b71da9a2f2787f4f9</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/muc#admin</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/muc-admin.xsd">muc-admin.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2260</td>
+                    <td colspan="" rowspan="">627d39d09e18208f0b068ff3ee1e4dc2</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/muc#owner</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/muc-owner.xsd">muc-owner.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1284</td>
+                    <td colspan="" rowspan="">6e4e2257c1a4ba937fbdf71664a7e793</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/muc#unique</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/muc-unique.xsd">muc-unique.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">512</td>
+                    <td colspan="" rowspan="">43f77e28d5574453f1208c653a4eb710</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/muc#user</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/muc-user.xsd">muc-user.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3881</td>
+                    <td colspan="" rowspan="">4c2643e702a591ed09dd4e1af15f46f5</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/nick</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/nick.xsd">nick.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">498</td>
+                    <td colspan="" rowspan="">280d55dac18c98559ea514e822d692d1</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/offline</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/offline.xsd">offline.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1157</td>
+                    <td colspan="" rowspan="">e0c329c185c3339480a78b8662be92a0</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/pubsub</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/pubsub.xsd">pubsub.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">7296</td>
+                    <td colspan="" rowspan="">18b754fd463509c7c95bde5a6bf54a07</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/pubsub#errors</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/pubsub-errors.xsd">pubsub-errors.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4637</td>
+                    <td colspan="" rowspan="">20479f150ffe1fa932da529528d89aa0</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/pubsub#event</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/pubsub-event.xsd">pubsub-event.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4866</td>
+                    <td colspan="" rowspan="">003ba8f4780822511a84cc8f83ca6c95</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/pubsub#owner</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/pubsub-owner.xsd">pubsub-owner.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4387</td>
+                    <td colspan="" rowspan="">f0d2a4733fe7991135172ff6cfec66d9</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/rosterx</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/rosterx.xsd">rosterx.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1338</td>
+                    <td colspan="" rowspan="">97bfd4958edef7fb962eba8fe38ce810</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/rsm</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/rsm.xsd">rsm.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1379</td>
+                    <td colspan="" rowspan="">340cfcdf0827a12f8ba0fbca6b28aa37</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/shim</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/shim.xsd">shim.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">911</td>
+                    <td colspan="" rowspan="">989fc4e6a95c1e763ec17245ac622c1a</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/si</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/si.xsd">si.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1530</td>
+                    <td colspan="" rowspan="">d00cd67eec0a6923ad01865c507d4808</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/si/profile/file-transfer</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/file-transfer.xsd">file-transfer.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1479</td>
+                    <td colspan="" rowspan="">8fbc4d2d7972696b30132a4092336122</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/sipub</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sipub.xsd">sipub.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1655</td>
+                    <td colspan="" rowspan="">3eafe26f5ade2fbbf0cc9d354051ead7</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/soap#fault</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/soap-fault.xsd">soap-fault.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">856</td>
+                    <td colspan="" rowspan="">df3517931ab9dcc747f89e7c84851d8e</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/tune</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/tune.xsd">tune.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1237</td>
+                    <td colspan="" rowspan="">d5ba7c1a0e061e7c2c1ec325f583edfb</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/waitinglist</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/waitinglist.xsd">waitinglist.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2431</td>
+                    <td colspan="" rowspan="">45637c6ae8a3db8048edeb241d54ff3e</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/xdata-color</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/color-parameter.xsd">color-parameter.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">558</td>
+                    <td colspan="" rowspan="">fdd94654b15532501f30541e52253a7f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/xdata-layout</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/xdata-layout.xsd">xdata-layout.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2021</td>
+                    <td colspan="" rowspan="">c74f116543466f6a39352a2f95bc5e2d</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/xdata-validate</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/xdata-validate.xsd">xdata-validate.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1874</td>
+                    <td colspan="" rowspan="">0ace852dda1d5e9a72427515e934b342</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">http://jabber.org/protocol/xhtml-im</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/xhtml-im-wrapper.xsd">xhtml-im-wrapper.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1402</td>
+                    <td colspan="" rowspan="">a3733bf495c05653e86ef20a825c62cb</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:client</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jabber-client.xsd">jabber-client.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">6968</td>
+                    <td colspan="" rowspan="">5e2d5cbf0506e3f16336d295093d66c4</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:component:accept</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/component-accept.xsd">component-accept.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">6635</td>
+                    <td colspan="" rowspan="">eb052d6aadc60e4a704728e68e9b71b4</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:component:connect</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/component-connect.xsd">component-connect.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">6637</td>
+                    <td colspan="" rowspan="">74497cf7c9a306fdbd3c336d471dba87</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:auth</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-auth.xsd">iq-auth.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1075</td>
+                    <td colspan="" rowspan="">524d617af8f30feae26b92cd83a21d7f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:gateway</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-gateway.xsd">iq-gateway.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">766</td>
+                    <td colspan="" rowspan="">736df8b8976add34b6065512dad8352f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:last</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-last.xsd">iq-last.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">700</td>
+                    <td colspan="" rowspan="">93a08299e6a987209704502256b21721</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:oob</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-oob.xsd">iq-oob.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">739</td>
+                    <td colspan="" rowspan="">556fa1cd4d36ae1780ed2e0c1053c296</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:pass</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-pass.xsd">iq-pass.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1274</td>
+                    <td colspan="" rowspan="">4cf2bab840ce9d592f573db2d1dde1ef</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:privacy</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-privacy.xsd">iq-privacy.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3116</td>
+                    <td colspan="" rowspan="">1dfec6d0dbd1f625f46fb3f68c188338</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:private</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-private.xsd">iq-private.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">605</td>
+                    <td colspan="" rowspan="">b8d0aebb2370a2f8658304ba57677623</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:register</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-register.xsd">iq-register.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2598</td>
+                    <td colspan="" rowspan="">b79db0064b527f0da817e90333896eac</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:roster</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/roster.xsd">roster.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1898</td>
+                    <td colspan="" rowspan="">936bbba0ef836bc173735c3b416ff553</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:rpc</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jabber-rpc.xsd">jabber-rpc.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4853</td>
+                    <td colspan="" rowspan="">351909f64a5a6b66c35972a53d498e88</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:search</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-search.xsd">iq-search.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1574</td>
+                    <td colspan="" rowspan="">1f202602ae9b46d43a6e5791d8c54d93</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:time</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-time.xsd">iq-time.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">933</td>
+                    <td colspan="" rowspan="">dde555d546b4f460ba3abb9848acc2aa</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:iq:version</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/iq-version.xsd">iq-version.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">763</td>
+                    <td colspan="" rowspan="">22a89a8dcf2fb54710b534b85333f5a7</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:server</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jabber-server.xsd">jabber-server.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">6948</td>
+                    <td colspan="" rowspan="">dd95bd3055dfdd69984ed427cd6356e0</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:server:dialback</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/dialback.xsd">dialback.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1606</td>
+                    <td colspan="" rowspan="">ddb71d38501ceea6dbf04b96aeabd6fc</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:conference</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-conference.xsd">x-conference.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1339</td>
+                    <td colspan="" rowspan="">d06113e71790a8b4f92fe38d0e76dda6</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:data</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-data.xsd">x-data.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3562</td>
+                    <td colspan="" rowspan="">ed9ac8c241c7f6503887c86b3d9ef2f1</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:delay</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-delay.xsd">x-delay.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">940</td>
+                    <td colspan="" rowspan="">60cbc644095747e5f5e987845ce3a233</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:encrypted</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-encrypted.xsd">x-encrypted.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">469</td>
+                    <td colspan="" rowspan="">95816171d561dad6d412112bb698aed4</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:event</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-event.xsd">x-event.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1013</td>
+                    <td colspan="" rowspan="">305f4bef3c118b9d3d11d96aea753026</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:expire</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-expire.xsd">x-expire.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">916</td>
+                    <td colspan="" rowspan="">2c4f88b96a5ba140532788ca47c6216e</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:oob</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-oob.xsd">x-oob.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">668</td>
+                    <td colspan="" rowspan="">d85e431c630889f65e3139d947be1cca</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:roster</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-roster.xsd">x-roster.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1077</td>
+                    <td colspan="" rowspan="">00cb233dee83919067559c5dcee04f3d</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">jabber:x:signed</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/x-signed.xsd">x-signed.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">463</td>
+                    <td colspan="" rowspan="">979b382c4f4b0d9278f184f078e291c3</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">roster:delimiter</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/delimiter.xsd">delimiter.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">435</td>
+                    <td colspan="" rowspan="">aa7d17ef59561634d78a5c3acf0cc23c</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">storage:bookmarks</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/bookmarks.xsd">bookmarks.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1588</td>
+                    <td colspan="" rowspan="">a500b821a46a4dece20671abe259c4fd</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">storage:rosternotes</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/rosternotes.xsd">rosternotes.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1045</td>
+                    <td colspan="" rowspan="">2d5a4c3e97af7650a941b74473b18903</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-bind</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/bind.xsd">bind.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">852</td>
+                    <td colspan="" rowspan="">ef4bc7405e969b05e1df4c0f8fbb5e71</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-e2e</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/e2e.xsd">e2e.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">598</td>
+                    <td colspan="" rowspan="">da2132f0a69fc389685a7c8fe7f66e92</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-sasl</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sasl.xsd">sasl.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">2769</td>
+                    <td colspan="" rowspan="">fd9a83f5c75628486ce18c0eb3a35995</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-session</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/session.xsd">session.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">444</td>
+                    <td colspan="" rowspan="">cc1dad32ba05d18407579b7a1c98c64b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-stanzas</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/stanzaerror.xsd">stanzaerror.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3133</td>
+                    <td colspan="" rowspan="">1a8d21588424f9134dc497de64b10c3f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-streams</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/streamerror.xsd">streamerror.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3315</td>
+                    <td colspan="" rowspan="">75cd95aecb9f1fd66110c3ddcf00c9b8</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:ietf:params:xml:ns:xmpp-tls</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/tls.xsd">tls.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">688</td>
+                    <td colspan="" rowspan="">dc18bc4da35bc1be7a6c52aa43330825</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:archive</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/archive.xsd">archive.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">10355</td>
+                    <td colspan="" rowspan="">379f31dbd639e577cc3671989f89eac7</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:attention:0</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/attention.xsd">attention.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">621</td>
+                    <td colspan="" rowspan="">42f9232182d298aa92f29d300d4087c5</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:avatar:data</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/avatar-data.xsd">avatar-data.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">482</td>
+                    <td colspan="" rowspan="">d705ada4740d78c5d404f470e61ea06c</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:avatar:metadata</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/avatar-metadata.xsd">avatar-metadata.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1782</td>
+                    <td colspan="" rowspan="">d8cb3ff5805145161c81f73dc4f1d5dc</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:blocking</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/blocking.xsd">blocking.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1437</td>
+                    <td colspan="" rowspan="">f9540f863f741e300e4706c8f773d02d</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:blocking:errors</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/blocking-errors.xsd">blocking-errors.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">627</td>
+                    <td colspan="" rowspan="">28eb443b113cbe7147cfed90834a68fd</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:bob</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/bob.xsd">bob.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">846</td>
+                    <td colspan="" rowspan="">990e71ba1e657f3a587cd6f0e758c69b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:captcha</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/captcha.xsd">captcha.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">752</td>
+                    <td colspan="" rowspan="">2128162d221b39d19530769ccdedd01b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:delay</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/delay.xsd">delay.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">762</td>
+                    <td colspan="" rowspan="">34283385814c8db0dc3ad874ae57e9ab</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:features:rosterver</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/versioning-feature.xsd">versioning-feature.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">619</td>
+                    <td colspan="" rowspan="">089d67a345ba701d21c1d3316a03c7e6</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:http</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/http-over-xmpp.xsd">http-over-xmpp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">5135</td>
+                    <td colspan="" rowspan="">51c68b927a5cc0ab4a6e8d081e100cb0</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:iot:concentrators</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sensor-network-concentrators.xsd">sensor-network-concentrators.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">37235</td>
+                    <td colspan="" rowspan="">9923874ce246c24e6fe488cb58f48c9d</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:iot:control</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sensor-network-control.xsd">sensor-network-control.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">6293</td>
+                    <td colspan="" rowspan="">74dcea52300e8c8df8c4de2c9e90495b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:iot:interoperability</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/xep-0000-IoT-Interoperability.xsd">xep-0000-IoT-Interoperability.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1275</td>
+                    <td colspan="" rowspan="">5d39845a0082715ff8807691698353bb</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:iot:provisioning</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sensor-network-provisioning.xsd">sensor-network-provisioning.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">8856</td>
+                    <td colspan="" rowspan="">3ed5360bc17eadb2a8949498c9af3f0c</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:iot:sensordata</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sensor-data.xsd">sensor-data.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">8752</td>
+                    <td colspan="" rowspan="">49b101e7deea39ccc31340a3c7871c43</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle.xsd">jingle.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">4926</td>
+                    <td colspan="" rowspan="">29d29c6f994ce1b1cc3d5da8c1b54d80</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:apps:rtp:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-apps-rtp.xsd">jingle-apps-rtp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3481</td>
+                    <td colspan="" rowspan="">3f1d6e7fc12ebddd3c196fb44dc0912b</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:apps:rtp:errors:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-apps-rtp-errors.xsd">jingle-apps-rtp-errors.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">705</td>
+                    <td colspan="" rowspan="">bb476ac38da026742ddb94862f8d3e1f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:apps:rtp:info:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-apps-rtp-info.xsd">jingle-apps-rtp-info.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1467</td>
+                    <td colspan="" rowspan="">c8fc00ddcff8c69cf4a923c3797a9d04</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:apps:rtp:zrtp:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-apps-rtp-zrtp.xsd">jingle-apps-rtp-zrtp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">732</td>
+                    <td colspan="" rowspan="">9144b780fc33098ad0c5725394d53e8e</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:errors:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-errors.xsd">jingle-errors.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">783</td>
+                    <td colspan="" rowspan="">fa8cefea805ce412615a0e19fcc90f29</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:transports:ibb:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-transports-ibb.xsd">jingle-transports-ibb.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1424</td>
+                    <td colspan="" rowspan="">284b6271054657577a380c654f90453f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:transports:ice-udp:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-transports-ice-udp.xsd">jingle-transports-ice-udp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3103</td>
+                    <td colspan="" rowspan="">03a3be93d48a393e5756717d74b27efc</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:transports:raw-udp:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-transports-raw-udp.xsd">jingle-transports-raw-udp.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1826</td>
+                    <td colspan="" rowspan="">54ab91e95e7d070a26b1b6afbd5559ca</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:jingle:transports:s5b:1</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/jingle-transports-s5b.xsd">jingle-transports-s5b.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3336</td>
+                    <td colspan="" rowspan="">fe5cb4f3077307279a7c0e5da7c5c6e7</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:langtrans</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/langtrans.xsd">langtrans.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1934</td>
+                    <td colspan="" rowspan="">42fd5d84bfdab64d405146500833ff95</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:langtrans:items</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/langtrans-items.xsd">langtrans-items.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1500</td>
+                    <td colspan="" rowspan="">c28ef67fe38aeaed5ba44e239c1c1886</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:media-element</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/media-element.xsd">media-element.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1051</td>
+                    <td colspan="" rowspan="">0d4c292aa81f6eb1ad3f8b06421e1cee</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:pie:0</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/pie.xsd">pie.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">1590</td>
+                    <td colspan="" rowspan="">a1a80b05609760cc0bf73c81c48a8ab6</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:ping</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/ping.xsd">ping.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">602</td>
+                    <td colspan="" rowspan="">a2a720f5ee6da310e3a05ba89b89eb20</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:receipts</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/receipts.xsd">receipts.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">879</td>
+                    <td colspan="" rowspan="">e11be9d296fa183a1c06ea021fd69559</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:sec-label:0</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sec-label.xsd">sec-label.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3865</td>
+                    <td colspan="" rowspan="">9e98b80af0f6376c24a678d14a9a642f</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:sec-label:catalog:2</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sec-label-catalog.xsd">sec-label-catalog.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3378</td>
+                    <td colspan="" rowspan="">f63f39aaacb09726ceabf6638008b13a</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:sec-label:ess:0</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sec-label-ess.xsd">sec-label-ess.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">804</td>
+                    <td colspan="" rowspan="">99311ef62e7f29be25eb78d68baaff2a</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:sm:3</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/sm.xsd">sm.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">3583</td>
+                    <td colspan="" rowspan="">392326992f88327d9958fb6afbbb4382</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:time</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/time.xsd">time.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">658</td>
+                    <td colspan="" rowspan="">001c5347c00da7aad231504ec706fbb3</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">urn:xmpp:xbosh</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/xbosh.xsd">xbosh.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">760</td>
+                    <td colspan="" rowspan="">0920ea082f0ba162c8b96611368941a8</td>
+                </tr>
+                <tr class="body">
+                    <td colspan="" rowspan="">vcard-temp:x:update</td>
+                    <td colspan="" rowspan="">
+                        <a href="http://xmpp.org/schemas/vcard-avatar.xsd">vcard-avatar.xsd</a>
+                    </td>
+                    <td colspan="" rowspan="">625</td>
+                    <td colspan="" rowspan="">edaf52356eb306390849641bdc33fdc9</td>
+                </tr>
+            </table>
       </div>
-            <p class="" style="">
-                For each schemaId component given by a client (or an initiating entity) to a server,
-                a server shall make a combined schema by inserting 'xs:import' statement to the
-                <a href="#default">default schema</a>.
-            </p>
         </div>
         <div class="indent">
-      <h3>4.2 <a name="sect-ID0EMWAE">Server-local SchemaIDs</a></h3>
+      <h3>3.12 <a name="knownproblems">Known problems with existing schemas</a></h3>
             <p class="" style="">
-                EXI/XMPP stream MAY negotiate schema to be used in "next" stream.
+                The following sections list some known problems that might affect already defined schemas. For these schemas to be used
+                together with EXI compression, the recommended procedures should be considered. If changes to the schema is required,
+                new byte sizes and hash values must be computed for the changed schema correspondingly.
             </p>
-            <p class="" style="">
-                Server-assigned local schemaId MAY be given in setupResponse
-                with 'L' prefix. For example, if a
-                schema has md5Hash '18829242ca7a72a552a7e15af5b9e44d', then the schema
-                may be registered as 'Lf5b9e44d' or 'Lfoobar' or whatever the server want to. 
-                It is recommended to use a shorter identifier for schemaId to make 
-                communication efficient.
-            </p>
-            <p class="" style="">
-                This schemaId is valid only with the
-                server and the server MAY use different value for a server-local
-                schemaId (apparent case is on hash collision, or some
-                manually-installed parmanent schema). Local schemaId SHOULD
-                NOT be reused on different schema.
-            </p>
-        </div>
+            <div class="indent">
+        <h3>3.12.1 <a name="patch">Patch to avoid UPA for streams.xsd</a></h3>
+                
+                <p class="" style="">
+                    TBD: group discussion needed
+                </p>
+                <p class="" style="">
+                    streams.xsd defined in RFC6120 has 'unique particle attribution (UPA)' problem.
+                    UPA is undeterministic attribution of an element between a wildcard and an explicit definition.
+                    Details could be found in <a href="http://www.w3.org/TR/xmlschema-1/#non-ambig">Appendix H</a> of XML schema specification.
+                </p>
+                <p class="" style="">
+                    A simple
+                    way to solve UPA is to insert delimiters around wildcards to eliminate
+                    ambiguity. A deterministic delimiter can resolve ambiguity.
+                    The other way to solve UPA is to use 'weak wildcard model'
+                    introduced in XML schema 1.1. The cause of ambiguity is lack of
+                    precedence between explicit definitions and wildcard definitions. As
+                    weak wildcards have weaker precedence against explicit definitions,
+                    there are no ambiguity with UPA.
+                </p>
+                <p class="" style="">
+                    To keep the same semantics with current XML implementations, by
+                    default this proposal recommends weak wildcard model on
+                    implementations. However, if an implementation does not support weak
+                    wildcards, it may use streams.xsd with following patch applied.
+                </p>
+                
+                <p class="caption">
+        </p>
         <div class="indent">
-      <h3>4.3 <a name="shortcut">Using EXI Option Document for Shortcut Setup</a></h3>
-            
-            <p class="" style="">
-                If an initiating entity expects a server has required set of schemas,
-                it may start initial EXI stream by specifing corresponding combined
-                schemaId and parameters in the EXI option document. If the server has
-                the set of schema specified by the schemaId and decided to accept the
-                options, the server SHOULD open a stream to the client with EXI option
-                document with the identical option. This option document indicates the
-                server accepts the option and no schema/encoding parameter negotiation
-                will be required.
-            </p>
-            <p class="" style="">
-                If the server does not have a schema in the given schemaId, does not
-                support given encoding parameter, or decided to deny the shortcut
-                request, it SHALL return a stream with an empty setupResponse with
-                agreement="false", encoded in the default schema without EXI options
-                document. Then, the initiating entity SHOULD fallback to schema
-                negotiation in EXI/XMPP encoded in the default schema.
-            </p>
+          <pre class="prettyprint">
+                    --- streams.xsd    2013-03-25 17:37:52.733451313 +0900
+                    +++ streams-UPA-patched.xsd    2013-03-25 17:57:44.889469868 +0900
+                    @@ -32,10 +32,12 @@
+                    &lt;xs:any namespace='urn:ietf:params:xml:ns:xmpp-sasl'
+                    minOccurs='0'
+                    maxOccurs='1'/&gt;
+                    +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
+                    &lt;xs:any namespace='##other'
+                    minOccurs='0'
+                    maxOccurs='unbounded'
+                    processContents='lax'/&gt;
+                    +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
+                    &lt;xs:choice minOccurs='0' maxOccurs='1'&gt;
+                    &lt;xs:choice minOccurs='0' maxOccurs='unbounded'&gt;
+                    &lt;xs:element ref='client:message'/&gt;
+                    @@ -77,6 +79,7 @@
+                    &lt;xs:element ref='err:text'
+                    minOccurs='0'
+                    maxOccurs='1'/&gt;
+                    +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
+                    &lt;xs:any     namespace='##other'
+                    minOccurs='0'
+                    maxOccurs='1'
+                </pre>
         </div>
-    <h2>5.
+            </div>
+        </div>
+        
+    <h2>4.
        <a name="security">Security Considerations</a></h2>
         <p class="" style="">
             Note that EXI compressed information, even though it is hard to decode by humans, is by no means encrypted. If sensitive data is to be sent over an EXI compressed
             channel, encryption should be considered as well.
         </p>
-    <h2>6.
+    <h2>5.
        <a name="iana">IANA Considerations</a></h2>
         <p class="" style="">
             
             This XEP requires new service names (proposed 'xmpp-bclient' and 'xmpp-bserver') for SRV records registered in IANA.
             A static port number for a dedicated binary EXI/XMPP binding may also be requested.
         </p>
-    <h2>7.
+    <h2>6.
        <a name="registrar">XMPP Registrar Considerations</a></h2>
         <p class="" style="">
-            
             Some of schemas should be kept 'as-is' format in XSF registry. EXI interoperability
             requires schema stability, so a snapshot repository of version-controlled well-known schemas is requested to XMPP Registrar.
             Related discussion is in <a href="#wellknown">here</a>.
         </p>
-    <h2>8.
+        <p class="" style="">
+            Furthermore, it is suggested that the table at <a href="http://xmpp.org/resources/schemas/">http://xmpp.org/resources/schemas/</a> is updated
+            with two columns containing updated byte size and MD5 hash information for the current files. Tools can be provided by the authors to automate
+            the extraction of byte size and MD5 Hash information from the collection of schema files and transform them to appropriate formats.
+        </p>
+        <p class="" style="">
+            The <a href="#schema">protocol schema</a> needs to be added to the list of <a href="http://xmpp.org/resources/schemas/">XMPP protocol schemas</a>.
+        </p>
+    <h2>7.
        <a name="schema">XML Schema</a></h2>
         <p class="caption">
     </p>
@@ -982,8 +2168,14 @@
     xmlns:xs='http://www.w3.org/2001/XMLSchema'
     targetNamespace='http://jabber.org/protocol/compress/exi'
     xmlns='http://jabber.org/protocol/compress/exi'
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:client='jabber:client'
+    xmlns:streams='http://etherx.jabber.org/streams'
     elementFormDefault='qualified'&gt;
-    
+ 
+    &lt;xs:import namespace="http://www.w3.org/XML/1998/namespace"/&gt;
+    &lt;xs:import namespace="http://etherx.jabber.org/streams"/&gt;
+ 
     &lt;xs:element name='setup' type='Setup'/&gt;
     &lt;xs:element name='setupResponse' type='SetupResponse'/&gt;
  
@@ -993,6 +2185,7 @@
             &lt;xs:element name='datatypeRepresentationMap' type='DatatypeRepresentationMap'/&gt;
         &lt;/xs:choice&gt;
         &lt;xs:attributeGroup ref='Options'/&gt;
+        &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
     &lt;/xs:complexType&gt;
  
     &lt;xs:complexType name='SetupResponse'&gt;
@@ -1002,6 +2195,7 @@
                     &lt;xs:element name='missingSchema' type='Schema'/&gt;
                 &lt;/xs:choice&gt;
                 &lt;xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/&gt;
+                &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
             &lt;/xs:extension&gt;
         &lt;/xs:complexContent&gt;
     &lt;/xs:complexType&gt;
@@ -1021,37 +2215,30 @@
         &lt;xs:attribute name='version' type='xs:positiveInteger' use='optional' default='1'/&gt;
         &lt;xs:attribute name='alignment' type='Alignment' use='optional' default='bit-packed'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The alignment option is used to control the alignment of event codes and content items. 
-                The value is one of bit-packed, byte-alignment or pre-compression, of which bit-packed is the default value 
-                assumed when the "alignment" element is absent in the EXI Options document. The option values byte-alignment 
-                and pre-compression are effected when "byte" and "pre-compress" elements are present in the EXI Options 
-                document, respectively. When the value of compression option is set to true, alignment of the EXI Body is 
-                governed by the rules specified in 9. EXI Compression instead of the alignment option value. The "alignment" 
-                element MUST NOT appear in an EXI options document when the "compression" element is present.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The alignment option is used to control the alignment of event codes and content items. The value is one of bit-packed, byte-alignment or 
+                pre-compression, of which bit-packed is the default value assumed when the "alignment" element is absent in the EXI Options document. The option values 
+                byte-alignment and pre-compression are effected when "byte" and "pre-compress" elements are present in the EXI Options document, respectively. When the 
+                value of compression option is set to true, alignment of the EXI Body is governed by the rules specified in 9. EXI Compression instead of the alignment 
+                option value. The "alignment" element MUST NOT appear in an EXI options document when the "compression" element is present.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='compression' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The compression option is a Boolean used to increase compactness using additional 
-                computational resources. The default value "false" is assumed when the "compression" element is absent in 
-                the EXI Options document whereas its presence denotes the value "true". When set to true, the event codes 
-                and associated content are compressed according to 9. EXI Compression regardless of the alignment option 
-                value. As mentioned above, the "compression" element MUST NOT appear in an EXI options document when the 
-                "alignment" element is present.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The compression option is a Boolean used to increase compactness using additional computational resources. The default value "false" is 
+                assumed when the "compression" element is absent in the EXI Options document whereas its presence denotes the value "true". When set to true, the event 
+                codes and associated content are compressed according to 9. EXI Compression regardless of the alignment option value. As mentioned above, the "compression" 
+                element MUST NOT appear in an EXI options document when the "alignment" element is present.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='strict' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The strict option is a Boolean used to increase compactness by using a strict 
-                interpretation of the schemas and omitting preservation of certain items, such as comments, processing 
-                instructions and namespace prefixes. The default value "false" is assumed when the "strict" element is 
-                absent in the EXI Options document whereas its presence denotes the value "true". When set to true, those 
-                productions that have NS, CM, PI, ER, and SC terminal symbols are omitted from the EXI grammars, and 
-                schema-informed element and type grammars are restricted to only permit items declared in the schemas. 
-                A note in section 8.5.4.4.2 Adding Productions when Strict is True describes some additional restrictions 
-                consequential of the use of this option. The "strict" element MUST NOT appear in an EXI options document 
-                when one of "dtd", "prefixes", "comments", "pis" or "selfContained" element is present in the same 
-                options document.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The strict option is a Boolean used to increase compactness by using a strict interpretation of the schemas and omitting preservation 
+                of certain items, such as comments, processing instructions and namespace prefixes. The default value "false" is assumed when the "strict" element is 
+                absent in the EXI Options document whereas its presence denotes the value "true". When set to true, those productions that have NS, CM, PI, ER, and SC 
+                terminal symbols are omitted from the EXI grammars, and schema-informed element and type grammars are restricted to only permit items declared in the 
+                schemas. A note in section 8.5.4.4.2 Adding Productions when Strict is True describes some additional restrictions consequential of the use of this 
+                option. The "strict" element MUST NOT appear in an EXI options document when one of "dtd", "prefixes", "comments", "pis" or "selfContained" element is 
+                present in the same options document.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='preserveComments' type='xs:boolean' use='optional' default='false'&gt;
@@ -1061,8 +2248,7 @@
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='preservePIs' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;Processing instructions are preserved. Must not be used together with the strict 
-                option.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;Processing instructions are preserved. Must not be used together with the strict option.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='preserveDTD' type='xs:boolean' use='optional' default='false'&gt;
@@ -1077,58 +2263,49 @@
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='preserveLexical' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;Lexical form of element and attribute values can be preserved in value content items. 
-                Can be used together with the strict option.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;Lexical form of element and attribute values can be preserved in value content items. Can be used together with the strict option.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='selfContained' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The selfContained option is a Boolean used to enable the use of self-contained elements 
-                in the EXI stream. Self-contained elements may be read independently from the rest of the EXI body, 
-                allowing them to be indexed for random access. The "selfContained" element MUST NOT appear in an EXI 
-                options document when one of "compression", "pre-compression" or "strict" elements are present in the 
-                same options document. The default value "false" is assumed when the "selfContained" element is absent 
-                from the EXI Options document whereas its presence denotes the value "true".&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The selfContained option is a Boolean used to enable the use of self-contained elements in the EXI stream. Self-contained elements may be read 
+                independently from the rest of the EXI body, allowing them to be indexed for random access. The "selfContained" element MUST NOT appear in an EXI options document 
+                when one of "compression", "pre-compression" or "strict" elements are present in the same options document. The default value "false" is assumed when the 
+                "selfContained" element is absent from the EXI Options document whereas its presence denotes the value "true".&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='blockSize' type='xs:positiveInteger' use='optional' default='1000000'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The blockSize option specifies the block size used for EXI compression. When the 
-                "blockSize" element is absent in the EXI Options document, the default blocksize of 1,000,000 is used. 
-                The default blockSize is intentionally large but can be reduced for processing large documents on 
-                devices with limited memory.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The blockSize option specifies the block size used for EXI compression. When the "blockSize" element is absent in the EXI Options document, the 
+                default blocksize of 1,000,000 is used. The default blockSize is intentionally large but can be reduced for processing large documents on devices with limited 
+                memory.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='valueMaxLength' type='xs:positiveInteger' use='optional'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The valueMaxLength option specifies the maximum length of value content items to be 
-                considered for addition to the string table. The default value "unbounded" is assumed when the 
-                "valueMaxLength" element is absent in the EXI Options document.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The valueMaxLength option specifies the maximum length of value content items to be considered for addition to the string table. The default 
+                value "unbounded" is assumed when the "valueMaxLength" element is absent in the EXI Options document.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='valuePartitionCapacity' type='xs:positiveInteger' use='optional'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;The valuePartitionCapacity option specifies the maximum number of value content 
-                items in the string table at any given time. The default value "unbounded" is assumed when the 
-                "valuePartitionCapacity" element is absent in the EXI Options document. Section 7.3.3 Partitions 
-                Optimized for Frequent use of String Literals specifies the behavior of the string table when this 
-                capacity is reached.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;The valuePartitionCapacity option specifies the maximum number of value content items in the string table at any given time. The default value 
+                "unbounded" is assumed when the "valuePartitionCapacity" element is absent in the EXI Options document. Section 7.3.3 Partitions Optimized for Frequent use of 
+                String Literals specifies the behavior of the string table when this capacity is reached.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
         &lt;xs:attribute name='sessionWideBuffers' type='xs:boolean' use='optional' default='false'&gt;
             &lt;xs:annotation&gt;
-                &lt;xs:documentation&gt;If set to true, all buffers, string tables, etc. will be maintained during the 
-                entire session. This may improve performance during time since strings can be omitted in the 
-                compressed binary stream, but it might also in some cases degrade performance since more options 
-                are available in the tables, requiring more bits to encode strings. The default value is false, 
-                meaning that buffers, string tables, etc., are cleared between each stanza.&lt;/xs:documentation&gt;
+                &lt;xs:documentation&gt;If set to true, all buffers, string tables, etc. will be maintained during the entire session. This may improve performance during time since strings
+                can be omitted in the compressed binary stream, but it might also in some cases degrade performance since more options are available in the tables, requiring more bits 
+                to encode strings. The default value is false, meaning that buffers, string tables, etc., are cleared between each stanza.&lt;/xs:documentation&gt;
             &lt;/xs:annotation&gt;
         &lt;/xs:attribute&gt;
     &lt;/xs:attributeGroup&gt;
  
     &lt;xs:simpleType name='MD5Hash'&gt;
         &lt;xs:restriction base='xs:string'&gt;
-            &lt;xs:pattern value='^[0-9a-f]{32}$'/&gt;
+            &lt;xs:pattern value='[0-9a-f]{32}'/&gt;
         &lt;/xs:restriction&gt;
     &lt;/xs:simpleType&gt;
  
@@ -1136,27 +2313,23 @@
         &lt;xs:restriction base='xs:string'&gt;
             &lt;xs:enumeration value='bit-packed'&gt;
                 &lt;xs:annotation&gt;
-                    &lt;xs:documentation&gt;The alignment option value bit-packed indicates that the event codes and associated 
-                    content are packed in bits without any padding in-between.&lt;/xs:documentation&gt;
+                    &lt;xs:documentation&gt;The alignment option value bit-packed indicates that the event codes and associated content are packed in bits without any padding 
+                    in-between.&lt;/xs:documentation&gt;
                 &lt;/xs:annotation&gt;
             &lt;/xs:enumeration&gt;
             &lt;xs:enumeration value='byte-alignment'&gt;
                 &lt;xs:annotation&gt;
-                    &lt;xs:documentation&gt;The alignment option value byte-alignment indicates that the event codes and 
-                    associated content are aligned on byte boundaries. While byte-alignment generally results in EXI 
-                    streams of larger sizes compared with their bit-packed equivalents, byte-alignment may provide a 
-                    help in some use cases that involve frequent copying of large arrays of scalar data directly out 
-                    of the stream. It can also make it possible to work with data in-place and can make it easier to 
-                    debug encoded data by allowing items on aligned boundaries to be easily located in the stream.&lt;/xs:documentation&gt;
+                    &lt;xs:documentation&gt;The alignment option value byte-alignment indicates that the event codes and associated content are aligned on byte boundaries. While 
+                    byte-alignment generally results in EXI streams of larger sizes compared with their bit-packed equivalents, byte-alignment may provide a help in some use 
+                    cases that involve frequent copying of large arrays of scalar data directly out of the stream. It can also make it possible to work with data in-place and 
+                    can make it easier to debug encoded data by allowing items on aligned boundaries to be easily located in the stream.&lt;/xs:documentation&gt;
                 &lt;/xs:annotation&gt;
             &lt;/xs:enumeration&gt;
             &lt;xs:enumeration value='pre-compression'&gt;
                 &lt;xs:annotation&gt;
-                    &lt;xs:documentation&gt;The alignment option value pre-compression indicates that all steps involved 
-                    in compression (see section 9. EXI Compression) are to be done with the exception of the final 
-                    step of applying the DEFLATE algorithm. The primary use case of pre-compression is to avoid a 
-                    duplicate compression step when compression capability is built into the transport protocol. In 
-                    this case, pre-compression just prepares the stream for later compression.&lt;/xs:documentation&gt;
+                    &lt;xs:documentation&gt;The alignment option value pre-compression indicates that all steps involved in compression (see section 9. EXI Compression) are to be 
+                    done with the exception of the final step of applying the DEFLATE algorithm. The primary use case of pre-compression is to avoid a duplicate compression
+                    step when compression capability is built into the transport protocol. In this case, pre-compression just prepares the stream for later compression.&lt;/xs:documentation&gt;
                 &lt;/xs:annotation&gt;
             &lt;/xs:enumeration&gt;
         &lt;/xs:restriction&gt;
@@ -1225,109 +2398,38 @@
         &lt;/xs:complexContent&gt;
     &lt;/xs:complexType&gt;
  
+    &lt;xs:element name='streamStart'&gt;
+        &lt;xs:complexType&gt;
+            &lt;xs:sequence&gt;
+                &lt;xs:element ref='streams:features'
+                            minOccurs='0'
+                            maxOccurs='1'/&gt;
+                &lt;xs:any namespace='urn:ietf:params:xml:ns:xmpp-tls'
+                        minOccurs='0'
+                        maxOccurs='1'/&gt;
+                &lt;xs:any namespace='urn:ietf:params:xml:ns:xmpp-sasl'
+                        minOccurs='0'
+                        maxOccurs='1'/&gt;
+                &lt;xs:element ref='streams:error' minOccurs='0' maxOccurs='1'/&gt;
+            &lt;/xs:sequence&gt;
+            &lt;xs:attribute name='from' type='xs:string' use='optional'/&gt;
+            &lt;xs:attribute name='id' type='xs:string' use='optional'/&gt;
+            &lt;xs:attribute name='to' type='xs:string' use='optional'/&gt;
+            &lt;xs:attribute name='version' type='xs:decimal' use='optional'/&gt;
+            &lt;xs:attribute ref='xml:lang' use='optional'/&gt;
+            &lt;xs:anyAttribute namespace='##other' processContents='lax'/&gt;
+        &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+ 
+    &lt;xs:element name='streamEnd'&gt;
+        &lt;xs:complexType/&gt;
+    &lt;/xs:element&gt;
+ 
 &lt;/xs:schema&gt;
 
         </pre>
     </div>
-        <div class="indent">
-      <h3>8.1 <a name="default">Default schema for alternative bindings</a></h3>
-            
-            
-            <p class="" style="">
-                Default EXI grammar used in EXI/XMPP SHALL be equivalent to the EXI grammar defined by the following schema. The default EXI grammar is used in initiating connection of EXI/XMPP alternate binding.
-            </p>
-            <p class="caption">
-      </p>
-      <div class="indent">
-        <pre class="prettyprint">
-                
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xs:schema
- xmlns:xs="http://www.w3.org/2001/XMLSchema"
- xmlns:stream="http://etherx.jabber.org/streams"
- targetNamespace="urn:xmpp:exi:base:0"
- elementFormDefault="qualified"&gt;
- &lt;xs:import namespace="http://etherx.jabber.org/streams"
-            schemaLocation="${snapshot_url}/streams.xsd" /&gt;
- &lt;xs:import namespace="http://jabber.org/protocol/compress/exi"
-            schemaLocation="${snapshot_url}/xep-xxxx-00.xsd" /&gt; &lt;!-- FIXME location of Peter's schema--&gt;
- &lt;!-- any other common schema shall be always imported TBD --&gt;
- &lt;!-- INSERT ADDITIONAL SCHEMAS HERE --&gt;
-&lt;/xs:schema&gt;
-
-            </pre>
-      </div>
-
-            <p class="" style="">
-                The schemaId for this default schema is 'X322.0.20130423'. The schema version will be 'X322.1' as
-                the XEP becomes 'Proposed' state.
-            </p>
-        </div>
-        <div class="indent">
-      <h3>8.2 <a name="sect-ID0EMZAE">A schema for Combined Schemas</a></h3>
-            <p class="" style="">
-                With a <a href="#schemaID">combined schemaId</a> in a stream header, or a setup process of compression parameter negotiation, a set of schema used in the EXI stream is defined. The grammar used in the EXI/XMPP stream SHALL be equivalent to the EXI grammar defined by the default schema with corresponding import statement is placed at the end of the list of default import statements (marked as 'INSERT ADDITIONAL SCHEMAS HERE').
-            </p>
-        </div>
-        <div class="indent">
-      <h3>8.3 <a name="patch">Patch to avoid UPA for streams.xsd</a></h3>
-            
-            
-            <p class="" style="">
-                TBD: group discussion needed
-            </p>
-            <p class="" style="">
-                streams.xsd defined in RFC6120 has 'unique particle attribution (UPA)' problem.
-                UPA is undeterministic attribution of an element between a wildcard and an explicit definition.
-                Details could be found in <a href="http://www.w3.org/TR/xmlschema-1/#non-ambig">Appendix H</a> of XML schema specification.
-            </p>
-            <p class="" style="">
-                A simple
-                way to solve UPA is to insert delimiters around wildcards to eliminate
-                ambiguity. A deterministic delimiter can resolve ambiguity.
-                The other way to solve UPA is to use 'weak wildcard model'
-                introduced in XML schema 1.1. The cause of ambiguity is lack of
-                precedence between explicit definitions and wildcard definitions. As
-                weak wildcards have weaker precedence against explicit definitions,
-                there are no ambiguity with UPA.
-            </p>
-            <p class="" style="">
-                To keep the same semantics with current XML implementations, by
-                default this proposal recommends weak wildcard model on
-                implementations. However, if an implementation does not support weak
-                wildcards, it may use streams.xsd with following patch applied.
-            </p>
-            <p class="caption">
-      </p>
-      <div class="indent">
-        <pre class="prettyprint">
-                --- streams.xsd    2013-03-25 17:37:52.733451313 +0900
-                +++ streams-UPA-patched.xsd    2013-03-25 17:57:44.889469868 +0900
-                @@ -32,10 +32,12 @@
-                &lt;xs:any namespace='urn:ietf:params:xml:ns:xmpp-sasl'
-                minOccurs='0'
-                maxOccurs='1'/&gt;
-                +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
-                &lt;xs:any namespace='##other'
-                minOccurs='0'
-                maxOccurs='unbounded'
-                processContents='lax'/&gt;
-                +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
-                &lt;xs:choice minOccurs='0' maxOccurs='1'&gt;
-                &lt;xs:choice minOccurs='0' maxOccurs='unbounded'&gt;
-                &lt;xs:element ref='client:message'/&gt;
-                @@ -77,6 +79,7 @@
-                &lt;xs:element ref='err:text'
-                minOccurs='0'
-                maxOccurs='1'/&gt;
-                +        &lt;xs:element name="delim" type="xs:boolean" minOccurs="1" maxOccurs="1" /&gt;
-                &lt;xs:any     namespace='##other'
-                minOccurs='0'
-                maxOccurs='1'
-            </pre>
-      </div>
-        </div>
-    <h2>9.
+    <h2>8.
        <a name="ack">Acknowledgements</a></h2>
         <p class="" style="">Thanks to Joachim Lindborg, Takuki Kamiya, Tina Beckman, Karin Forsell, Jeff Freund and Rumen Kyusakov for all valuable feedback.</p>
     <hr><a name="appendices"></a><h2>Appendices</h2>
@@ -1385,12 +2487,11 @@
     <p class="indent">The following requirements keywords as used in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>: "MUST", "SHALL", "REQUIRED"; "MUST NOT", "SHALL NOT"; "SHOULD", "RECOMMENDED"; "SHOULD NOT", "NOT RECOMMENDED"; "MAY", "OPTIONAL".</p>
     <hr><a name="appendix-notes"></a><h3>Appendix G: Notes</h3>
     <div class="indent">
-      <p><a name="nt-ID0E5F">1</a>. 
+      <p><a name="nt-ID0EJG">1</a>. 
                 Efficient XML Interchange (EXI) Format &lt;<a href="http://www.w3.org/TR/exi/">http://www.w3.org/TR/exi/</a>&gt;.
             </p>
-      <p><a name="nt-ID0ENBAC">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
-      <p><a name="nt-ID0EZBAC">3</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
-      <p><a name="nt-ID0EPCAC">4</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
+      <p><a name="nt-ID0EYBAC">2</a>. XEP-0138: Stream Compression &lt;<a href="http://xmpp.org/extensions/xep-0138.html">http://xmpp.org/extensions/xep-0138.html</a>&gt;.</p>
+      <p><a name="nt-ID0EMGAE">3</a>. RFC 6120: Extensible Messaging and Presence Protocol (XMPP): Core &lt;<a href="http://tools.ietf.org/html/rfc6120">http://tools.ietf.org/html/rfc6120</a>&gt;.</p>
     </div>
     <hr><a name="appendix-revs"></a><h3>Appendix H: Revision History</h3>
     <p>Note: Older versions of this specification might be available at <a href="http://xmpp.org/extensions/attic/">http://xmpp.org/extensions/attic/</a></p>
@@ -1399,8 +2500,10 @@
       <div class="indent">
                 <p class="" style="">Added support for a binary binding.</p>
                 <p class="" style="">Changed namespace urn:xmpp:sn to urn:xmpp:iot</p>
-				<p class="" style="">Added streamStart and streamEnd elements.</p>
-				<p class="" style="">Added central XMPP schemas used for XMPP communication.</p>
+                <p class="" style="">Added streamStart and streamEnd elements.</p>
+                <p class="" style="">Added central XMPP schemas used for XMPP communication.</p>
+                <p class="" style="">Added references to core XMPP schemas in examples.</p>
+                <p class="" style="">Added quick setup attribute: <span class="strong">configurationId</span>.</p>
              (pw, yd)
     </div>
       <h4>Version 0.0.4 (2013-03-19)</h4>
