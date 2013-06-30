@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<exi:startStream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
- <exi:xmlns><exi:prefix>stream</exi:prefix><exi:uri>http://etherx.jabber.org/streams</exi:uri></exi:xmlns>
- <exi:xmlns><exi:prefix></exi:prefix><exi:uri>jabber:client</exi:uri></exi:xmlns>
- <exi:xmlns><exi:prefix>xml</exi:prefix><exi:uri>http://www.w3.org/XML/1998/namespace</exi:uri></exi:xmlns>
-</exi:startStream>
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>

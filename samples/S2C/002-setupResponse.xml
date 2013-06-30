@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<exi:setupResponse xmlns:exi='urn:xmpp:exi:base:0' agreement="true" agreedSchemaId="a83b19b31e016409d3001331d9f084fc">
+<exi:setupResponse xmlns:exi='http://jabber.org/protocol/compress/exi' agreement="true" configurationId="a83b19b31e016409d3001331d9f084fc">
   <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
-  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1284" md5Hash="6e4e2257c1a4ba937fbdf71664a7e793" />
 </exi:setupResponse>
 
 

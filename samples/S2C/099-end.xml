@@ -1,2 +1,2 @@
 <?xml version="1.0"?>
-<endStream xmlns='urn:xmpp:exi:base:0' />
+<streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
