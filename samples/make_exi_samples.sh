@@ -2,10 +2,10 @@
 
 EXIFICIENT_DIR=/shome/ydoi/.s/exificient-sep2work
 WDIR=`/bin/pwd`
-SCHEMA_DIR=$WDIR/../schema/LOCAL/
+SCHEMA_DIR=$WDIR/schema_localized/
 
-BASESCHEMA=$SCHEMA_DIR/base.xsd
-EXTSCHEMA=$SCHEMA_DIR/base+muc.xsd
+BASESCHEMA=$SCHEMA_DIR/00_canonical_example00.xsd
+EXTSCHEMA=$SCHEMA_DIR/00_canonical_example01.xsd
 
 cd $EXIFICIENT_DIR
 . ./env.sh
