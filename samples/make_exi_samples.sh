@@ -19,24 +19,21 @@ for TARGET in C2S S2C; do
   exit 1
  fi
  ENC_MODE=normal
- EXI_PERSISTENT_CONTEXT=0 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/00*.xml
+ EXI_PERSISTENT_CONTEXT=0 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/???-base-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base
- mv -f $WDIR/$TARGET/00*.exi $WDIR/exi-$TARGET-$ENC_MODE/base/
- EXI_PERSISTENT_CONTEXT=0 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/*.xml
+ mv -f $WDIR/$TARGET/???-base-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base/
+ EXI_PERSISTENT_CONTEXT=0 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/???-base+muc-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base+muc ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base+muc
- #[ -d $WDIR/exi-$TARGET-$ENC_MODE/base+muc-dummy ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base+muc-dummy
- #mv -f $WDIR/$TARGET/00*.exi $WDIR/exi-$TARGET/base+muc-dummy/
- rm -f $WDIR/$TARGET/00*.exi
- mv -f $WDIR/$TARGET/*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc/
+ mv -f $WDIR/$TARGET/???-base+muc-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc/
 
  ENC_MODE=persistent
- EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/00*.xml
+ EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/0??-base-*.xml
+ EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/1??-base-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base
- mv -f $WDIR/$TARGET/00*.exi $WDIR/exi-$TARGET-$ENC_MODE/base/
- EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/*.xml
+ mv -f $WDIR/$TARGET/???-base-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base/
+ EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/0??-base+muc-*.xml
+ EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/1??-base+muc-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base+muc ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base+muc
- [ -d $WDIR/exi-$TARGET-$ENC_MODE/base+muc-dummy ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base+muc-dummy
- mv -f $WDIR/$TARGET/00*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc-dummy/
- mv -f $WDIR/$TARGET/*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc/
+ mv -f $WDIR/$TARGET/???-base+muc-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc/
 
 done

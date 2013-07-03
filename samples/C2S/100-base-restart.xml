@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- default encoding -->
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
  <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
  <exi:xmlns prefix="" namespace="jabber:client" />
