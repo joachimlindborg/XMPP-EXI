@@ -922,7 +922,7 @@
                     <li>fragment: false</li>
                     <li>preserve: all false</li>
                     <li>selfContained: false</li>
-                    <li>schemaId: "X322.0.20130423" (XEP number of this document and experimental revision)</li> <!-- [YD] FIXME this should be FIXED .. to what? -->
+                    <li>schemaId: "urn:xmpp:exi:cs:default"</li> <!-- [YD] FIXME modified. Is this ok? -->
                     <li>datatypeReresentationMap: not exist</li>
                     <li>blockSize: N/A</li>
                     <li>valueMaxLength: 64</li>
@@ -2262,16 +2262,11 @@
 			</section3>
         </section2>
         <!--
-        PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
-        <section2 topic="Default schema for alternative bindings" anchor="default">
-            
-FIXME [YD]
-TBD: namespace is tentative
-shall it have other common schemas such as roster, muc, ... ?
-
-            TODO: [PW] This can be done internally in the xmpp server (implementation note), and does not need to be specified here. 
-            See discussion above. This is a solution to the problem of combining multiple separate schemas into one schema, for EXI
-            engines only supporting one single schema. 
+	    [YD]: FIXME: is this really true? [Better example in first use case section] I strongly oppose this. Alternative binding cannot be implemented without 
+	    I recovered this 2013--07-07.
+	    PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
+	    -->
+        <section2 topic="Default schema for alternative bindings" anchor="defaultSchema">
             <p>
                 Default EXI grammar used in EXI/XMPP SHALL be equivalent to the EXI grammar defined by the following schema. The default EXI grammar 
                 is used in initiating connection of EXI/XMPP alternate binding.
@@ -2308,94 +2303,6 @@ shall it have other common schemas such as roster, muc, ... ?
             </p>
         </section2>-->
     </section1>
-    <!--<section1 topic='Handling of XML Schema in EXI/XMPP Stream' anchor='schemaHandling'>-->
-        <!-- [YD] copied from yd's proposal TODO: requires discussion -->
-        <!-- TODO: more texts should be added - schema and option negotiation -->
-
-        <!-- TODO: [PW] This should be under Implementation Nodes. Also, it can be treated internally by the server. 
-        There's no need for clients to know or handle Schema IDs. For instance: Clients optionally negotiates schemas.
-        Then, when it starts, it lists schemas, by namespace, byte length & hash. The server then automatically
-        (internally) generates the root schema that imports the desired (available) schemas and uses an internal Schema ID
-        for that root schema, which it then can pass on to the EXI engine. 
-        
-        Note: Personally I don't think the internal architecture of the XMPP server is important to specify. One could give an
-        idea of how it could be solved, but finally, the architecture should be implementation specific. The XEP should only
-        specify the interface between the client and the server. -->
-
-        <!-- TODO: [PW] All binary communication should be clearly shown in tables, so there's no ambiguity on how to interpret them. -->
-        
-        <!-- PW: Removed. Not needed. See discussion under Generation of Canonic Schemas
-        <section2 topic="SchemaID for (a combination of) registered XML schemas" anchor="schemaID">
-            <p>
-                In EXI binding, schemaId may be used to initiate a shortcut setup.
-                A schemaID SHALL contain only characters in [a-zA-Z0-9].
-                Initial character SHOULD be 'X' for XEP-based <link url="#wellknown">well-known schemas</link>,
-                'L' for server-local schema.
-            </p>
-            <p>
-                A schemaId corresponds to a schema-informed grammar created from a
-                schema. In XMPP use case, it is common to add an independent
-                schema as a schema for extension. Hence, a set of schema should be
-                used to define a EXI stream.
-            </p>
-            <p>
-                Combined schemaId is given by plus-delimited list of component schemaIds.
-                For example,
-                base schema defined in this document plus the some locally-cached schema will be
-                something like:
-            </p>
-            <code>
-                "X322.0.20120423+Lf5b9e44d"
-            </code>
-            <p>
-                For each schemaId component given by a client (or an initiating entity) to a server,
-                a server shall make a combined schema by inserting 'xs:import' statement to the
-                <link url="#default">default schema</link>.
-            </p>
-        </section2>
-        <section2 topic="Server-local SchemaIDs">
-            <p>
-                EXI/XMPP stream MAY negotiate schema to be used in "next" stream.
-            </p>
-            <p>
-                Server-assigned local schemaId MAY be given in setupResponse
-                with 'L' prefix. For example, if a
-                schema has md5Hash '18829242ca7a72a552a7e15af5b9e44d', then the schema
-                may be registered as 'Lf5b9e44d' or 'Lfoobar' or whatever the server want to.
-                It is recommended to use a shorter identifier for schemaId to make
-                communication efficient.
-            </p>
-            <p>
-                This schemaId is valid only with the
-                server and the server MAY use different value for a server-local
-                schemaId (apparent case is on hash collision, or some
-                manually-installed parmanent schema). Local schemaId SHOULD
-                NOT be reused on different schema.
-            </p>
-        </section2>-->
-        <!-- PW: This is a good idea. I've moved the section to Implementation Nodes (same topic name) and rewritten it somewhat.
-        I've also expanded on this creating dynamic quick setups that can easilly reused.
-        <section2 topic="Using EXI Option Document for Shortcut Setup" anchor="shortcut">
-            <p>
-                If an initiating entity expects a server has required set of schemas,
-                it may start initial EXI stream by specifing corresponding combined
-                schemaId and parameters in the EXI option document. If the server has
-                the set of schema specified by the schemaId and decided to accept the
-                options, the server SHOULD open a stream to the client with EXI option
-                document with the identical option. This option document indicates the
-                server accepts the option and no schema/encoding parameter negotiation
-                will be required.
-            </p>
-            <p>
-                If the server does not have a schema in the given schemaId, does not
-                support given encoding parameter, or decided to deny the shortcut
-                request, it SHALL return a stream with an empty setupResponse with
-                agreement="false", encoded in the default schema without EXI options
-                document. Then, the initiating entity SHOULD fallback to schema
-                negotiation in EXI/XMPP encoded in the default schema.
-            </p>
-        </section2>-->
-    <!--</section1>-->
     <section1 topic='Security Considerations' anchor='security'>
         <p>
             Note that EXI compressed information, even though it is hard to decode by humans, is by no means encrypted. If sensitive data is to be sent over an EXI compressed
