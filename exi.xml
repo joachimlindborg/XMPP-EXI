@@ -717,7 +717,7 @@
                 </li>
                 <li>
                     <p>
-                        If client needs to use different encoding option or schema than the default encoding options or <link url="#default">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
+                        If client needs to use different encoding option or schema than the default encoding options or <link url="#defaultSchema">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
                     </p>
 		    <p>
 			For example, the client want to use MUC option (XEP-0045<!-- FIXME: reference -->), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
@@ -866,20 +866,41 @@
                 </li>
                 <li>
                     <p>
-                        The client now can start the initial EXI/XMPP stream with explicit EXI option with the encoding option and schemaId used in the previous negotiated session (<link url="#shortcut">shortcut setup</link>)
+                        The client now can start a preconfigured EXI/XMPP stream with explicit EXI option with the encoding option and canoinc schema used in the previous negotiated session (<link url="#shortcutAltBind">shortcut setup</link>)
                     </p>
-		    <example caption="Shortcut Setup (Client to Server)">
-			FIXME -- how short it should be?
+		    <example caption="EXI Option Document used for Shortcut Setup (Client to Server)">
+FIXME
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
+		    <example caption="XML Equivalent of streamStart">
+FIXME			
 		    </example>
--->
-		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+		    <example caption="Actual EXI Stream with EXI option document">
+			(TBD: needs some development)
 		    </example>
                 </li>
+		<li>
+		    <p>
+			The server may respond with the given configuration ID. This can skip the configuration setup and the communication can continue with preconfigured schemas.
+		    </p>
+		    <example caption="EXI Option Document used for Shortcut Setup (Server to Client)">
+FIXME			
+		    </example>
+		    <example caption="XML Equivalent of streamStart in response">
+FIXME			
+		    </example>
+		    <example caption="Actual EXI Stream with EXI option document">
+			(TBD: needs some development)
+		    </example>
+		    <p>
+			Or server may deny to start the new communication by just sending streamEnd tag with default encoding.
+		    </p>
+		    <example caption="XML Equivalent of streamEnd to deny the configuration">
+FIXME			
+		    </example>
+		    <example caption="Actual EXI Stream with EXI option document">
+			(TBD: needs some development)
+		    </example>
+		</li>
             </ol>
             <section3 topic="DNS SRV lookup" anchor="srv">
                 <p>
@@ -1199,11 +1220,13 @@
             </p>
         </section2>
         <section2 topic="Using EXI Option Documents for Shortcut Setup" anchor="shortcut">
-	    <!-- [YD] FIXME: update this according to configurationId -->
 			<p>
 				The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
 				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
 				through an URL.
+			</p>
+			<p>
+			    A client may specify a configurationId or configurationLocation on exi:setup element. If the server has corresponding setup configuration, the server may respond with an exi:setupResponse with <strong>agreement="true"</strong>. If the server does not know the configurationId or does not be able to use the given configurationLocation, the server shall respond with an exi:setupResponse with <strong>agreement="false"</strong>.
 			</p>
 			<p>
                 This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
@@ -1215,6 +1238,15 @@
 			<p>
 				The format for these opton documents or locations is beyond the scope of this specification.
 			</p>
+			<section3 topic="Shortcut Setup for Alternative Transport Binding" anchor="shortcutAltBind">
+			    With alternative transport bind, following rule for shortcut may be used, assuming a server and a client have common shared configuration with configurationId="01234" as an example.
+			    <ul>
+				<li>Client can start configured stream with a <strong>exi:streamStart</strong> element encoded in the configuration given in configurationId="01234". To indicate configurationId, a schemaId corresponds to the configurationId prefixed by "c:" SHALL be used. In this example, schemaId is "c:01234". EXI option in EXI option header other than the schemaId SHOULD NOT be specified.</li>
+				<li>If the server accepts the configuration, the server SHOULD respond with a <strong>exi:streamStart</strong> element encoded in the configuration given in the configurationId. The server SHALL put the schemaId in the EXI header of the response. No EXI options other than the schemaId SHOULD NOT be specified in the response EXI header. The EXI header is the indication of configuration agreement and SHALL NOT be omitted.</li>
+				<li>If the server does not accept the configuration, the server SHALL respond with a <strong>exi:streamEnd</strong> element encoded in the <link url="#defaultSchema">default schema</link> and the EXI header option SHOULD be empty.</li>
+				<li>The client can continue pre-configured stream if and only if it receives <strong>exi:streamStart</strong> element encoded in the configurationId with EXI option header that contains the identical schemaId. Otherwise, the client SHOULD start a new <strong>exi:streamStart</strong> with a new TCP connection an empty EXI option header (e.g. default schema). Current TCP connection SHOULD NOT be used for re-negotiation (configuration setup).</li>
+			    </ul>
+			</section3>
         </section2>
         <section2 topic="XMPP Schema files and their hash values" anchor="knownhashes">
             <p>
@@ -2277,24 +2309,29 @@
 <xs:schema
  xmlns:xs="http://www.w3.org/2001/XMLSchema"
  xmlns:stream="http://etherx.jabber.org/streams"
- targetNamespace="urn:xmpp:exi:base:0"
+ targetNamespace="urn:xmpp:exi:cs"
  elementFormDefault="qualified">
  <xs:import namespace="http://etherx.jabber.org/streams"
             schemaLocation="${snapshot_url}/streams.xsd" />
  <xs:import namespace="http://jabber.org/protocol/compress/exi"
-            schemaLocation="${snapshot_url}/xep-xxxx-00.xsd" /> 
-            FIXME location of Peter's schema
- any other common schema shall be always imported TBD 
- INSERT ADDITIONAL SCHEMAS HERE 
+            schemaLocation="${snapshot_url}/xep-0322-01.xsd" /> 
 </xs:schema>
 ]]>
             </code>
 
             <p>
-                The schemaId for this default schema is 'X322.0.20130423'. The schema version will be 'X322.1' as
-                the XEP becomes 'Proposed' state.
+		The ${snapshot-url} corresponds to yet-to-be-specified schema snapshot repository described in <link href="#wellknown">snapshot repository for well-known schemas</link> section.
+                The schemaId of this schema will is 'urn:xmpp:exi:cs:default'. SchemaId is ID for this instance and not a namespace identifier and intentionally different from the target namespace of the schema.
             </p>
         </section2>
+        <section2 topic="Reserved Schema IDs" anchor="reservedSchemaID">
+	    <!-- [YD] required for alternative bindings -->
+	    Following schema Ids are reserved.
+	    <ul>
+		<li>Schema IDs starts with "c:". This is used as <link href="#shortcutaltBind">shortcut setup for alternative transport binding</link>.</li>
+		<li>Schema IDs starts with "urn:xmpp". This may be used to describe XEP-based schemas.</li>
+	    </ul>
+	</section2>
         <section2 topic="A schema for Combined Schemas">
             <p>
                 With a <link url="#schemaID">combined schemaId</link> in a stream header, or a setup process of compression parameter negotiation, 
