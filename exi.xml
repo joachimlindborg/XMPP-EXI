@@ -679,11 +679,6 @@
 </exi:streamStart>
 ]]>
 		    </example>
-<!-- FIXME
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream with EXI Header">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -701,11 +696,6 @@
 </exi:streamStart>
 ]]>		    
 		    </example>
-<!-- FIXME
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream with EXI Header">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -827,11 +817,6 @@
 </iq>
 ]]>
 		    </example>
-<!-- FIXME
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream with EXI Header">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -869,36 +854,72 @@
                         The client now can start a preconfigured EXI/XMPP stream with explicit EXI option with the encoding option and canoinc schema used in the previous negotiated session (<link url="#shortcutAltBind">shortcut setup</link>)
                     </p>
 		    <example caption="EXI Option Document used for Shortcut Setup (Client to Server)">
-FIXME
+			<!-- samples/quick-setup-header.xml -->
+			<![CDATA[
+<?xml version="1.0"?>
+<header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <common>
+  <schemaId>c:761aabc0-a255-4b9b-89a1-4cb859559691</schemaId>
+ </common>
+</header>
+			]]>
 		    </example>
 		    <example caption="XML Equivalent of streamStart">
-FIXME			
+			<!-- samples/C2S/010-base+muc-restart.xml -->
+			<![CDATA[
+<?xml version="1.0"?>
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
+			]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI option document">
-			(TBD: needs some development)
+FIXME: needs some development
 		    </example>
                 </li>
 		<li>
 		    <p>
 			The server may respond with the given configuration ID. This can skip the configuration setup and the communication can continue with preconfigured schemas.
 		    </p>
+
 		    <example caption="EXI Option Document used for Shortcut Setup (Server to Client)">
-FIXME			
+			<!-- samples/quick-setup-header.xml -->
+			<![CDATA[
+<?xml version="1.0"?>
+<header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <common>
+  <schemaId>c:761aabc0-a255-4b9b-89a1-4cb859559691</schemaId>
+ </common>
+</header>
+			]]>
 		    </example>
 		    <example caption="XML Equivalent of streamStart in response">
-FIXME			
+			<!-- samples/S2C/010-base+muc-restart.xml -->
+			<![CDATA[
+<?xml version="1.0"?>
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
+]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI option document">
-			(TBD: needs some development)
+FIXME: needs some development
 		    </example>
 		    <p>
 			Or server may deny to start the new communication by just sending streamEnd tag with default encoding.
 		    </p>
 		    <example caption="XML Equivalent of streamEnd to deny the configuration">
-FIXME			
+			<![CDATA[
+<?xml version="1.0"?>
+<streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
+			]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI option document">
-			(TBD: needs some development)
+FIXME
 		    </example>
 		</li>
             </ol>
