@@ -25,16 +25,15 @@
 	</xs:complexType>
  
     <xs:complexType name='SetupResponse'>
-        <xs:complexContent>
-            <xs:extension base='Setup'>
-                <xs:choice minOccurs='0' maxOccurs='unbounded'>
-                    <xs:element name='missingSchema' type='Schema'/>
-                </xs:choice>
-                <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
-				<xs:attribute name='configurationId' type='xs:string' use='optional'/>
-				<xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
-			</xs:extension>
-        </xs:complexContent>
+        <xs:choice minOccurs='0' maxOccurs='unbounded'>
+            <xs:element name='schema' type='Schema'/>
+            <xs:element name='datatypeRepresentationMap' type='DatatypeRepresentationMap'/>
+			<xs:element name='missingSchema' type='Schema'/>
+        </xs:choice>
+        <xs:attributeGroup ref='Options'/>
+		<xs:attribute name='configurationId' type='xs:string' use='optional'/>
+		<xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
+        <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
     </xs:complexType>
  
     <xs:complexType name='Schema'>

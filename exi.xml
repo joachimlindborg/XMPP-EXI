@@ -59,15 +59,15 @@
                 <p>Added quick setup attributes: <strong>configurationId</strong>, <strong>configurationLocation</strong>.</p>
             </remark>
         </revision>
-		<revision>
-			<version>0.1</version>
-			<date>2013-04-16</date>
-			<initials>psa</initials>
-			<remark>
-				<p>Initial published version approved by the XMPP Council.</p>
-			</remark>
-		</revision>
-		<revision>
+        <revision>
+            <version>0.1</version>
+            <date>2013-04-16</date>
+            <initials>psa</initials>
+            <remark>
+                <p>Initial published version approved by the XMPP Council.</p>
+            </remark>
+        </revision>
+        <revision>
             <version>0.0.4</version>
             <date>2013-03-19</date>
             <initials>pw</initials>
@@ -1005,21 +1005,21 @@
             </p>
         </section2>
         <section2 topic="Using EXI Option Documents for Shortcut Setup" anchor="shortcut">
-			<p>
-				The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
-				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
-				through an URL.
-			</p>
-			<p>
-                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
-				If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <strong>agreement=false</strong>
-				response. Otherwise the semantics of the <strong>configurationLocation</strong> attribute is the same as for the <strong>configurationId</strong>
-				attribute, except it provide a mechism for static configurations, while the <strong>configurationId</strong> provides a mechanism for
-				dynamic configurations.
+            <p>
+                The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
+                a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
+                through an URL.
             </p>
-			<p>
-				The format for these opton documents or locations is beyond the scope of this specification.
-			</p>
+            <p>
+                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
+                If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <strong>agreement=false</strong>
+                response. Otherwise the semantics of the <strong>configurationLocation</strong> attribute is the same as for the <strong>configurationId</strong>
+                attribute, except it provide a mechism for static configurations, while the <strong>configurationId</strong> provides a mechanism for
+                dynamic configurations.
+            </p>
+            <p>
+                The format for these opton documents or locations is beyond the scope of this specification.
+            </p>
         </section2>
         <section2 topic="XMPP Schema files and their hash values" anchor="knownhashes">
             <p>
@@ -2062,9 +2062,9 @@
                     maxOccurs='1'
                 </code>
             </section3>
-			<section3 topic="Patch for missing wildcards in extensible schemas">
-				<!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
-			</section3>
+            <section3 topic="Patch for missing wildcards in extensible schemas">
+                <!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
+            </section3>
         </section2>
         <!--
         PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
@@ -2276,16 +2276,15 @@ shall it have other common schemas such as roster, muc, ... ?
     </xs:complexType>
  
     <xs:complexType name='SetupResponse'>
-        <xs:complexContent>
-            <xs:extension base='Setup'>
-                <xs:choice minOccurs='0' maxOccurs='unbounded'>
-                    <xs:element name='missingSchema' type='Schema'/>
-                </xs:choice>
-                <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
-                <xs:attribute name='configurationId' type='xs:string' use='optional'/>
-                <xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:choice minOccurs='0' maxOccurs='unbounded'>
+            <xs:element name='schema' type='Schema'/>
+            <xs:element name='datatypeRepresentationMap' type='DatatypeRepresentationMap'/>
+            <xs:element name='missingSchema' type='Schema'/>
+        </xs:choice>
+        <xs:attributeGroup ref='Options'/>
+        <xs:attribute name='configurationId' type='xs:string' use='optional'/>
+        <xs:attribute name='configurationLocation' type='xs:string' use='optional'/>
+        <xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/>
     </xs:complexType>
  
     <xs:complexType name='Schema'>
