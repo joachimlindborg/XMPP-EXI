@@ -28,11 +28,11 @@ for TARGET in C2S S2C; do
 
  ENC_MODE=persistent
  EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/0??-base-*.xml
- EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/1??-base-*.xml
+# EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $BASESCHEMA $WDIR/$TARGET/1??-base-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base
  mv -f $WDIR/$TARGET/???-base-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base/
  EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/0??-base+muc-*.xml
- EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/1??-base+muc-*.xml
+# EXI_PERSISTENT_CONTEXT=1 jython loopEncoder.py $EXTSCHEMA $WDIR/$TARGET/1??-base+muc-*.xml
  [ -d $WDIR/exi-$TARGET-$ENC_MODE/base+muc ] || mkdir -p $WDIR/exi-$TARGET-$ENC_MODE/base+muc
  mv -f $WDIR/$TARGET/???-base+muc-*.exi $WDIR/exi-$TARGET-$ENC_MODE/base+muc/
 
