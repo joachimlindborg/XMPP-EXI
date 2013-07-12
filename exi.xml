@@ -2321,6 +2321,9 @@ FIXME
                 together with EXI compression, the recommended procedures should be considered. If changes to the schema is required,
                 new byte sizes and hash values must be computed for the changed schema correspondingly.
             </p>
+	    <p>
+		Patched version of XML schemas may be placed in the <link href="#wellknown">snapshot repository for well-known schemas</link> to avoid wild patches (and too many derived schema for the same model).
+	    </p>
             <section3 topic="Patch to avoid UPA for streams.xsd" anchor="patch">
                 <!-- [YD] -->
                 <p>
