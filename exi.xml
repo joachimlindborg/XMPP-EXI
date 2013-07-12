@@ -733,7 +733,7 @@
                         If client needs to use different encoding option or schema than the default encoding options or <link url="#defaultSchema">the default schema</link>, then the client shall start <link url="#schemaHandling">schema negotiation</link>. The streams with alternate options/schemas SHOULD NOT have an EXI Options document to indicate the parameter is negotiated via previous XMPP stream.
                     </p>
 		    <p>
-			For example, the client want to use MUC option (XEP-0045<!-- FIXME: reference -->), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
+			For example, the client want to use MUC option (<link href="http://xmpp.org/extensions/xep-0045.html">XEP-0045</link>)), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
 		    </p>
 		    <example caption="XML equivalent of setup element (Client to Server)">
 			<!-- samples/C2S/002-base-setup.xml -->
@@ -1039,7 +1039,7 @@ FIXME
 -->
                 <p>
                     In addition, local value learning mechanism is disabled by
-                    default as described in section 4 of [EXI Profile].<!-- FIXME: reference -->
+                    default as described in section 4 of <link href="http://www.w3.org/TR/exi-profile/">EXI Profile</link>.
 		    <!-- FIXME: discussion, shall we mandate use of EXI Profile? -->
                 </p>
                 <ul>
