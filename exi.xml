@@ -1026,13 +1026,13 @@ FIXME
                     <li>fragment: false</li>
                     <li>preserve: all false</li>
                     <li>selfContained: false</li>
-                    <li>schemaId: "urn:xmpp:exi:cs:default"</li> <!-- [YD] FIXME modified. Is this ok? -->
+                    <li>schemaId: "urn:xmpp:exi:default"</li> <!-- [YD] FIXME modified. Is this ok? -->
                     <li>datatypeReresentationMap: not exist</li>
                     <li>blockSize: N/A</li>
                     <li>valueMaxLength: 64</li>
                     <li>valuePartitionCapacity: 64</li>
                 </ul>
-                <!-- [YD] FIXME discussion: 
+                <!-- [YD] agreed 2013-07-12: 
 // 4K RAM for value partitions - is this enough small?
 // valueMaxLength should be something like 95% percentile of JID
 // sorted by the length
@@ -1040,7 +1040,7 @@ FIXME
                 <p>
                     In addition, local value learning mechanism is disabled by
                     default as described in section 4 of <link href="http://www.w3.org/TR/exi-profile/">EXI Profile</link>.
-		    <!-- FIXME: discussion, shall we mandate use of EXI Profile? -->
+		    <!-- FIXME: [YD] add reference to available implementations -->
                 </p>
                 <ul>
                     <li>localValuePartitions: 0</li>
@@ -1104,45 +1104,38 @@ FIXME
 	    </ol>
 	</section2>
         <section2 topic='EXI options'>
-	    <!-- [YD] FIXME: is this section just copied from EXI spec? I think we need to be careful on copyright. In addition, if this is just a copy, I don't think we need it. -->
+	    <!-- [YD] FIXME: agreed: change this description as simple list of options and reference to the EXI spec. XMPP-dependent description may be added. -->
+	    <!-- [YD] FIXME: add some numbers according to examples to show effects (in size) -->
+	    <!-- DATA URI Scheme can be used to add figures (memo) -->
             <p>
-                The following segment is taken from the <link url='http://www.w3.org/TR/exi/#options'>EXI specification</link>. It describes the different EXI options that need to be negotiated before enabling EXI.
+                There are many <link url='http://www.w3.org/TR/exi/#options'>EXI options</link> in EXI Format. Followings are brief description for use in XMPP.
             </p>
             <p>
-                The <strong>alignment option</strong> is used to control the alignment of event codes and content items. The value is one of bit-packed, byte-alignment or pre-compression, of which bit-packed is the default value assumed when the "alignment" element is absent in the EXI Options document. The option values byte-alignment and pre-compression are effected when "byte" and "pre-compress" elements are present in the EXI Options document, respectively. When the value of compression option is set to true, alignment of the EXI Body is governed by the rules specified in <link url='http://www.w3.org/TR/exi/#compression'>9. EXI Compression</link> instead of the alignment option value. The "alignment" element MUST NOT appear in an EXI options document when the "compression" element is present.
+                The <strong>alignment option</strong> is to control how the values are encoded. The default option 'bit-packed' fits most of communication use cases. If TLS compression is used at the same time, pre-compression will make the best result.
+	    </p>
+            <p>
+                The <strong>compression option</strong> is a Boolean to specify additional entropy-based compression is performed over EXI encoding. This option works best for larger documents. Usual use cases expected in XMPP/EXI may not give much additional compactness to messages.
             </p>
             <p>
-                The alignment option value <strong>bit-packed</strong> indicates that the event codes and associated content are packed in bits without any padding in-between.
+                The <strong>strict option</strong> is a Boolean to let EXI grammars (schema-informed grammars) work more strictly. With a strict schema-informed grammar, only valid data with the schema is allowed in streams. This makes best compactness of a grammar and messages without additional entropy-based compression. With nonstrict schema-informed grammar, derived elements and attributes could be encoded in the built-in grammar. The built-in grammar is a dynamic, self-learning grammar model that gives full flexibility, with larger message size.
             </p>
             <p>
-                The alignment option value <strong>byte-alignment</strong> indicates that the event codes and associated content are aligned on byte boundaries. While byte-alignment generally results in EXI streams of larger sizes compared with their bit-packed equivalents, byte-alignment may provide a help in some use cases that involve frequent copying of large arrays of scalar data directly out of the stream. It can also make it possible to work with data in-place and can make it easier to debug encoded data by allowing items on aligned boundaries to be easily located in the stream.
+                The <strong>preserve option</strong> is a set of Booleans to alter some production of events. Usually, all false (no preservation of comments, processing instructions, DTDs, namespace declarations and its prefixes, and lexical values) makes no problem on XMPP communication. However, uploading a binary schema may require the schema encoded with preserved namespace prefixes. The prefixes are used in type definitions, and without prefix preservation binding between type definition references and actual definitions will be lost.
             </p>
             <p>
-                The alignment option value <strong>pre-compression</strong> indicates that all steps involved in compression (see section <link url='http://www.w3.org/TR/exi/#compression'>9. EXI Compression</link>) are to be done with the exception of the final step of applying the DEFLATE algorithm. The primary use case of pre-compression is to avoid a duplicate compression step when compression capability is built into the transport protocol. In this case, pre-compression just prepares the stream for later compression.
+                The <strong>selfContained option</strong> is a Boolean to enable self contained encoding of elements. Self contained element has no dependency to context (string table state in EXI processors) and can be copied to other context with the same grammar. However, self contained elements cannot use external string tables in EXI processors and may result larger size.
             </p>
             <p>
-                The <strong>compression option</strong> is a Boolean used to increase compactness using additional computational resources. The default value "false" is assumed when the "compression" element is absent in the EXI Options document whereas its presence denotes the value "true". When set to true, the event codes and associated content are compressed according to <link url='http://www.w3.org/TR/exi/#compression'>9. EXI Compression</link> regardless of the alignment option value. As mentioned above, the "compression" element MUST NOT appear in an EXI options document when the "alignment" element is present.
+                The <strong>datatypeRepresentationMap option</strong> can be used to modify how types encoded in EXI. If encoders and decoders have special encoding, it can be specified here. In most use cases in XMPP/EXI, this option will not be used.
             </p>
             <p>
-                The <strong>strict option</strong> is a Boolean used to increase compactness by using a strict interpretation of the schemas and omitting preservation of certain items, such as comments, processing instructions and namespace prefixes. The default value "false" is assumed when the "strict" element is absent in the EXI Options document whereas its presence denotes the value "true". When set to true, those productions that have NS, CM, PI, ER, and SC terminal symbols are omitted from the EXI grammars, and schema-informed element and type grammars are restricted to only permit items declared in the schemas. A note in section <link url='http://www.w3.org/TR/exi/#addingProductionsStrict'>8.5.4.4.2 Adding Productions when Strict is True</link> describes some additional restrictions consequential of the use of this option. The "strict" element MUST NOT appear in an EXI options document when one of "dtd", "prefixes", "comments", "pis" or "selfContained" element is present in the same options document.
+                The <strong>blockSize option</strong> specifies the block size used for EXI compression. It has no effect if compression is not used.
             </p>
             <p>
-                The <strong>preserve option</strong> is a set of Booleans that can be set independently to each enable or disable a share of the format's capacity determining whether or how certain information items can be preserved in the EXI stream. Section <link url='http://www.w3.org/TR/exi/#fidelityOptions'>6.3 Fidelity Options</link> describes the set of information items affected by the preserve option. The presence of "dtd", "prefixes", "lexicalValues", "comments" and "pis" in the EXI Options document each turns on fidelity options Preserve.comments, Preserve.pis, Preserve.dtd, Preserve.prefixes and Preserve.lexicalValues whereas the absence denotes turning each off. The elements "dtd", "prefixes", "comments" and "pis" MUST NOT appear in an EXI options document when the "strict" element is present in the same options document. The element "lexicalValues", on the other hand, is permitted to occur in the presence of "strict" element.
+                The <strong>valueMaxLength option</strong> specifies the maximum length of re-used string in a stream. Larger value makes more strings captured in string tables in EXI processors. This means more memory needs to be allocated to process a stream. Because some use cases, such as Internet of Things, expects constrained nodes in the network, default value specified in ths XEP is very small (64 characters).
             </p>
             <p>
-                The <strong>selfContained option</strong> is a Boolean used to enable the use of self-contained elements in the EXI stream. Self-contained elements may be read independently from the rest of the EXI body, allowing them to be indexed for random access. The "selfContained" element MUST NOT appear in an EXI options document when one of "compression", "pre-compression" or "strict" elements are present in the same options document. The default value "false" is assumed when the "selfContained" element is absent from the EXI Options document whereas its presence denotes the value "true".
-            </p>
-            <p>
-                The <strong>datatypeRepresentationMap option</strong> specifies an alternate set of datatype representations for typed values in the EXI body as described in <link url='http://www.w3.org/TR/exi/#datatypeRepresentationMap'>7.4 Datatype Representation Map</link>. When there are no "datatypeRepresentationMap" elements in the EXI Options document, no Datatype Representation Map is used for processing the EXI body. This option does not take effect when the value of the Preserve.lexicalValues fidelity option is true (see <link url='http://www.w3.org/TR/exi/#fidelityOptions'>6.3 Fidelity Options</link>), or when the EXI stream is a schema-less EXI stream.
-            </p>
-            <p>
-                The <strong>blockSize option</strong> specifies the block size used for EXI compression. When the "blockSize" element is absent in the EXI Options document, the default blocksize of 1,000,000 is used. The default blockSize is intentionally large but can be reduced for processing large documents on devices with limited memory.
-            </p>
-            <p>
-                The <strong>valueMaxLength option</strong> specifies the maximum length of value content items to be considered for addition to the string table. The default value "unbounded" is assumed when the "valueMaxLength" element is absent in the EXI Options document.
-            </p>
-            <p>
-                The <strong>valuePartitionCapacity option</strong> specifies the maximum number of value content items in the string table at any given time. The default value "unbounded" is assumed when the "valuePartitionCapacity" element is absent in the EXI Options document. Section <link url='http://www.w3.org/TR/exi/#encodingOptimizedForMisses'>7.3.3 Partitions Optimized for Frequent use of String Literals</link> specifies the behavior of the string table when this capacity is reached.
+                The <strong>valuePartitionCapacity option</strong> specifies how many strings should be kept in a string table in a time. Default value of this is also small in this XEP (64 strings).
             </p>
 	    <!-- [YD] This option should not be considered as EXI option. I added a note at the beginning of the paragraph. -->
             <p>
@@ -1152,6 +1145,30 @@ FIXME
                 available in the tables, requiring more bits to encode strings. The default value is false, meaning that buffers, string tables, etc., are cleared between each stanza. (This option
                 is EXI/XMPP specific.)
             </p>
+	    <section3 topic='Evaluations of Options'>
+		<p>
+		    This section describes effects in message size for some options.
+		</p>
+		<p>
+		    The option <strong>sessionWideBuffers</strong> must have large effect in XMPP communication, because many XIDs are re-used many time within a XMPP stream.
+		    If sessionWideBuffers option is enabled, most of XIDs can be encoded in short identifiers as it appears in some previous messages. Followings are
+		    preliminary evaluation of message size of XML (plain old XML), EXI with sessionWideBuffers=false, and EXI with sessionWideBuffers=true.
+		</p>
+		<ul>
+		    <li>
+			<!-- % for x in C2S/*.xml S2C/*.xml; do xmlindent -i 0 -l 10000 $x|grep -v '^<?xml'|tr -d '\n'; done|wc -c -->
+			<strong>Plain Old XML (without XML declaration, whitespaces)</strong>: 5011 bytes in 22 messages
+		    </li>
+		    <li>
+			<!-- % cat samples/exi-{C2S,S2C}-normal/{base,base+muc}/*.exi|wc -c -->
+			<strong>EXI without sessionWideBuffers</strong>: 1614 bytes in 22 messages
+		    </li>
+		    <li>
+			<!-- % cat samples/exi-{C2S,S2C}-persistent/{base,base+muc}/*.exi|wc -c -->
+			<strong>EXI with sessionWideBuffers</strong>: 1458 bytes in 22 messages <!-- [YD] effect is lower than expected...? -->
+		    </li>
+ 		</ul>
+	    </section3>
         </section2>
         <section2 topic='Transmission of EXI bodies and Session-wide Buffers'>
             <p>
@@ -2382,15 +2399,12 @@ FIXME
                 <!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
             </section3>
         </section2>
-        <!--
-	    [YD]: FIXME: is this really true? [Better example in first use case section] I strongly oppose this. Alternative binding cannot be implemented without 
-	    I recovered this 2013-07-07.
-	    PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
-	    -->
         <section2 topic="Default schema for alternative bindings" anchor="defaultSchema">
             <p>
                 Default EXI grammar used in EXI/XMPP SHALL be equivalent to the EXI grammar defined by the following schema. The default EXI grammar 
-                is used in initiating connection of EXI/XMPP alternate binding.
+                is used in initiating connection of EXI/XMPP alternate binding. The default schema is defined by following definition, and all
+		the imported schemas SHOULD be same schemas described in <link url="#wellknown">the snapshot</link> and SHOULD have the identical
+		MD5 hash value described in <link url="#knownhashes">this section</link>.
             </p>
             <code>
                 <![CDATA[
@@ -2407,10 +2421,9 @@ FIXME
 </xs:schema>
 ]]>
             </code>
-
             <p>
 		The ${snapshot-url} corresponds to yet-to-be-specified schema snapshot repository described in <link href="#wellknown">snapshot repository for well-known schemas</link> section.
-                The schemaId of this schema will is 'urn:xmpp:exi:cs:default'. SchemaId is ID for this instance and not a namespace identifier and intentionally different from the target namespace of the schema.
+                The schemaId of this schema will is 'urn:xmpp:exi:default'. SchemaId is ID for this instance and not a namespace identifier and intentionally different from the target namespace of the schema.
             </p>
         </section2>
         <section2 topic="Reserved Schema IDs" anchor="reservedSchemaID">
@@ -2421,13 +2434,6 @@ FIXME
 		<li>Schema IDs starts with "urn:xmpp". This may be used to describe XEP-based schemas.</li>
 	    </ul>
 	</section2>
-        <section2 topic="A schema for Combined Schemas">
-            <p>
-                With a <link url="#schemaID">combined schemaId</link> in a stream header, or a setup process of compression parameter negotiation, 
-                a set of schema used in the EXI stream is defined. The grammar used in the EXI/XMPP stream SHALL be equivalent to the EXI grammar 
-                defined by the default schema with corresponding import statement is placed at the end of the list of default import statements (marked as 'INSERT ADDITIONAL SCHEMAS HERE').
-            </p>
-        </section2>-->
     </section1>
     <section1 topic='Security Considerations' anchor='security'>
         <p>
@@ -2459,7 +2465,8 @@ FIXME
         <p>
             Some of schemas should be kept 'as-is' format in XSF registry. EXI interoperability
             requires schema stability, so a snapshot repository of version-controlled well-known schemas is requested to XMPP Registrar.
-            Related discussion is in <link url="#wellknown">here</link>.
+            Related discussion is in <link url="#wellknown">here</link>. Also, patched versions such as described in <link url="#knownproblems">Known problems</link>
+	    should be placed in the same snapshot repository.
         </p>
         <p>
             Furthermore, it is suggested that the table at <link url="http://xmpp.org/resources/schemas/">http://xmpp.org/resources/schemas/</link> is updated
@@ -2470,7 +2477,7 @@ FIXME
             The <link url="#schema">protocol schema</link> needs to be added to the list of <link url="http://xmpp.org/resources/schemas/">XMPP protocol schemas</link>.
         </p>
         <p>
-            The target namespace for canonical schemas <strong>urn:xmpp:exi:cs</strong>, as well as the EXI compress schema namespace
+            The target namespace for canonical schemas <strong>urn:xmpp:exi:cs</strong>, for default schemas <strong>urn:xmpp:exi:default</strong>, as well as the EXI compress schema namespace
             <strong>http://jabber.org/protocol/compress/exi</strong> need to be registered on the list of known XSF schemas.
         </p>
     </section1>
