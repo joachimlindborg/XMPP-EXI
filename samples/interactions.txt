@@ -39,4 +39,10 @@ Client                                         Server
 * restart /w EXI header
 -- C2S/100-restart.xml ->
                                   <- S2C/100-restart.xml --
+-- C2S/101-setup.xml ->
+                            <- S2C/101-setupResponse.xml --
+
+* regular stream starts with configured schema 
+-- C2S/110-restart.xml ->
+                                  <- S2C/110-restart.xml --
 
