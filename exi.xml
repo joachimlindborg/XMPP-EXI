@@ -722,11 +722,6 @@
 </exi:setup>
 ]]>		
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -745,11 +740,6 @@
 </exi:setupResponse>
 ]]>
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -772,11 +762,6 @@
 
 ]]>
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -795,11 +780,6 @@
 </exi:streamStart>
 ]]>
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
@@ -837,11 +817,6 @@
 <streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
 ]]>
 		    </example>
-<!--
-		    <example caption="Corresponding EXI Events">
-			(TBD: will be fixed after XML schema fix)
-		    </example>
--->
 		    <example caption="Actual EXI Stream">
 			(TBD: will be fixed after XML schema fix)
 		    </example>
