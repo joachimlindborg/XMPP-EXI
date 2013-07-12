@@ -680,7 +680,18 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-C2S-normal/base/001-base-start-N-SIs.dump -->
+			<![CDATA[
+0000000 8a 40 8c ad c0 28 d4 c2 c4 c4 ca e4 5c ca f0 c2
+0000020 da e0 d8 ca 5c de e4 ce 00 20 04 89 a1 d1 d1 c0
+0000040 e8 bc bd 95 d1 a1 95 c9 e0 b9 a9 85 89 89 95 c8
+0000060 b9 bd c9 9c bd cd d1 c9 95 85 b5 cc 21 cd d1 c9
+0000100 95 85 b4 07 b5 30 b1 31 32 b9 1d 31 b6 34 b2 b7
+0000120 3a 01 02 66 87 47 47 03 a2 f2 f7 77 77 72 e7 73
+0000140 32 e6 f7 26 72 f5 84 d4 c2 f3 13 93 93 82 f6 e6
+0000160 16 d6 57 37 06 16 36 50 57 86 d6 ca
+0000174
+]]>
 		    </example>
                 </li>
                 <li>
@@ -697,7 +708,19 @@
 ]]>		    
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-S2C-normal/base/001-base-start-N-SIs.dump -->
+			<![CDATA[
+0000000 8a 02 8d 4c 2c 4c 4c ae 45 cc af 0c 2d ae 0d 8c
+0000020 a5 cd ee 4c e2 08 ca dc 20 10 02 44 d0 e8 e8 e0
+0000040 74 5e 5e ca e8 d0 ca e4 f0 5c d4 c2 c4 c4 ca e4
+0000060 5c de e4 ce 5e e6 e8 e4 ca c2 da e6 10 e6 e8 e4
+0000100 ca c2 da 03 da 98 58 98 99 5c 8e 98 db 1a 59 5b
+0000120 9d 00 81 33 43 a3 a3 81 d1 79 7b bb bb b9 73 b9
+0000140 99 73 7b 93 39 7a c2 6a 61 79 89 c9 c9 c1 7b 73
+0000160 0b 6b 2b 9b 83 0b 1b 28 2b c3 6b 65
+0000174
+]]>
+
 		    </example>
                 </li>
                 <li>
@@ -723,7 +746,18 @@
 ]]>		
 		    </example>
 		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-C2S-normal/base/002-base-setup-N-SIs.dump -->
+			<![CDATA[
+0000000 7b 0a a0 a2 24 14 6a 69 4a 57 84 02 5a c4 b3 85
+0000020 aa 4a 84 f1 1d 07 79 1e 92 06 87 47 47 03 a2 f2
+0000040 f6 a6 16 26 26 57 22 e6 f7 26 72 f7 07 26 f7 46
+0000060 f6 36 f6 c2 f6 d7 56 32 10 28 88 ce 23 84 22 9d
+0000100 81 51 16 a4 8c ef 5b 5e 70 98 c4 51 dc 74 8c 99
+0000120 a1 d1 d1 c0 e8 bc bd a9 85 89 89 95 c8 b9 bd c9
+0000140 9c bd c1 c9 bd d1 bd 8d bd b0 bd b5 d5 8c 8d bd
+0000160 dd b9 95 ca
+0000164
+]]>
 		    </example>
                 </li>
 		<li>
@@ -741,7 +775,20 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-S2C-normal/base/002-base-setupResponse-N-SIs.dump -->
+			<![CDATA[
+0000000 7c 08 c9 8d cd 8c 58 58 58 98 cc 0b 58 4c 8d 4d
+0000020 4b 4d 18 8e 58 8b 4e 0e 58 4c 4b 4d 18 d8 8e 0d
+0000040 4e 4d 4d 4e 4d 8e 4c 72 a8 28 89 05 1a 9a 52 95
+0000060 e1 00 96 b1 2c e1 6a 92 a1 3c 47 41 de 47 a4 81
+0000100 a1 d1 d1 c0 e8 bc bd a9 85 89 89 95 c8 b9 bd c9
+0000120 9c bd c1 c9 bd d1 bd 8d bd b0 bd b5 d5 8c 84 0a
+0000140 22 33 88 e1 08 a7 60 54 45 a9 23 3b d6 d7 9c 26
+0000160 31 14 77 1d 23 26 68 74 74 70 3a 2f 2f 6a 61 62
+0000200 62 65 72 2e 6f 72 67 2f 70 72 6f 74 6f 63 6f 6c
+0000220 2f 6d 75 63 23 6f 77 6e 65 72 c0
+0000233
+]]>
 		    </example>
 		    <p>
 			Note that the server may deny the negotiation with agreement="false" setupResponse (example omitted).
@@ -763,7 +810,18 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-C2S-normal/base+muc/ -->
+			<![CDATA[
+0000000 98 40 8c ad c0 28 d4 c2 c4 c4 ca e4 5c ca f0 c2
+0000020 da e0 d8 ca 5c de e4 ce 00 20 04 89 a1 d1 d1 c0
+0000040 e8 bc bd 95 d1 a1 95 c9 e0 b9 a9 85 89 89 95 c8
+0000060 b9 bd c9 9c bd cd d1 c9 95 85 b5 cc 21 cd d1 c9
+0000100 95 85 b4 07 b5 30 b1 31 32 b9 1d 31 b6 34 b2 b7
+0000120 3a 01 02 66 87 47 47 03 a2 f2 f7 77 77 72 e7 73
+0000140 32 e6 f7 26 72 f5 84 d4 c2 f3 13 93 93 82 f6 e6
+0000160 16 d6 57 37 06 16 36 50 57 86 d6 ca
+0000174
+]]>
 		    </example>
                 </li>
 		<li>
@@ -781,7 +839,18 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-S2C-normal/base+muc/010-base+muc-restart-N-SIs.dump -->
+			<![CDATA[
+0000000 98 02 8d 4c 2c 4c 4c ae 45 cc af 0c 2d ae 0d 8c
+0000020 a5 cd ee 4c e2 08 ca dc 20 10 02 44 d0 e8 e8 e0
+0000040 74 5e 5e ca e8 d0 ca e4 f0 5c d4 c2 c4 c4 ca e4
+0000060 5c de e4 ce 5e e6 e8 e4 ca c2 da e6 10 e6 e8 e4
+0000100 ca c2 da 03 da 98 58 98 99 5c 8e 98 db 1a 59 5b
+0000120 9d 00 81 33 43 a3 a3 81 d1 79 7b bb bb b9 73 b9
+0000140 99 73 7b 93 39 7a c2 6a 61 79 89 c9 c9 c1 7b 73
+0000160 0b 6b 2b 9b 83 0b 1b 28 2b c3 6b 65
+0000174
+]]>
 		    </example>
                 </li>
 		<li>
@@ -798,7 +867,15 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-S2C-normal/base+muc/050-base+muc-00-iq-response-N-SIs.dump -->
+			<![CDATA[
+0000000 42 20 73 65 6e 73 6f 72 73 40 63 6f 6e 66 65 72
+0000020 65 6e 63 65 2e 65 78 61 6d 70 6c 65 2e 6f 72 67
+0000040 07 61 62 32 36 61 47 d9 5e 1a 50 1a 98 58 98 99
+0000060 5c 8b 99 5e 18 5b 5c 1b 19 4b 9b dc 99 cb dc d9
+0000100 5b 9c db dc a8
+0000105
+]]>
 		    </example>
 		    <p>
 			This message has a query element under muc#owner namespace. This is performed efficiently because 
@@ -818,7 +895,11 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			(TBD: will be fixed after XML schema fix)
+			<!-- samples/exi-C2S-normal/base+muc/099-base+muc-end-N-SIs.dump -->
+<![CDATA[
+0000000 96
+0000001
+]]>
 		    </example>
 		    <p>
 			Exactly same message should be sent from the server to the client to close the opposite way of the stream (example omitted).
@@ -850,9 +931,11 @@
 </exi:streamStart>
 			]]>
 		    </example>
+<!--
 		    <example caption="Actual EXI Stream with EXI option document">
 FIXME: needs some development
 		    </example>
+-->
                 </li>
 		<li>
 		    <p>
@@ -881,9 +964,11 @@ FIXME: needs some development
 </exi:streamStart>
 ]]>
 		    </example>
+<!--
 		    <example caption="Actual EXI Stream with EXI option document">
 FIXME: needs some development
 		    </example>
+-->
 		    <p>
 			Or server may deny to start the new communication by just sending streamEnd tag with default encoding.
 		    </p>
@@ -893,9 +978,11 @@ FIXME: needs some development
 <streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
 			]]>
 		    </example>
+<!--
 		    <example caption="Actual EXI Stream with EXI option document">
 FIXME
 		    </example>
+-->
 		</li>
             </ol>
             <section3 topic="DNS SRV lookup" anchor="srv">
