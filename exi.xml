@@ -59,15 +59,15 @@
                 <p>Added quick setup attributes: <strong>configurationId</strong>, <strong>configurationLocation</strong>.</p>
             </remark>
         </revision>
-		<revision>
-			<version>0.1</version>
-			<date>2013-04-16</date>
-			<initials>psa</initials>
-			<remark>
-				<p>Initial published version approved by the XMPP Council.</p>
-			</remark>
-		</revision>
-		<revision>
+        <revision>
+            <version>0.1</version>
+            <date>2013-04-16</date>
+            <initials>psa</initials>
+            <remark>
+                <p>Initial published version approved by the XMPP Council.</p>
+            </remark>
+        </revision>
+        <revision>
             <version>0.0.4</version>
             <date>2013-03-19</date>
             <initials>pw</initials>
@@ -1303,33 +1303,36 @@ FIXME
             </p>
         </section2>
         <section2 topic="Using EXI Option Documents for Shortcut Setup" anchor="shortcut">
-			<p>
-				The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
-				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
-				through an URL.
-			</p>
-			<p>
-			    A client may specify a configurationId or configurationLocation on exi:setup element. If the server has corresponding setup configuration, the server may respond with an exi:setupResponse with <strong>agreement="true"</strong>. If the server does not know the configurationId or does not be able to use the given configurationLocation, the server shall respond with an exi:setupResponse with <strong>agreement="false"</strong>.
-			</p>
-			<p>
-                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
-				If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <strong>agreement=false</strong>
-				response. Otherwise the semantics of the <strong>configurationLocation</strong> attribute is the same as for the <strong>configurationId</strong>
-				attribute, except it provide a mechism for static configurations, while the <strong>configurationId</strong> provides a mechanism for
-				dynamic configurations.
+            <p>
+                The <strong>configurationId</strong> attribute has a similar attribute called <strong>configurationLocation</strong>. This attribute provides
+                a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
+                through an URL.
             </p>
-			<p>
-				The format for these opton documents or locations is beyond the scope of this specification.
-			</p>
-			<section3 topic="Shortcut Setup for Alternative Transport Binding" anchor="shortcutAltBind">
-			    With alternative transport bind, following rule for shortcut may be used, assuming a server and a client have common shared configuration with configurationId="01234" as an example.
-			    <ul>
-				<li>Client can start configured stream with a <strong>exi:streamStart</strong> element encoded in the configuration given in configurationId="01234". To indicate configurationId, a schemaId corresponds to the configurationId prefixed by "c:" SHALL be used. In this example, schemaId is "c:01234". EXI option in EXI option header other than the schemaId SHOULD NOT be specified.</li>
-				<li>If the server accepts the configuration, the server SHOULD respond with a <strong>exi:streamStart</strong> element encoded in the configuration given in the configurationId. The server SHALL put the schemaId in the EXI header of the response. No EXI options other than the schemaId SHOULD NOT be specified in the response EXI header. The EXI header is the indication of configuration agreement and SHALL NOT be omitted.</li>
-				<li>If the server does not accept the configuration, the server SHALL respond with a <strong>exi:streamEnd</strong> element encoded in the <link url="#defaultSchema">default schema</link> and the EXI header option SHOULD be empty.</li>
-				<li>The client can continue pre-configured stream if and only if it receives <strong>exi:streamStart</strong> element encoded in the configurationId with EXI option header that contains the identical schemaId. Otherwise, the client SHOULD start a new <strong>exi:streamStart</strong> with a new TCP connection an empty EXI option header (e.g. default schema). Current TCP connection SHOULD NOT be used for re-negotiation (configuration setup).</li>
-			    </ul>
-			</section3>
+	    <p>
+		A client may specify a configurationId or configurationLocation on exi:setup element. If the server has corresponding setup configuration, the server may respond with an exi:setupResponse with <strong>agreement="true"</strong>. If the server does not know the configurationId or does not be able to use the given configurationLocation, the server shall respond with an exi:setupResponse with <strong>agreement="false"</strong>.
+	    </p>
+            <p>
+                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
+                If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <strong>agreement=false</strong>
+                response. Otherwise the semantics of the <strong>configurationLocation</strong> attribute is the same as for the <strong>configurationId</strong>
+                attribute, except it provide a mechism for static configurations, while the <strong>configurationId</strong> provides a mechanism for
+                dynamic configurations.
+            </p>
+            <p>
+                The format for these opton documents or locations is beyond the scope of this specification.
+            </p>
+	    <p>
+		The format for these opton documents or locations is beyond the scope of this specification.
+	    </p>
+	    <section3 topic="Shortcut Setup for Alternative Transport Binding" anchor="shortcutAltBind">
+		With alternative transport bind, following rule for shortcut may be used, assuming a server and a client have common shared configuration with configurationId="01234" as an example.
+		<ul>
+		    <li>Client can start configured stream with a <strong>exi:streamStart</strong> element encoded in the configuration given in configurationId="01234". To indicate configurationId, a schemaId corresponds to the configurationId prefixed by "c:" SHALL be used. In this example, schemaId is "c:01234". EXI option in EXI option header other than the schemaId SHOULD NOT be specified.</li>
+		    <li>If the server accepts the configuration, the server SHOULD respond with a <strong>exi:streamStart</strong> element encoded in the configuration given in the configurationId. The server SHALL put the schemaId in the EXI header of the response. No EXI options other than the schemaId SHOULD NOT be specified in the response EXI header. The EXI header is the indication of configuration agreement and SHALL NOT be omitted.</li>
+		    <li>If the server does not accept the configuration, the server SHALL respond with a <strong>exi:streamEnd</strong> element encoded in the <link url="#defaultSchema">default schema</link> and the EXI header option SHOULD be empty.</li>
+		    <li>The client can continue pre-configured stream if and only if it receives <strong>exi:streamStart</strong> element encoded in the configurationId with EXI option header that contains the identical schemaId. Otherwise, the client SHOULD start a new <strong>exi:streamStart</strong> with a new TCP connection an empty EXI option header (e.g. default schema). Current TCP connection SHOULD NOT be used for re-negotiation (configuration setup).</li>
+		</ul>
+	    </section3>
         </section2>
         <section2 topic="XMPP Schema files and their hash values" anchor="knownhashes">
             <p>
@@ -2372,9 +2375,9 @@ FIXME
                     maxOccurs='1'
                 </code>
             </section3>
-			<section3 topic="Patch for missing wildcards in extensible schemas">
-				<!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
-			</section3>
+            <section3 topic="Patch for missing wildcards in extensible schemas">
+                <!-- [PW]: Example missing wildcard definition in data forms, in relation to data form validation, data form layout, etc. -->
+            </section3>
         </section2>
         <!--
 	    [YD]: FIXME: is this really true? [Better example in first use case section] I strongly oppose this. Alternative binding cannot be implemented without 

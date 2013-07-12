@@ -1080,21 +1080,21 @@
         </div>
         <div class="indent">
       <h3>3.10 <a name="shortcut">Using EXI Option Documents for Shortcut Setup</a></h3>
-			<p class="" style="">
-				The <span class="strong">configurationId</span> attribute has a similar attribute called <span class="strong">configurationLocation</span>. This attribute provides
-				a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
-				through an URL.
-			</p>
-			<p class="" style="">
-                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
-				If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <span class="strong">agreement=false</span>
-				response. Otherwise the semantics of the <span class="strong">configurationLocation</span> attribute is the same as for the <span class="strong">configurationId</span>
-				attribute, except it provide a mechism for static configurations, while the <span class="strong">configurationId</span> provides a mechanism for
-				dynamic configurations.
+            <p class="" style="">
+                The <span class="strong">configurationId</span> attribute has a similar attribute called <span class="strong">configurationLocation</span>. This attribute provides
+                a mechanism to setup an EXI connection rapidly using option documents installed as files on the server or available on the network accessible
+                through an URL.
             </p>
-			<p class="" style="">
-				The format for these opton documents or locations is beyond the scope of this specification.
-			</p>
+            <p class="" style="">
+                This specification does not define the format of this Configuration Location attribute, and so it is server specific, or if it is supported.
+                If used on a server not supporting this attribute, or if the contents of the attribute is invalid, the server returns an <span class="strong">agreement=false</span>
+                response. Otherwise the semantics of the <span class="strong">configurationLocation</span> attribute is the same as for the <span class="strong">configurationId</span>
+                attribute, except it provide a mechism for static configurations, while the <span class="strong">configurationId</span> provides a mechanism for
+                dynamic configurations.
+            </p>
+            <p class="" style="">
+                The format for these opton documents or locations is beyond the scope of this specification.
+            </p>
         </div>
         <div class="indent">
       <h3>3.11 <a name="knownhashes">XMPP Schema files and their hash values</a></h3>
@@ -2146,10 +2146,10 @@
                 </pre>
         </div>
             </div>
-			<div class="indent">
+            <div class="indent">
         <h3>3.12.2 <a name="sect-ID0EQVAI">Patch for missing wildcards in extensible schemas</a></h3>
-				
-			</div>
+                
+            </div>
         </div>
         
     <h2>4.
@@ -2231,16 +2231,15 @@
     &lt;/xs:complexType&gt;
  
     &lt;xs:complexType name='SetupResponse'&gt;
-        &lt;xs:complexContent&gt;
-            &lt;xs:extension base='Setup'&gt;
-                &lt;xs:choice minOccurs='0' maxOccurs='unbounded'&gt;
-                    &lt;xs:element name='missingSchema' type='Schema'/&gt;
-                &lt;/xs:choice&gt;
-                &lt;xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/&gt;
-                &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
-                &lt;xs:attribute name='configurationLocation' type='xs:string' use='optional'/&gt;
-            &lt;/xs:extension&gt;
-        &lt;/xs:complexContent&gt;
+        &lt;xs:choice minOccurs='0' maxOccurs='unbounded'&gt;
+            &lt;xs:element name='schema' type='Schema'/&gt;
+            &lt;xs:element name='datatypeRepresentationMap' type='DatatypeRepresentationMap'/&gt;
+            &lt;xs:element name='missingSchema' type='Schema'/&gt;
+        &lt;/xs:choice&gt;
+        &lt;xs:attributeGroup ref='Options'/&gt;
+        &lt;xs:attribute name='configurationId' type='xs:string' use='optional'/&gt;
+        &lt;xs:attribute name='configurationLocation' type='xs:string' use='optional'/&gt;
+        &lt;xs:attribute name='agreement' type='xs:boolean' use='optional' default='false'/&gt;
     &lt;/xs:complexType&gt;
  
     &lt;xs:complexType name='Schema'&gt;
@@ -2557,8 +2556,8 @@
     </div>
       <h4>Version 0.1 (2013-04-16)</h4>
       <div class="indent">
-				<p class="" style="">Initial published version approved by the XMPP Council.</p>
-			 (psa)
+                <p class="" style="">Initial published version approved by the XMPP Council.</p>
+             (psa)
     </div>
       <h4>Version 0.0.4 (2013-03-19)</h4>
       <div class="indent">
