@@ -2381,7 +2381,7 @@ FIXME
         </section2>
         <!--
 	    [YD]: FIXME: is this really true? [Better example in first use case section] I strongly oppose this. Alternative binding cannot be implemented without 
-	    I recovered this 2013--07-07.
+	    I recovered this 2013-07-07.
 	    PW: Removed. Information distributed in various places: Better examples in first use case section, schema lists, canoncial schema, etc.
 	    -->
         <section2 topic="Default schema for alternative bindings" anchor="defaultSchema">
