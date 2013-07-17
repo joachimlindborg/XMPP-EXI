@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema
+    xmlns:xs='http://www.w3.org/2001/XMLSchema'
+    targetNamespace='urn:xmpp:exi:cs'
+    xmlns='urn:xmpp:exi:cs'
+    elementFormDefault='unqualified'>
+  <xs:import namespace='http://etherx.jabber.org/streams' schemaLocation='streams.xsd' />
+  <xs:import namespace='http://jabber.org/protocol/compress/exi' schemaLocation='exi.xsd' />
+  <xs:import namespace='http://jabber.org/protocol/muc' schemaLocation='muc.xsd' />
+  <xs:import namespace='http://jabber.org/protocol/muc#owner' schemaLocation='muc-owner.xsd' />
+</xs:schema>

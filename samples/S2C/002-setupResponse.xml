@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<exi:setupResponse xmlns:exi='urn:xmpp:exi:base:0' agreement="true" agreedSchemaId="a83b19b31e016409d3001331d9f084fc">
-  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
-  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1260" md5Hash="2e0e6e895c833f18c44f109c29c9e798" />
-</exi:setupResponse>
-
-
