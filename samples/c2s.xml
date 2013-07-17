@@ -1,35 +1,53 @@
-<?xml version="1.0"?>
-<stream:stream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client'>
-<!-- EXI nego and stream restarting -->
-<exi:setup xmlns:exi='urn:xmpp:exi:base:0'>
-    <exi:schema ns="http://jabber.org/protocol/muc" bytes="1" md5Hash="d41d8cd98f00b204e9800998ecf8427e" />
+<!-- this is example overview of a stream and not a valid XML -->
+
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
+
+<exi:setup xmlns:exi='http://jabber.org/protocol/compress/exi'>
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1284" md5Hash="6e4e2257c1a4ba937fbdf71664a7e793" />
 </exi:setup>
-<stream:stream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client'>
-<!-- normal stream -->
+
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
+
 <iq xmlns="jabber:client" type="set" id="bind_1">
-    <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
-        <resource>sensor</resource>
-    </bind>
+ <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+  <resource>sensor</resource>
+ </bind>
 </iq>
+
 <iq xmlns="jabber:client" type="get" id="ab19a">
-    <query xmlns="jabber:iq:roster"/>
+ <query xmlns="jabber:iq:roster"/>
 </iq>
+
 <presence xmlns="jabber:client">
-    <priority>5</priority>
+<priority>5</priority>
 </presence>
+
 <message xmlns="jabber:client" type="chat" to="admin@jabber.example.org/PC" id="ab1ea" >
-    <body>I'm Active!</body>
+  <body>I'm Active!</body>
 </message>
+
 <iq xmlns="jabber:client" type="set" to="sensors@conference.example.org" id="ab26a" >
-    <query xmlns="http://jabber.org/protocol/muc#owner">
-        <x xmlns="jabber:x:data" type="submit" />
-    </query>
+<query xmlns="http://jabber.org/protocol/muc#owner">
+<x xmlns="jabber:x:data" type="submit" />
+</query>
 </iq>
+
 <message xmlns="jabber:client" type="groupchat" to="sensors@conference.example.org" id="ab28a" >
-    <body>I'm Active!</body>
-    <nick xmlns="http://jabber.org/protocol/nick">exi-sensor</nick>
+<body>I'm Active!</body>
+<nick xmlns="http://jabber.org/protocol/nick">exi-sensor</nick>
 </message>
+
 <presence xmlns="jabber:client" type="unavailable" >
-    <status>Logged out</status>
+  <status>Logged out</status>
 </presence>
-</stream:stream>
+
+<streamEnd xmlns='http://jabber.org/protocol/compress/exi' />

@@ -1,14 +1,28 @@
-<stream:stream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client">
-<exi:setupResponse xmlns:exi='urn:xmpp:exi:base:0' agreement="true" agreedSchemaId="a83b19b31e016409d3001331d9f084fc">
-  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1" md5Hash="d41d8cd98f00b204e9800998ecf8427e" />
+<!-- this is example overview of a stream and not a valid XML -->
+
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
+
+<exi:setupResponse xmlns:exi='http://jabber.org/protocol/compress/exi' agreement="true" configurationId="a83b19b31e016409d3001331d9f084fc">
+  <exi:schema ns="http://jabber.org/protocol/muc" bytes="1322" md5Hash="853ad555f102bb2b71da9a2f2787f4f9" />
+  <exi:schema ns="http://jabber.org/protocol/muc#owner" bytes="1284" md5Hash="6e4e2257c1a4ba937fbdf71664a7e793" />
 </exi:setupResponse>
-<stream:stream xmlns:exi='urn:xmpp:exi:base:0' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:stream="http://etherx.jabber.org/streams" xmlns="jabber:client">
+
+<exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+ <exi:xmlns prefix="stream" namespace="http://etherx.jabber.org/streams" />
+ <exi:xmlns prefix="" namespace="jabber:client" />
+ <exi:xmlns prefix="xml" namespace="http://www.w3.org/XML/1998/namespace" />
+</exi:streamStart>
 
 <iq xmlns="jabber:client" type="result" id="bind_1">
  <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
   <jid>exi@jabber.example.org/sensor</jid>
  </bind>
 </iq>
+
 <iq xmlns="jabber:client" type="result" id="ab19a">
   <query xmlns='jabber:iq:roster'>
     <item subscription='both' jid='manager@jabber.example.org'/>
@@ -16,12 +30,13 @@
     <item subscription='both' jid='admin@jabber.example.org'/>
   </query>
 </iq>
+
 <message xmlns="jabber:client" type="chat" to="exi@jabber.example.org/sensor" id="ab1ea" >
   <body>How are you?</body>
 </message>
 
-
 <iq xmlns='jabber:client' type='result' to='exi@jabber.example.org/sensor' id='ab26a' from='sensors@conference.example.org'/>
+
 <presence xmlns='jabber:client' to='exi@jabber.example.org/sensor' from='sensors@conference.example.org'>
   <priority>5</priority>
   <x xmlns='http://jabber.org/protocol/muc'/>
@@ -29,4 +44,5 @@
     <item jid='exi@jabber.example.org/sensor' affiliation='owner' role='moderator'/><status code='201'/>
   </x>
 </presence>
-</stream:stream>
+
+<streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
