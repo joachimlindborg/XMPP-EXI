@@ -46,6 +46,18 @@
             <jid>yusuke.doi@gmail.com</jid>
             <uri>http://www.linkedin.com/in/yusukedoi</uri>
         </author>
+	<revision>
+	    <version>0.1.2</version>
+	    <date>2013-07-19</date>
+	    <initials>pw, yd</initials>
+	    <remark>
+		<p>Added examples of communication in alternate bindings.</p>
+		<p>Default parameter, canonical namespace, and reserved schemaId of EXI encoding are revised.</p>
+		<p>Added clarifications on use of streamStart, streamEnd elements with namespace prefix mappings.</p>
+		<p>EXI options are now described in the context of use in XMPP communication.</p>
+		<p>A bug in setupResponse element type definition is fixed.</p>
+	    </remark>
+	</revision>
         <revision>
             <version>0.1.1</version>
             <date>2013-06-27</date>
@@ -2737,5 +2749,6 @@ FIXME
 <!-- please keep this to inform YD's editor (Emacs) work aligned with Peter's indent style
 Local Variables:
 nxml-child-indent: 4
+sgml-indent-step: 4
 End:
 -->
