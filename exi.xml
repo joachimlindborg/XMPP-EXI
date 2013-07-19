@@ -56,6 +56,7 @@
 		<p>Added clarifications on use of streamStart, streamEnd elements with namespace prefix mappings.</p>
 		<p>EXI options are now described in the context of use in XMPP communication.</p>
 		<p>A bug in setupResponse element type definition is fixed.</p>
+		<p>Changed domanname schemavault.se used in schema download examples to schemavault.example.org to clarify this is an example.</p>
 	    </remark>
 	</revision>
         <revision>
@@ -441,7 +442,7 @@
                     </tr>
                     <tr>
                         <td>blockSize</td>
-                        <td>1000000 (one million)</td>
+                        <td>N/A</td>
                     </tr>
                     <tr>
                         <td>valueMaxLength</td>
@@ -464,9 +465,9 @@
                     As an alternative to uploading a schema file to the server, the client can ask the server to download a schema file by itself. This is done using the <strong>downloadSchema</strong>
                     command, as follows:
                 </p>
-                <example caption='Downloading new schema files on server'>
+                <example caption='Downloading a new XML schema file on server'>
                     <![CDATA[
-    <downloadSchema xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd'/>]]>
+    <downloadSchema xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd'/>]]>
                 </example>
                 <p>
                     The server tries to download the schema by itself, and then computes the <strong>target namespace</strong>, <strong>byte size</strong> and <strong>MD5 Hash</strong>
@@ -477,14 +478,14 @@
                 </p>
                 <example caption='Schema successfully downloaded'>
                     <![CDATA[
-    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='true'/>]]>
+    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd' result='true'/>]]>
                 </example>
                 <p>
                     If an HTTP error occurred while trying to download the schema, a response as follows is returned:
                 </p>
                 <example caption='HTTP Error'>
                     <![CDATA[
-    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
+    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd' result='false'>
         <httpError code='404' message='NotFound'/>
     </downloadSchemaResponse>]]>
                 </example>
@@ -502,7 +503,7 @@
                 </p>
                 <example caption='Timeout'>
                     <![CDATA[
-    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
+    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd' result='false'>
         <timeout message='No response returned.'/>
     </downloadSchemaResponse>]]>
                 </example>
@@ -511,7 +512,7 @@
                 </p>
                 <example caption='Invalid Content Type'>
                     <![CDATA[
-    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
+    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd' result='false'>
         <invalidContentType contentTypeReturned='text/html'/>
     </downloadSchemaResponse>]]>
                 </example>
@@ -520,7 +521,7 @@
                 </p>
                 <example caption='Other types of errors'>
                     <![CDATA[
-    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.se/compress/sn/provisioning.xsd' result='false'>
+    <downloadSchemaResponse xmlns='http://jabber.org/protocol/compress/exi' url='http://schemavault.example.org/compress/sn/provisioning.xsd' result='false'>
         <error message='No free space left.'/>
     </downloadSchemaResponse>]]>
                 </example>
@@ -2495,6 +2496,7 @@ FIXME
     </section1>
     <section1 topic='XML Schema' anchor='schema'>
         <code>
+<!-- IMPORT_AS_CDATA: ./exi.xsd -->
             <![CDATA[
 <?xml version='1.0' encoding='UTF-8'?>
 <xs:schema
