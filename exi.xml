@@ -682,7 +682,7 @@
 			The client sends out 'EXI Cookie' (e.g. '$EXI') and starts EXI stream with an EXI Header without any option document (implies <link url="#defaultParam">default encoding parameters</link>). It sends out EXI events corresponds to start tag of &lt;stream:stream>. Following shows XML Equivalent and EXI events <!-- TBD: shall be fixed after schema fix. -->
 		    </p>
 		    <example caption="XML equivalent of stream start element (Client to Server)">
-			<!-- samples/C2S/001-start.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/C2S/001-start.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
@@ -693,7 +693,7 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			<!-- samples/exi-C2S-normal/base/001-base-start-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-C2S-normal/base/001-base-start-N-SIs.dump -->
 			<![CDATA[
 0000000 8a 40 8c ad c0 28 d4 c2 c4 c4 ca e4 5c ca f0 c2
 0000020 da e0 d8 ca 5c de e4 ce 00 20 04 89 a1 d1 d1 c0
@@ -710,7 +710,7 @@
                 <li>
                     <p>The server responds with EXI stream, with EXI cookie, without EXI option, and with appropriate events for stream tag.</p>
 		    <example caption="XML equivalent of stream start element (Server to Client)">
-			<!-- samples/S2C/001-base-start.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/S2C/001-base-start.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
@@ -721,7 +721,7 @@
 ]]>		    
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			<!-- samples/exi-S2C-normal/base/001-base-start-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-S2C-normal/base/001-base-start-N-SIs.dump -->
 			<![CDATA[
 0000000 8a 02 8d 4c 2c 4c 4c ae 45 cc af 0c 2d ae 0d 8c
 0000020 a5 cd ee 4c e2 08 ca dc 20 10 02 44 d0 e8 e8 e0
@@ -749,7 +749,7 @@
 			For example, the client want to use MUC option (<link href="http://xmpp.org/extensions/xep-0045.html">XEP-0045</link>)), the following communication will occur. First, client try to renegotiate XML schema used in the communication.
 		    </p>
 		    <example caption="XML equivalent of setup element (Client to Server)">
-			<!-- samples/C2S/002-base-setup.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/C2S/002-base-setup.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:setup xmlns:exi='http://jabber.org/protocol/compress/exi'>
@@ -759,7 +759,7 @@
 ]]>		
 		    </example>
 		    <example caption="Actual EXI Stream">
-			<!-- samples/exi-C2S-normal/base/002-base-setup-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-C2S-normal/base/002-base-setup-N-SIs.dump -->
 			<![CDATA[
 0000000 7b 0a a0 a2 24 14 6a 69 4a 57 84 02 5a c4 b3 85
 0000020 aa 4a 84 f1 1d 07 79 1e 92 06 87 47 47 03 a2 f2
@@ -778,7 +778,7 @@
 			In the response the server accepts schema change.
 		    </p>
 		    <example caption="XML equivalent of setup element (Server to Client)">
-			<!-- samples/S2C/002-base-sestupResponse.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/S2C/002-base-sestupResponse.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:setupResponse xmlns:exi='http://jabber.org/protocol/compress/exi' agreement="true" configurationId="a83b19b31e016409d3001331d9f084fc">
@@ -788,7 +788,7 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			<!-- samples/exi-S2C-normal/base/002-base-setupResponse-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-S2C-normal/base/002-base-setupResponse-N-SIs.dump -->
 			<![CDATA[
 0000000 7c 08 c9 8d cd 8c 58 58 58 98 cc 0b 58 4c 8d 4d
 0000020 4b 4d 18 8e 58 8b 4e 0e 58 4c 4b 4d 18 d8 8e 0d
@@ -811,7 +811,7 @@
 
 		    <p>Just after receiving the setupResponse, client re-opens the stream. The new stream should have EXI header and may have EXI option header with updated options.</p>
 		    <example caption="XML equivalent of stream start element (Client to Server)">
-			<!-- samples/C2S/010-base+muc-restart.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/C2S/010-base+muc-restart.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
@@ -823,7 +823,7 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			<!-- samples/exi-C2S-normal/base+muc/ -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-C2S-normal/base+muc/ -->
 			<![CDATA[
 0000000 98 40 8c ad c0 28 d4 c2 c4 c4 ca e4 5c ca f0 c2
 0000020 da e0 d8 ca 5c de e4 ce 00 20 04 89 a1 d1 d1 c0
@@ -840,7 +840,7 @@
 		<li>
 		    <p>In response, server re-opens the stream with exi:streamStart tag.</p>
 		    <example caption="XML equivalent of stream start element (Server to Client)">
-			<!-- samples/S2C/010-base+muc-restart.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/S2C/010-base+muc-restart.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <!-- configuration id 761aabc0-a255-4b9b-89a1-4cb859559691 -->
@@ -852,7 +852,7 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			<!-- samples/exi-S2C-normal/base+muc/010-base+muc-restart-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-S2C-normal/base+muc/010-base+muc-restart-N-SIs.dump -->
 			<![CDATA[
 0000000 98 02 8d 4c 2c 4c 4c ae 45 cc af 0c 2d ae 0d 8c
 0000020 a5 cd ee 4c e2 08 ca dc 20 10 02 44 d0 e8 e8 e0
@@ -869,7 +869,7 @@
 		<li>
 		    <p>After an exi:streamStart from the server to the client, they can communicate with EXI stream. The first level element in conventional XMPP is encoded as root element of EXI message. For example, a client may send MUC query with EXI.</p>
 		    <example caption="XML equivalent of MUC chat message (Client to Server)">
-			<!-- samples/C2S/050-base+muc-muc-iq.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/C2S/050-base+muc-muc-iq.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <iq xmlns="jabber:client" type="set" to="sensors@conference.example.org" id="ab26a" >
@@ -880,7 +880,7 @@
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream with EXI Header">
-			<!-- samples/exi-S2C-normal/base+muc/050-base+muc-00-iq-response-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-S2C-normal/base+muc/050-base+muc-00-iq-response-N-SIs.dump -->
 			<![CDATA[
 0000000 42 20 73 65 6e 73 6f 72 73 40 63 6f 6e 66 65 72
 0000020 65 6e 63 65 2e 65 78 61 6d 70 6c 65 2e 6f 72 67
@@ -901,14 +901,14 @@
                 <li>
                     <p>The client and the server may end the stream with exi:streamEnd tag anytime.</p>
 		    <example caption="XML equivalent of stream end element (Client to Server)" >
-			<!-- samples/C2S/099-base+muc-end.xml -->
+			<!-- IMPORT_AS_CDATA: samples/C2S/099-base+muc-end.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <streamEnd xmlns='http://jabber.org/protocol/compress/exi' />
 ]]>
 		    </example>
 		    <example caption="Actual EXI Stream">
-			<!-- samples/exi-C2S-normal/base+muc/099-base+muc-end-N-SIs.dump -->
+			<!-- IMPORT_AS_CDATA: ./samples/exi-C2S-normal/base+muc/099-base+muc-end-N-SIs.dump -->
 <![CDATA[
 0000000 96
 0000001
@@ -923,7 +923,7 @@
                         The client now can start a preconfigured EXI/XMPP stream with explicit EXI option with the encoding option and canoinc schema used in the previous negotiated session (<link url="#shortcutAltBind">shortcut setup</link>)
                     </p>
 		    <example caption="EXI Option Document used for Shortcut Setup (Client to Server)">
-			<!-- samples/quick-setup-header.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/quick-setup-header.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -934,7 +934,7 @@
 			]]>
 		    </example>
 		    <example caption="XML Equivalent of streamStart">
-			<!-- samples/C2S/010-base+muc-restart.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/C2S/010-base+muc-restart.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" to="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
@@ -956,7 +956,7 @@ FIXME: needs some development
 		    </p>
 
 		    <example caption="EXI Option Document used for Shortcut Setup (Server to Client)">
-			<!-- samples/quick-setup-header.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/quick-setup-header.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <header xmlns="http://www.w3.org/2009/exi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -967,7 +967,7 @@ FIXME: needs some development
 			]]>
 		    </example>
 		    <example caption="XML Equivalent of streamStart in response">
-			<!-- samples/S2C/010-base+muc-restart.xml -->
+			<!-- IMPORT_AS_CDATA: ./samples/S2C/010-base+muc-restart.xml -->
 			<![CDATA[
 <?xml version="1.0"?>
 <exi:streamStart xmlns:exi='http://jabber.org/protocol/compress/exi' version="1.0" from="jabber.example.org" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
@@ -2496,7 +2496,7 @@ FIXME
     </section1>
     <section1 topic='XML Schema' anchor='schema'>
         <code>
-<!-- IMPORT_AS_CDATA: ./exi.xsd -->
+	    <!-- IMPORT_AS_CDATA: ./exi.xsd -->
             <![CDATA[
 <?xml version='1.0' encoding='UTF-8'?>
 <xs:schema
