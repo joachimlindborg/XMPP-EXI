@@ -10,15 +10,7 @@
     <header>
         <title>Efficient XML Interchange (EXI) Format</title>
         <abstract>This specification describes how EXI compression can be used in XMPP networks.</abstract>
-        <legal>
-            <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2013 by the XMPP Standards Foundation (XSF).</copyright>
-            <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
-            <warranty>## NOTE WELL: This Specification is provided on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</warranty>
-            <liability>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.</liability>
-            <conformance>
-                This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<link url='http://www.xmpp.org/extensions/ipr-policy.shtml'>http://www.xmpp.org/extensions/ipr-policy.shtml</link>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).
-            </conformance>
-        </legal>
+        &LEGALNOTICE;
         <number>0322</number>
         <status>Experimental</status>
         <type>Standards Track</type>
@@ -46,30 +38,34 @@
             <jid>yusuke.doi@gmail.com</jid>
             <uri>http://www.linkedin.com/in/yusukedoi</uri>
         </author>
-	<revision>
-	    <version>0.1.2</version>
-	    <date>2013-07-19</date>
-	    <initials>pw, yd</initials>
-	    <remark>
-		<p>Added examples of communication in alternate bindings.</p>
-		<p>Default parameter, canonical namespace, and reserved schemaId of EXI encoding are revised.</p>
-		<p>Added clarifications on use of streamStart, streamEnd elements with namespace prefix mappings.</p>
-		<p>EXI options are now described in the context of use in XMPP communication.</p>
-		<p>A bug in setupResponse element type definition is fixed.</p>
-		<p>Changed domanname schemavault.se used in schema download examples to schemavault.example.org to clarify this is an example.</p>
-	    </remark>
-	</revision>
         <revision>
-            <version>0.1.1</version>
+            <version>0.3</version>
+            <date>2013-07-19</date>
+            <initials>pw, yd</initials>
+            <remark>
+              <ul>
+                <li>Added examples of communication in alternate bindings.</li>
+                <li>Default parameter, canonical namespace, and reserved schemaId of EXI encoding are revised.</li>
+                <li>Added clarifications on use of streamStart, streamEnd elements with namespace prefix mappings.</li>
+                <li>EXI options are now described in the context of use in XMPP communication.</li>
+                <li>A bug in setupResponse element type definition is fixed.</li>
+                <li>Changed domanname schemavault.se used in schema download examples to schemavault.example.org to clarify this is an example.</li>
+              </ul>
+            </remark>
+        </revision>
+        <revision>
+            <version>0.2</version>
             <date>2013-06-27</date>
             <initials>pw, yd</initials>
             <remark>
-                <p>Added support for a binary binding.</p>
-                <p>Changed namespace urn:xmpp:sn to urn:xmpp:iot</p>
-                <p>Added streamStart and streamEnd elements.</p>
-                <p>Added central XMPP schemas used for XMPP communication.</p>
-                <p>Added references to core XMPP schemas in examples.</p>
-                <p>Added quick setup attributes: <strong>configurationId</strong>, <strong>configurationLocation</strong>.</p>
+              <ul>
+                <li>Added support for a binary binding.</li>
+                <li>Changed namespace urn:xmpp:sn to urn:xmpp:iot</li>
+                <li>Added streamStart and streamEnd elements.</li>
+                <li>Added central XMPP schemas used for XMPP communication.</li>
+                <li>Added references to core XMPP schemas in examples.</li>
+                <li>Added quick setup attributes: <strong>configurationId</strong>, <strong>configurationLocation</strong>.</li>
+              </ul>
             </remark>
         </revision>
         <revision>
@@ -1087,12 +1083,12 @@ FIXME
 	    </p>
 	    <example caption='Example configuration of communication channels.'>
 		<![CDATA[
-+-------------------------+  			 +-----------------------+
-| +----+		  |  			 |  	          +----+ |
++-------------------------+                      +-----------------------+
+| +----+                  |                      |                +----+ |
 | |    | <------------------ Plain XMPP Channel ----------------> |    | |
-| |XMPP|   	  	  |  	       	       	 |     	          |XMPP| |
+| |XMPP|                  |                      |                |XMPP| |
 | |    | <-[Proc]-[EXI]<------- EXI Channel ------>[EXI]-[Proc]-> |    | |
-| +----+      	       	  |		     	 |	          +----+ |
+| +----+                  |                      |                +----+ |
 +-------------------------+		     	 +-----------------------+
 		]]>
 
